@@ -94,34 +94,34 @@ def eliminacao_gauss_com_pivotamento(A, b):
     return x, A, b
 
 # Decomposição LU sem pivotamento
-def lu_sem_pivot(A):
+def lu_sem_pivot(A,b):
     n = len(A)
     U = A.astype(float).copy() # matriz superior
     L = np.eye(n) # matriz inferior
-    imprimir_sistema_linear(U, np.zeros(n), "Matriz U inicial")
-    imprimir_sistema_linear(L, np.zeros(n), "Matriz L inicial")
+    imprimir_sistema_linear(U, b, "Matriz U inicial")
+    imprimir_sistema_linear(L, b, "Matriz L inicial")
     for k in range(n-1):
         if abs(U[k,k]) < 1e-20:
             print(f"Pivô zero detectado na etapa {k+1} da decomposição LU sem pivotamento.")
             raise ZeroDivisionError("Pivô zero na LU sem pivotamento - sistema pode ser impossível ou indeterminado.")
         print(f'Etapa {k+1} da decomposição LU sem pivotamento:')
         for i in range(k+1, n):
-            m = U[i,k] / U[k,k] # fator multiplicador
-            L[i,k] = m # armazena o fator em L
-            U[i,:] = U[i,:] - m * U[k,:] # elimina o elemento abaixo do pivô
+            m = - U[i,k] / U[k,k] # fator multiplicador
+            L[i,k] = - m # armazena o fator em L
+            U[i,:] += m * U[k,:] # elimina o elemento abaixo do pivô
             print(f"m_{{{i+1},{k+1}}} = {m}")
-            imprimir_sistema_linear(L, np.zeros(n), "Matriz L após etapa")
-            imprimir_sistema_linear(U, np.zeros(n), "Matriz U após etapa")
+            imprimir_sistema_linear(L, b, "Matriz L após etapa")
+            imprimir_sistema_linear(U, b, "Matriz U após etapa")
     return L, U
 
 # Decomposição LU com pivotamento parcial
-def lu_com_pivot(A):
+def lu_com_pivot(A,b):
     n = len(A)
     U = A.astype(float).copy()
     L = np.eye(n)
-    P = np.eye(n)
-    imprimir_sistema_linear(U, np.zeros(n), "Matriz U inicial")
-    imprimir_sistema_linear(L, np.zeros(n), "Matriz L inicial")
+    P = np.eye(n) # aqui cria a matriz identidade usando o numpy, que zera e mantem apenas a diagonal.
+    imprimir_sistema_linear(U, b, "Matriz U inicial")
+    imprimir_sistema_linear(L, b, "Matriz L inicial")
     imprimir_sistema_linear(P, np.zeros(n), "Matriz P inicial")
     for k in range(n-1):
         # Escolhe o maior pivô na coluna k
@@ -136,17 +136,17 @@ def lu_com_pivot(A):
             if k > 0:
                 L[[k, pivo_linha], :k] = L[[pivo_linha, k], :k]
             print(f"Trocando linha {k+1} com linha {pivo_linha+1} na matriz U (pivotamento):")
-            imprimir_sistema_linear(U, np.zeros(n), "Matriz U após permutação")
-            imprimir_sistema_linear(L, np.zeros(n), "Matriz L após permutação")
+            imprimir_sistema_linear(U, b, "Matriz U após permutação")
+            imprimir_sistema_linear(L, b, "Matriz L após permutação")
             imprimir_sistema_linear(P, np.zeros(n), "Matriz P após permutação")
         print(f'Etapa {k+1} da decomposição LU com pivotamento:')
         for i in range(k+1, n):
-            m = U[i,k] / U[k,k]
-            L[i,k] = m
-            U[i,:] = U[i,:] - m * U[k,:]
+            m = -U[i,k] / U[k,k]   # fator negativo da eliminação de Gauss
+            L[i,k] = -m             # matriz L armazena esse fator negativo
+            U[i,:] += m * U[k,:]   # soma em U para zerar o elemento U[i,k]
             print(f"m_{{{i+1},{k+1}}} = {m}")
-            imprimir_sistema_linear(L, np.zeros(n), "Matriz L após atualização")
-            imprimir_sistema_linear(U, np.zeros(n), "Matriz U após atualização")
+            imprimir_sistema_linear(L, np.zeros(n), "Matriz L após etapa")
+            imprimir_sistema_linear(U, np.zeros(n), "Matriz U após etapa")
     return P, L, U
 
 # stackoverflow progressiva 
@@ -208,6 +208,22 @@ def exibir_residuo_detalhado(A, x, b):
         print(f"{r[i]:>{largura}}")
     print()
 
+def multiplicar_matrizes(A, B):
+    n_linhas_A, n_colunas_A = A.shape
+    n_linhas_B, n_colunas_B = B.shape
+    if n_colunas_A != n_linhas_B:
+        raise ValueError("Número de colunas de A deve ser igual ao número de linhas de B para multiplicar.")
+
+    resultado = np.zeros((n_linhas_A, n_colunas_B))
+
+    for i in range(n_linhas_A):
+        for j in range(n_colunas_B):
+            soma = 0
+            for k in range(n_colunas_A):
+                soma += A[i, k] * B[k, j]
+            resultado[i, j] = soma
+    return resultado
+
 def menu():
     while True:
         print("\nMenu de métodos para resolver sistemas lineares:")
@@ -243,7 +259,7 @@ def menu():
                     print(f"{var} = {val}") # exibir solução
                 exibir_residuo_detalhado(A, x, b) # resíduo mostrando Ax - b = r 
             elif opcao == '3':
-                L, U = lu_sem_pivot(A)
+                L, U = lu_sem_pivot(A,b)
                 y = forward_solve(L, b) # resolve em baixo Ly = b
                 x = backward_solve(U, y) # resolve em cima = Ux = y
                 print("\nSolução pela decomposição LU sem pivotamento:")
@@ -251,7 +267,7 @@ def menu():
                     print(f"{var} = {val}") # exibir solução
                 exibir_residuo_detalhado(A, x, b) # resíduo mostrando Ax - b = r
             elif opcao == '4':
-                result = lu_com_pivot(A)
+                result = lu_com_pivot(A,b)
                 if result is None:
                     print("Sistema impossível pela decomposição LU com pivotamento.")
                     continue
