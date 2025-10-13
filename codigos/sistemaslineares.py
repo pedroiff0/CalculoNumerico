@@ -208,46 +208,46 @@ def exibir_residuo_detalhado(A, x, b):
         print(f"{r[i]:>{largura}}")
     print()
 
-# pra substituir o np.zeros()
-def matriz_zeros_manual(n):
-    matriz = []
-    m = n
-    for i in range(m):
-        linha = []
-        for j in range(n):
-            linha.append(0)
-        matriz.append(linha)
-    return matriz
+# # pra substituir o np.zeros()
+# def matriz_zeros_manual(n):
+#     matriz = []
+#     m = n
+#     for i in range(m):
+#         linha = []
+#         for j in range(n):
+#             linha.append(0)
+#         matriz.append(linha)
+#     return matriz
 
-# para criar matriz identidade  (seja pra L ou U na decomposição) pode usar o np.eye ou fazer manual:
-def matriz_identidade(n):
-    identidade = []
-    for i in range(n):
-        linha = []
-        for j in range(n):
-            if i == j:
-                linha.append(1)
-            else:
-                linha.append(0)
-        identidade.append(linha)
-    return identidade
+# # para criar matriz identidade  (seja pra L ou U na decomposição) pode usar o np.eye ou fazer manual:
+# def matriz_identidade(n):
+#     identidade = []
+#     for i in range(n):
+#         linha = []
+#         for j in range(n):
+#             if i == j:
+#                 linha.append(1)
+#             else:
+#                 linha.append(0)
+#         identidade.append(linha)
+#     return identidade
 
-# pra multiplicar duas matrizes a e b (subsituindo o @ que é o operador padrão disso no python)
-def multiplicar_matrizes(A, B):
-    n_linhas_A, n_colunas_A = A.shape
-    n_linhas_B, n_colunas_B = B.shape
-    if n_colunas_A != n_linhas_B:
-        raise ValueError("Número de colunas de A deve ser igual ao número de linhas de B para multiplicar.")
+# # pra multiplicar duas matrizes a e b (subsituindo o @ que é o operador padrão disso no python)
+# def multiplicar_matrizes(A, B):
+#     n_linhas_A, n_colunas_A = A.shape
+#     n_linhas_B, n_colunas_B = B.shape
+#     if n_colunas_A != n_linhas_B:
+#         raise ValueError("Número de colunas de A deve ser igual ao número de linhas de B para multiplicar.")
 
-    resultado = np.zeros((n_linhas_A, n_colunas_B))
+#     resultado = np.zeros((n_linhas_A, n_colunas_B))
 
-    for i in range(n_linhas_A):
-        for j in range(n_colunas_B):
-            soma = 0
-            for k in range(n_colunas_A):
-                soma += A[i, k] * B[k, j]
-            resultado[i, j] = soma
-    return resultado
+#     for i in range(n_linhas_A):
+#         for j in range(n_colunas_B):
+#             soma = 0
+#             for k in range(n_colunas_A):
+#                 soma += A[i, k] * B[k, j]
+#             resultado[i, j] = soma
+#     return resultado
 
 def menu():
     while True:
