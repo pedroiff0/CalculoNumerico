@@ -55,16 +55,23 @@ def newton_dif_divididas(x, tabela, xp):
 def gregory_newton_progressivo(x, y, xp):
     n = len(x)
     dx = x[1] - x[0]
-    s = (xp - x[0]) / dx
+    s = (xp - x[0]) / dx  # variável u na fórmula
     tabela = tabela_diferencas_finitas(y)
     resultado = y[0]
     termo = 1.0
+
+    print(f"\nPasso h = {dx:.6f}")
+    print(f"Valor de u (s) = (xp - x[0]) / h = ({xp} - {x[0]}) / {dx:.6f} = {s:.6f}")
+
     print("\nCálculo passo a passo (Gregory-Newton Progressivo):")
     print(f"y[0] = {y[0]:.6f}")
+
     for k in range(1, n):
-        termo *= (s - (k-1)) / k
-        resultado += tabela[k][0] * termo
-        print(f"Δ^{k} y[0] = {tabela[k][0]:.6f}, termo: {termo:.6f}, parcial: {resultado:.6f}")
+        termo *= (s - (k - 1)) / k
+        delta = tabela[k][0]
+        resultado += delta * termo
+        print(f"Δ^{k} y[0] = {delta:.6f}, termo: {termo:.6f}, parcial: {resultado:.6f}")
+
     return resultado
 
 def lagrange_interpol(x, y, xp):
