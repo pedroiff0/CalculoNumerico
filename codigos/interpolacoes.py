@@ -1,4 +1,5 @@
-from math import exp, factorial, isclose
+from math import factorial, isclose
+import sympy as sp
 
 def obter_max_grau(n):
     try:
@@ -14,7 +15,7 @@ def obter_max_grau(n):
         print("Entrada inválida, usando o máximo possível.")
         return None
 
-def verifica_espaçamento_uniforme(x, tol=1e-6):
+def verifica_espaçamento_uniforme(x, tol=1e-15):
     h = x[1] - x[0]
     return all(isclose(x[i+1] - x[i], h, abs_tol=tol) for i in range(len(x)-1)), h
 
@@ -52,134 +53,152 @@ def imprimir_tabela_diferencas_finitas(tabela):
         linha = [f"{tabela[j][i]:>12.6f}" if i < len(tabela[j]) else " " * 12 for j in range(len(tabela))]
         print(" ".join(linha))
 
-def newton_dif_divididas(x, tabela, xp, max_grau=None):
+def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
+    x = sp.Symbol('x')
+    f = sp.sympify(func_str)
     try:
-        n = len(x)
-        if max_grau is None or max_grau > n - 1:
-            max_grau = n - 1
-        resultado = tabela[0][0]
-        termo = 1.0
-        print("\nCálculo passo a passo (Newton Diferenças Divididas):")
-        print(f"P0 = {resultado:.6f}")
-        for i in range(1, max_grau + 1):
-            termo *= (xp - x[i - 1])
-            print(f"Termo {i}: (xp - x[{i-1}]) = ({xp} - {x[i-1]}) = {xp - x[i-1]:.6f}")
-            print(f"Δ^{i} f = {tabela[i][0]:.6f}")
-            resultado += tabela[i][0] * termo
-            print(f"Parcial após termo {i}: {resultado:.6f}")
-        return resultado
-    except ZeroDivisionError:
-        print("\nErro: divisão por zero detectada. Interpolação impossível com os dados fornecidos.")
-        return None
+        # Derivada de ordem n+1 no ponto de interpolação
+        f_deriv_n1 = f.diff(x, grau + 1).evalf(subs={x: x_interp})
+
+        produto = 1.0
+        for xi in x_vals:
+            produto *= (x_interp - xi)
+        erro_trunc = (f_deriv_n1 / factorial(grau + 1)) * produto
+        valor_real = f.evalf(subs={x: x_interp})
+        erro_real = valor_real - valor_interpolado
+
+        print(f"\nErro truncamento estimado (com sinal): {erro_trunc}")
+        print(f"Valor real da função em {x_interp}: {valor_real}")
+        print(f"Erro real da interpolação (f(xp) - p_n(xp)): {erro_real} (abs: {abs(erro_real)})")
+
+        return erro_trunc, erro_real
+    except Exception as e:
+        print(f"Erro ao calcular os erros: {e}")
+        return None, None
+
+def perguntar_erro(x_vals, x_interp, grau, valor_interpolado):
+    resposta = input("Deseja calcular erro truncamento e erro real? (s/n) ").strip().lower()
+    if resposta == 's':
+        func_str = input("Digite a função f(x) em Python (ex: exp(x)): ").strip()
+        return calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado)
+    else:
+        print("Cálculo de erro não realizado.")
+        return None, None
+
+def newton_dif_divididas(x, tabela, xp, max_grau=None):
+    n = len(x)
+    if max_grau is None or max_grau > n - 1:
+        max_grau = n - 1
+    resultado = tabela[0][0]
+    termo = 1.0
+    print("\nCálculo passo a passo (Newton Diferenças Divididas):")
+    print(f"P0 = {resultado}")
+    for i in range(1, max_grau + 1):
+        termo *= (xp - x[i - 1])
+        print(f"Termo {i}: (xp - x[{i-1}]) = ({xp} - {x[i-1]}) = {xp - x[i-1]}")
+        print(f"Δ^{i} f = {tabela[i][0]}")
+        resultado += tabela[i][0] * termo
+        print(f"Parcial após termo {i}: {resultado}")
+    return resultado
 
 def gregory_newton_progressivo(x, y, xp, max_grau=None):
-    try:
-        n = len(x)
-        dx = x[1] - x[0]
-        s = (xp - x[0]) / dx  # variável u na fórmula
-        tabela = tabela_diferencas_finitas(y)
-        resultado = y[0]
-        termo = 1.0
-        if max_grau is None or max_grau > n - 1:
-            max_grau = n - 1
-        print(f"\nPasso h = {dx:.6f}")
-        print(f"Valor de u (s) = (xp - x[0]) / h = ({xp} - {x[0]}) / {dx:.6f} = {s:.6f}")
-        print("\nCálculo passo a passo (Gregory-Newton Progressivo):")
-        print(f"y[0] = {y[0]:.6f}")
-        for k in range(1, max_grau + 1):
-            termo *= (s - (k - 1)) / k
-            delta = tabela[k][0]
-            resultado += delta * termo
-            print(f"Δ^{k} y[0] = {delta:.6f}, termo: {termo:.6f}, parcial: {resultado:.6f}")
-        return resultado
-    except ZeroDivisionError:
-        print("\nErro: divisão por zero detectada no cálculo de Gregory-Newton. Verifique os dados.")
-        return None
+    n = len(x)
+    if max_grau is None or max_grau > n - 1:
+        max_grau = n - 1
+    dx = x[1] - x[0]
+    s = (xp - x[0]) / dx  # variável u
+    tabela = tabela_diferencas_finitas(y)
+    resultado = y[0]
+    termo = 1.0
+
+    print(f"\nPasso h = {dx}")
+    print(f"Valor de u (s) = (xp - x[0]) / h = ({xp} - {x[0]}) / {dx} = {s}")
+    print("\nCálculo passo a passo (Gregory-Newton Progressivo):")
+    print(f"y[0] = {y[0]}")
+
+    for k in range(1, max_grau + 1):
+        termo *= (s - (k - 1)) / k
+        delta = tabela[k][0]
+        resultado += delta * termo
+        print(f"Δ^{k} y[0] = {delta}, termo: {termo}, parcial: {resultado}")
+
+    return resultado
 
 def lagrange_interpol(x, y, xp, max_grau=None):
-    try:
-        n = len(x)
-        if max_grau is None or max_grau > n - 1:
-            max_grau = n - 1
-        yp = 0.0
-        print("\nCálculos detalhados do polinômio de Lagrange:")
-        for i in range(max_grau + 1):
-            li = 1.0
-            print(f"\nTermo {i}: L{i}(xp) = ", end="")
-            for j in range(n):
-                if i != j:
-                    li *= (xp - x[j]) / (x[i] - x[j])
-                    print(f"(({xp} - {x[j]}) / ({x[i]} - {x[j]})) ", end="")
-            termo = y[i] * li
-            yp += termo
-            print(f"= {li:.6f}")
-            print(f"y[{i}] * L{i} = {y[i]} * {li:.6f} = {termo:.6f}")
-        return yp
-    except ZeroDivisionError:
-        print("\nErro: divisão por zero detectada no cálculo do polinômio de Lagrange.")
-        return None
+    n = len(x)
+    if max_grau is None or max_grau > n - 1:
+        max_grau = n - 1
+    yp = 0.0
+    print("\nCálculos detalhados do polinômio de Lagrange:")
+
+    for i in range(max_grau + 1):
+        li = 1.0
+        print(f"\nTermo {i}: L{i}(xp) = ", end="")
+        for j in range(n):
+            if i != j:
+                li *= (xp - x[j]) / (x[i] - x[j])
+                print(f"(({xp} - {x[j]}) / ({x[i]} - {x[j]})) ", end="")
+        termo = y[i] * li
+        yp += termo
+        print(f"= {li}")
+        print(f"y[{i}] * L{i} = {y[i]} * {li} = {termo}")
+
+    return yp
 
 def dispositivo_pratico_lagrange(x, y, xp, max_grau=None):
-    try:
-        n = len(x)
-        if max_grau is None or max_grau > n - 1:
-            max_grau = n - 1
-        resultado = 0.0
-        # Construção da matriz G
-        G = []
-        for i in range(n):
-            linha = []
-            for j in range(n):
-                if i == j:
-                    linha.append(xp - x[j])
-                else:
-                    linha.append(x[i] - x[j])
-            G.append(linha)
-        print("\nDispositivo Prático de Lagrange:")
-        print(f"{'i':>2} {'x[i]':>10} {'y[i]':>10} {'L[i](xp)':>15}")
-        for i in range(max_grau + 1):
-            numerador = 1.0
-            denominador = 1.0
-            for j in range(n):
-                if i != j:
-                    numerador *= (xp - x[j])
-                    denominador *= (x[i] - x[j])
-            Li = numerador / denominador
-            termo = y[i] * Li
-            resultado += termo
-            print(f"{i:2d} {x[i]:10.4f} {y[i]:10.4f} {Li:15.6f}")
-        print("\nMatriz G (x[i] - x[j], diagonal = xp - x[i]):")
-        for i in range(n):
-            linha = [f"{G[i][j]:10.6f}" for j in range(n)]
-            print("[ " + " ".join(linha) + " ]")
-        Gi = []
-        Gd = 1.0
-        for i in range(max_grau + 1):
-            prod = 1.0
-            for j in range(n):
-                prod *= G[i][j]
-            Gi.append(prod)
-            Gd *= G[i][i]
-        print(f"\nProduto da diagonal Gd = {Gd:.6f}")
-        for i, val in enumerate(Gi):
-            print(f"Produto da linha G[{i}] = {val:.6f}")
-        soma_serie = 0.0
-        for i in range(max_grau + 1):
-            soma_serie += y[i] / Gi[i]
-        print(f"\nCálculo final: Gd * sum(y[i]/Gi[i]) = {Gd:.6f} * {soma_serie:.6f} = {Gd * soma_serie:.6f}")
-        print(f"\nValor interpolado em x = {xp:.4f} é: {resultado:.6f}")
-        return resultado
-    except ZeroDivisionError:
-        print("\nErro: divisão por zero detectada no Dispositivo Prático de Lagrange.")
-        return None
+    n = len(x)
+    if max_grau is None or max_grau > n - 1:
+        max_grau = n - 1
+    resultado = 0.0
+    G = []
+    for i in range(n):
+        linha = []
+        for j in range(n):
+            if i == j:
+                linha.append(xp - x[j])
+            else:
+                linha.append(x[i] - x[j])
+        G.append(linha)
 
-def erro_truncamento_exp3x(x_vals, x_interp):
-    f3_max = 27 * exp(3 * max(x_vals))
-    produto = 1
-    for xi in x_vals:
-        produto *= (x_interp - xi)
-    erro = (f3_max / factorial(3)) * produto
-    return erro
+    print("\nDispositivo Prático de Lagrange:")
+    print(f"{'i':>2} {'x[i]':>10} {'y[i]':>10} {'L[i](xp)':>15}")
+
+    for i in range(max_grau + 1):
+        numerador = 1.0
+        denominador = 1.0
+        for j in range(n):
+            if i != j:
+                numerador *= (xp - x[j])
+                denominador *= (x[i] - x[j])
+        Li = numerador / denominador
+        termo = y[i] * Li
+        resultado += termo
+        print(f"{i:2d} {x[i]:10} {y[i]:10} {Li:15}")
+
+    print("\nMatriz G (x[i] - x[j], diagonal = xp - x[i]):")
+    for linha in G:
+        print("[ " + " ".join(str(v) for v in linha) + " ]")
+
+    Gi = []
+    Gd = 1.0
+    for i in range(max_grau + 1):
+        prod = 1.0
+        for j in range(n):
+            prod *= G[i][j]
+        Gi.append(prod)
+        Gd *= G[i][i]
+
+    print(f"\nProduto da diagonal Gd = {Gd}")
+    for i, val in enumerate(Gi):
+        print(f"Produto da linha G[{i}] = {val}")
+
+    soma_serie = 0.0
+    for i in range(max_grau + 1):
+        soma_serie += y[i] / Gi[i]
+    print(f"\nCálculo final: Gd * sum(y[i]/Gi[i]) = {Gd} * {soma_serie} = {Gd * soma_serie}")
+    print(f"\nValor interpolado em x = {xp} é: {resultado}")
+
+    return resultado
 
 def menu():
     while True:
@@ -189,7 +208,7 @@ def menu():
         print("3. Polinômio de Newton (Diferenças Divididas)")
         print("4. Polinômio Gregory-Newton Progressivo")
         print("5. Sair")
-        opcao = input("Escolha uma opção: ")
+        opcao = input("Escolha uma opção: ").strip()
 
         if opcao == '5':
             print("Encerrando o programa...")
@@ -210,46 +229,69 @@ def menu():
         if opcao == '1':
             resultado = lagrange_interpol(x_vals, y_vals, x_interp, max_grau=max_grau)
             if resultado is not None:
-                erro = erro_truncamento_exp3x(x_vals, x_interp)
-                print(f"\nResultado final (Lagrange): {resultado:.6f}")
-                print(f"Erro estimado: {erro:.7f}")
+                erro_trunc, erro_real = perguntar_erro(x_vals[:max_grau+1], x_interp, max_grau, resultado)
+            print(f"\nResultado final (Lagrange): {resultado}")
 
         elif opcao == '2':
             resultado = dispositivo_pratico_lagrange(x_vals, y_vals, x_interp, max_grau=max_grau)
             if resultado is not None:
-                erro = erro_truncamento_exp3x(x_vals, x_interp)
-                print(f"\nErro estimado: {erro:.7f}")
+                erro_trunc, erro_real = perguntar_erro(x_vals[:max_grau+1], x_interp, max_grau, resultado)
+            print(f"\nResultado final (Dispositivo Prático de Lagrange): {resultado}")
 
         elif opcao == '3':
-            try:
-                tabela = tabela_diferencas_divididas(x_vals, y_vals)
-                imprimir_tabela_diferencas_divididas(tabela)
-                resultado = newton_dif_divididas(x_vals, tabela, x_interp, max_grau=max_grau)
-                if resultado is not None:
-                    erro = erro_truncamento_exp3x(x_vals, x_interp)
-                    print(f"\nResultado final (Newton Diferenças Divididas): {resultado:.6f}")
-                    print(f"Erro estimado: {erro:.7f}")
-            except Exception as e:
-                print(f"\nErro durante o cálculo de Newton: {e}")
+            tabela = tabela_diferencas_divididas(x_vals, y_vals)
+            imprimir_tabela_diferencas_divididas(tabela)
+            resultado = newton_dif_divididas(x_vals, tabela, x_interp, max_grau=max_grau)
+            if resultado is not None:
+                erro_trunc, erro_real = perguntar_erro(x_vals[:max_grau+1], x_interp, max_grau, resultado)
+            print(f"\nResultado final (Newton Diferenças Divididas): {resultado}")
 
         elif opcao == '4':
             uniforme, h = verifica_espaçamento_uniforme(x_vals)
             if not uniforme:
                 print("Erro: Os pontos x não têm espaçamento uniforme! Gregory-Newton requer x igualmente espaçados.")
                 continue
-            try:
-                tabela = tabela_diferencas_finitas(y_vals)
-                imprimir_tabela_diferencas_finitas(tabela)
-                resultado = gregory_newton_progressivo(x_vals, y_vals, x_interp, max_grau=max_grau)
-                if resultado is not None:
-                    erro = erro_truncamento_exp3x(x_vals, x_interp)
-                    print(f"\nResultado final (Gregory-Newton Progressivo): {resultado:.6f}")
-                    print(f"Erro estimado: {erro:.7f}")
-            except Exception as e:
-                print(f"\nErro durante o cálculo de Gregory-Newton: {e}")
+            tabela = tabela_diferencas_finitas(y_vals)
+            imprimir_tabela_diferencas_finitas(tabela)
+            resultado = gregory_newton_progressivo(x_vals, y_vals, x_interp, max_grau=max_grau)
+            if resultado is not None:
+                erro_trunc, erro_real = perguntar_erro(x_vals[:max_grau+1], x_interp, max_grau, resultado)
+            print(f"\nResultado final (Gregory-Newton Progressivo): {resultado}")
 
         else:
             print("Opção inválida, tente novamente.")
 
+def perguntar_erro(x_vals, x_interp, grau, valor_interpolado):
+    resposta = input("Deseja calcular erro truncamento e erro real? (s/n) ").strip().lower()
+    if resposta == 's':
+        func_str = input("Digite a função f(x) em Python (ex: exp(x)): ").strip()
+        return calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado)
+    else:
+        print("Cálculo de erro não realizado.")
+        return None, None
+
+def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
+    x = sp.Symbol('x')
+    f = sp.sympify(func_str)
+    try:
+        # Derivada de ordem n+1 no ponto de interpolação
+        f_deriv_n1 = f.diff(x, grau + 1).evalf(subs={x: x_interp})
+
+        produto = 1.0
+        for xi in x_vals:
+            produto *= (x_interp - xi)
+        erro_trunc = (f_deriv_n1 / factorial(grau + 1)) * produto
+        valor_real = f.evalf(subs={x: x_interp})
+        erro_real = valor_real - valor_interpolado
+
+        print(f"\nErro truncamento estimado (com sinal): {erro_trunc}")
+        print(f"Valor real da função em {x_interp}: {valor_real}")
+        print(f"Erro real da interpolação (f(xp) - p_n(xp)): {erro_real} (absoluto: {abs(erro_real)})")
+
+        return erro_trunc, erro_real
+    except Exception as e:
+        print(f"Erro ao calcular erros: {e}")
+        return None, None
+    
 if __name__ == '__main__':
     menu()
