@@ -53,28 +53,6 @@ def imprimir_tabela_diferencas_finitas(tabela):
         linha = [f"{tabela[j][i]:>12.6f}" if i < len(tabela[j]) else " " * 12 for j in range(len(tabela))]
         print(" ".join(linha))
 
-def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
-    x = sp.Symbol('x')
-    f = sp.sympify(func_str)
-    try:
-        # Derivada de ordem n+1 no ponto de interpolação
-        f_deriv_n1 = f.diff(x, grau + 1).evalf(subs={x: x_interp})
-
-        produto = 1.0
-        for xi in x_vals:
-            produto *= (x_interp - xi)
-        erro_trunc = (f_deriv_n1 / factorial(grau + 1)) * produto
-        valor_real = f.evalf(subs={x: x_interp})
-        erro_real = valor_real - valor_interpolado
-
-        print(f"\nErro truncamento estimado (com sinal): {erro_trunc}")
-        print(f"Valor real da função em {x_interp}: {valor_real}")
-        print(f"Erro real da interpolação (f(xp) - p_n(xp)): {erro_real} (abs: {abs(erro_real)})")
-
-        return erro_trunc, erro_real
-    except Exception as e:
-        print(f"Erro ao calcular os erros: {e}")
-        return None, None
 
 def perguntar_erro(x_vals, x_interp, grau, valor_interpolado):
     resposta = input("Deseja calcular erro truncamento e erro real? (s/n) ").strip().lower()
@@ -83,6 +61,39 @@ def perguntar_erro(x_vals, x_interp, grau, valor_interpolado):
         return calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado)
     else:
         print("Cálculo de erro não realizado.")
+        return None, None
+
+from math import exp, factorial
+
+def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
+    x = sp.Symbol('x')
+    f = sp.sympify(func_str)
+    try:
+        # Derivada de ordem n+1 para estimar erro máximo (limitante superior)
+        f_deriv = f.diff(x, grau + 1)
+
+        # Determina o ponto de máximo do valor absoluto da derivada no intervalo (aproximação)
+        x_max = max(x_vals)
+        f_deriv_max = abs(f_deriv.evalf(subs={x: x_max}))
+
+        # Produto dos termos (x - xi)
+        produto = 1.0
+        for xi in x_vals:
+            produto *= (x_interp - xi)
+
+        # Erro de truncamento máximo (limitante superior)
+        erro_trunc_max = (f_deriv_max / factorial(grau + 1)) * abs(produto)
+
+        # Exibe informações e valores
+        print(f"\nFunção: {func_str}")
+        print(f"Derivada de ordem {grau+1} máxima em x = {x_max}: {f_deriv_max}")
+        print(f"Produto dos termos (x_interp - xi): {produto}")
+        print(f"Erro de truncamento máximo (|E_n| ≤ ...): {erro_trunc_max}")
+
+        return erro_trunc_max, None
+
+    except Exception as e:
+        print(f"Erro ao calcular erro truncamento máximo: {e}")
         return None, None
 
 def newton_dif_divididas(x, tabela, xp, max_grau=None):
@@ -207,10 +218,10 @@ def menu():
         print("2. Dispositivo Prático de Lagrange")
         print("3. Polinômio de Newton (Diferenças Divididas)")
         print("4. Polinômio Gregory-Newton Progressivo")
-        print("5. Sair")
+        print("0. Sair")
         opcao = input("Escolha uma opção: ").strip()
 
-        if opcao == '5':
+        if opcao == '0':
             print("Encerrando o programa...")
             break
 
@@ -261,37 +272,5 @@ def menu():
         else:
             print("Opção inválida, tente novamente.")
 
-def perguntar_erro(x_vals, x_interp, grau, valor_interpolado):
-    resposta = input("Deseja calcular erro truncamento e erro real? (s/n) ").strip().lower()
-    if resposta == 's':
-        func_str = input("Digite a função f(x) em Python (ex: exp(x)): ").strip()
-        return calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado)
-    else:
-        print("Cálculo de erro não realizado.")
-        return None, None
-
-def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
-    x = sp.Symbol('x')
-    f = sp.sympify(func_str)
-    try:
-        # Derivada de ordem n+1 no ponto de interpolação
-        f_deriv_n1 = f.diff(x, grau + 1).evalf(subs={x: x_interp})
-
-        produto = 1.0
-        for xi in x_vals:
-            produto *= (x_interp - xi)
-        erro_trunc = (f_deriv_n1 / factorial(grau + 1)) * produto
-        valor_real = f.evalf(subs={x: x_interp})
-        erro_real = valor_real - valor_interpolado
-
-        print(f"\nErro truncamento estimado (com sinal): {erro_trunc}")
-        print(f"Valor real da função em {x_interp}: {valor_real}")
-        print(f"Erro real da interpolação (f(xp) - p_n(xp)): {erro_real} (absoluto: {abs(erro_real)})")
-
-        return erro_trunc, erro_real
-    except Exception as e:
-        print(f"Erro ao calcular erros: {e}")
-        return None, None
-    
 if __name__ == '__main__':
     menu()
