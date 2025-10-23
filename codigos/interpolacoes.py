@@ -1,5 +1,5 @@
-from math import factorial, isclose
-import sympy as sp
+from math import factorial, isclose # isclose é só pro gregory newton
+import sympy as sp # pro erro e truncamento
 
 def obter_max_grau(n):
     try:
@@ -15,10 +15,12 @@ def obter_max_grau(n):
         print("Entrada inválida, usando o máximo possível.")
         return None
 
+# tolerencia muito alta (15 casa decimal)
 def verifica_espaçamento_uniforme(x, tol=1e-15):
     h = x[1] - x[0]
     return all(isclose(x[i+1] - x[i], h, abs_tol=tol) for i in range(len(x)-1)), h
 
+# lagrange
 def tabela_diferencas_divididas(x, y):
     n = len(x)
     tabela = [y.copy()]
@@ -31,6 +33,7 @@ def tabela_diferencas_divididas(x, y):
         tabela.append(coluna)
     return tabela
 
+# impressao de tabela 
 def imprimir_tabela_diferencas_divididas(tabela):
     print("\nTabela de Diferenças Divididas:")
     for i in range(len(tabela[0])):
@@ -69,33 +72,34 @@ def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
     x = sp.Symbol('x')
     f = sp.sympify(func_str)
     try:
-        # Derivada de ordem n+1 para estimar erro máximo (limitante superior)
+        # derivada de ordem n+1 para estimar erro máximo (limitante superior)
         f_deriv = f.diff(x, grau + 1)
 
-        # Determina o ponto de máximo do valor absoluto da derivada no intervalo (aproximação)
+        # determina o ponto de máximo do valor da derivada no intervalo (aproximação)
         x_max = max(x_vals)
         f_deriv_max = abs(f_deriv.evalf(subs={x: x_max}))
 
-        # Produto dos termos (x - xi)
+        # produtorio dos termos (x - xi)
         produto = 1.0
         for xi in x_vals:
             produto *= (x_interp - xi)
 
-        # Erro de truncamento máximo (limitante superior)
+        # erro de truncamento máximo
         erro_trunc_max = (f_deriv_max / factorial(grau + 1)) * abs(produto)
 
         # Exibe informações e valores
-        print(f"\nFunção: {func_str}")
-        print(f"Derivada de ordem {grau+1} máxima em x = {x_max}: {f_deriv_max}")
-        print(f"Produto dos termos (x_interp - xi): {produto}")
-        print(f"Erro de truncamento máximo (|E_n| ≤ ...): {erro_trunc_max}")
-
+        # print(f"\nFunção: {func_str}")
+        # print(f"Derivada de ordem {grau+1} máxima em x = {x_max}: {f_deriv_max}")
+        #print(f"Produto dos termos (x_interp - xi): {produto}")
+        print(f"Erro de truncamento máximo): {erro_trunc_max}") # deixar so o erro truncamento, q é o ideal é necessário (prática 21/10)
+        
         return erro_trunc_max, None
 
     except Exception as e:
         print(f"Erro ao calcular erro truncamento máximo: {e}")
         return None, None
 
+#metodo de newton
 def newton_dif_divididas(x, tabela, xp, max_grau=None):
     n = len(x)
     if max_grau is None or max_grau > n - 1:
@@ -107,7 +111,7 @@ def newton_dif_divididas(x, tabela, xp, max_grau=None):
     for i in range(1, max_grau + 1):
         termo *= (xp - x[i - 1])
         print(f"Termo {i}: (xp - x[{i-1}]) = ({xp} - {x[i-1]}) = {xp - x[i-1]}")
-        print(f"Δ^{i} f = {tabela[i][0]}")
+        print(f"Δ^{i} f = {tabela[i][0]}") # Δ é o operador da dif dividida
         resultado += tabela[i][0] * termo
         print(f"Parcial após termo {i}: {resultado}")
     return resultado
