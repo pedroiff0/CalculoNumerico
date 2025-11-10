@@ -90,9 +90,9 @@ def tabela_interpolador(x, y, p1x):
     soma['i'] = ''
     df = pd.concat([df, pd.DataFrame([soma])], ignore_index=True)
     print(df.to_string(index=False))
-    msg = (f"\n=========================\nTabela Interpolador\n=========================\n",
-           df.to_string(index=False))
-    log_output(msg)
+    # msg = (f"\n=========================\nTabela Interpolador\n=========================\n",
+    #       df.to_string(index=False))
+    # log_output(msg)
 
 def tabela_minimos_quadrados(x, y):
     """
@@ -141,8 +141,8 @@ def tabela_minimos_quadrados(x, y):
     soma = df.sum(numeric_only=True)
     df = pd.concat([df, pd.DataFrame([soma])], ignore_index=True)
     print(df.to_string(index=False))
-    msg = (df.to_string(index=False))
-    log_output(msg)
+    # msg = (df.to_string(index=False))
+    # log_output(msg)
 
 def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
     """
@@ -198,6 +198,7 @@ def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
     print(f"SQReg = {SQReg:.6f}")
     print(f"R² = {r2:.6f}")
 
+    """
     msg = (f"\n=========================\nEstatísticas\n========================="
            f"\nDesvio D(a0,a1) = {desvio:.6f}"
            f"\nChi² = {chi2:.6f}"
@@ -207,7 +208,8 @@ def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
            f"\nR² = {r2:.6f}"
            )
     log_output(msg)
-
+    """
+    
     return {
         'Chi2': chi2,
         'R2': r2,
