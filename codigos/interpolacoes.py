@@ -66,8 +66,6 @@ def perguntar_erro(x_vals, x_interp, grau, valor_interpolado):
         print("Cálculo de erro não realizado.")
         return None, None
 
-from math import exp, factorial
-
 def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
     x = sp.Symbol('x')
     f = sp.sympify(func_str)
@@ -230,13 +228,16 @@ def menu():
             break
 
         n = int(input("\nDigite o número de pontos (n): "))
-        x_vals = []
-        y_vals = []
-        for i in range(n):
-            x = float(input(f"x[{i}] = "))
-            y = float(input(f"y[{i}] = "))
-            x_vals.append(x)
-            y_vals.append(y)
+        # x_vals = []
+        # y_vals = []
+        x_vals = [183, 173, 168, 188, 158, 163, 193, 163, 178]
+        y_vals = [79, 69, 70, 81, 61, 63, 79, 71, 73]
+        
+        # for i in range(n):
+        #     x = float(input(f"x[{i}] = "))
+        #     y = float(input(f"y[{i}] = "))
+        #     x_vals.append(x)
+        #     y_vals.append(y)
         x_interp = float(input("Digite o valor de x para interpolar: "))
 
         max_grau = obter_max_grau(n)
