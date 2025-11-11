@@ -9,12 +9,12 @@ plotpars_1x1 = {'axes.linewidth': 1.0,
                 'xtick.labelsize': 18,
                 'ytick.labelsize': 18,
                 'legend.frameon': True,
-                'legend.framealpha': 1,
+                'legend.framealpha': 0.65,
                 'legend.edgecolor': 'black',
                 'legend.loc': 'upper right',
-                'legend.fontsize': 14,
-                'font.size': 16,
-                'figure.figsize': (10, 8),
+                'legend.fontsize': 12,
+                'font.size': 12,
+                'figure.figsize': (7., 5.),
                 'image.cmap': 'ocean_r'
                }
 
@@ -50,50 +50,7 @@ def dados():
     except ValueError:
         print("Entrada inválida. Retornando arrays vazios.")
         return np.array([]), np.array([])
-
-def tabela_interpolador(x, y, p1x):
-    """
-    Tabela para exibição dos cálculos pelo método dos mínimos quadrados:
-
-    Entradas/Parâmetros: 
-    - x (vetor de pontos em x)
-    - y (vetor de pontos em y)
-    - p1x (valores do polinomio interpolador de x)
     
-    Fórmulas
-    di = yi - p1(xi)
-    
-    Saídas:     
-    - Tabela com i,xi,yi,p_1(xi),di,di**2 
-    """
-    import pandas as pd #opcional, apenas se quiser mostrar as tabelas formatadas
-
-    di = y - p1x
-    # di2 = di ** 2
-    n = len(x)
-
-    dados = {
-        'i': np.arange(1, n + 1),
-        'x': x,
-        'y': y,
-        'p1(x)': p1x,
-        'di': di,
-        # 'di^2': di2
-    }
-    df = pd.DataFrame(dados)
-    soma = df[['x', 
-               'y', 
-               'p1(x)', 
-               'di',
-               #'di^2'
-               ]].sum()
-    soma['i'] = ''
-    df = pd.concat([df, pd.DataFrame([soma])], ignore_index=True)
-    print(df.to_string(index=False))
-    # msg = (f"\n=========================\nTabela Interpolador\n=========================\n",
-    #       df.to_string(index=False))
-    # log_output(msg)
-
 def tabela_minimos_quadrados(x, y):
     """
     Tabela para exibição dos cálculos pelo método dos mínimos quadrados:
@@ -300,19 +257,17 @@ def minquadrados(x, y):
     else:
         pass
 
-# //TODO: Adicionar FIT POLINOMIAL de grau n, sem usar numpy.polyfit
-# //TODO: Adicionar FIT EXPONENCIAL, LOGARÍTMICO, TRIGONOMÉTRICO
-
 def menu():
-    """
-    Menu principal, ex1 e ex2 são dados prontos dos exemplos realizados em aula, para usar, comente as linhas 484,485 use apenas a linha 486. (Faça o mesmo para as outras opções)        
-    """
-    
     x = []
     y = []
     
+    # Questão 1:
     # x = [183, 173, 168, 188, 158, 163, 193, 163, 178] # altura
     # y = [79, 69, 70, 81, 61, 63, 79, 71, 73] # peso
+    
+    # Questão 2:
+    # x = [1,2,3,4,5,6,7,8]
+    # y = [0.5, 0.6, 0.9, 0.8, 1.2, 1.5, 1.7, 2.0]
     
     # x_val = np.array(x)
     # y_val = np.array(y)    
