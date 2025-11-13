@@ -1,7 +1,7 @@
 from math import factorial, isclose # isclose é só pro gregory newton
 import sympy as sp # pro erro e truncamento
 
-def ler_pontos_interpolacao():
+def dados_interpolacao():
     n = int(input("\nDigite o número de pontos (n): "))
     x_vals = []
     y_vals = []
@@ -11,7 +11,7 @@ def ler_pontos_interpolacao():
         x_vals.append(x)
         y_vals.append(y)
     x_interp = float(input("Digite o valor de x para interpolar: "))
-    return x_vals, y_vals, x_interp
+    return x_vals, y_vals, x_interp, n
 
 def obter_max_grau(n):
     try:
@@ -239,7 +239,7 @@ def menu():
             print("Encerrando o programa...")
             break
         
-        x_vals, y_vals, x_interp = ler_pontos_interpolacao()
+        x_vals, y_vals, x_interp, n = dados_interpolacao()
 
         max_grau = obter_max_grau(n)
 

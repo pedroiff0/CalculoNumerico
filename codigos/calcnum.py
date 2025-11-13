@@ -1274,6 +1274,7 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
     ATy = np.array(Sxy)
 
     # Resolver sistema pelo método manual
+    ## aqui ta retornando mais de uma variável, fazer o tratamento adequado.
     coef = eliminacao_gauss_sem_pivotamento(ATA, ATy)
 
     # Calcular valores ajustados
