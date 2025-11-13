@@ -1,6 +1,18 @@
 from math import factorial, isclose # isclose é só pro gregory newton
 import sympy as sp # pro erro e truncamento
 
+def ler_pontos_interpolacao():
+    n = int(input("\nDigite o número de pontos (n): "))
+    x_vals = []
+    y_vals = []
+    for i in range(n):
+        x = float(input(f"x[{i}] = "))
+        y = float(input(f"y[{i}] = "))
+        x_vals.append(x)
+        y_vals.append(y)
+    x_interp = float(input("Digite o valor de x para interpolar: "))
+    return x_vals, y_vals, x_interp
+
 def obter_max_grau(n):
     try:
         val = input(f"Digite o grau máximo desejado (máximo {n-1}), ou deixe vazio para usar o máximo: ")
@@ -226,19 +238,8 @@ def menu():
         if opcao == '0':
             print("Encerrando o programa...")
             break
-
-        n = int(input("\nDigite o número de pontos (n): "))
-        # x_vals = []
-        # y_vals = []
-        x_vals = [183, 173, 168, 188, 158, 163, 193, 163, 178]
-        y_vals = [79, 69, 70, 81, 61, 63, 79, 71, 73]
         
-        # for i in range(n):
-        #     x = float(input(f"x[{i}] = "))
-        #     y = float(input(f"y[{i}] = "))
-        #     x_vals.append(x)
-        #     y_vals.append(y)
-        x_interp = float(input("Digite o valor de x para interpolar: "))
+        x_vals, y_vals, x_interp = ler_pontos_interpolacao()
 
         max_grau = obter_max_grau(n)
 
