@@ -157,7 +157,7 @@ Sistemas Lineares - Parte 1
     
     Funções Auxiliares:
     - imprimir_sistema_linear()
-    - montar_sistema_valores() # (pedir dados ao usuario)
+    - dados_sistemas() # (pedir dados ao usuario)
     - exibir_residuo_detalhado(A, x, b)
     - matriz_zeros_manual(n) # opcional
     - multiplicar_matrizes(A, B) # opcional
@@ -178,7 +178,7 @@ def imprimir_sistema_linear(A, b, titulo="Sistema de Equações"):
     print()
 
 # Lê o sistema do usuário, garantindo matriz quadrada e entrada correta de b
-def montar_sistema_valores():
+def dados_sistemas():
     n = int(input("Digite o número de variáveis (sistema quadrado): ")) # só pode ser matrizes quadradas
     print(f"Insira os coeficientes da matriz A ({n} linhas), cada linha com {n} valores separados por espaço:")
     A = []
@@ -744,7 +744,7 @@ def dados_ajustes():
                    np.array(x),
                    np.array(y)
                    )
-            log_output(msg)
+            # log_output(msg)
         return np.array(x), np.array(y)
     except ValueError:
         print("Entrada inválida. Retornando arrays vazios.")
@@ -791,7 +791,7 @@ def tabela_interpolador(x, y, p1x):
     print(df.to_string(index=False))
     msg = (f"\n=========================\nTabela Interpolador\n=========================\n",
            df.to_string(index=False))
-    log_output(msg)
+    # log_output(msg)
 
 
 def tabela_minimos_quadrados(x, y):
@@ -842,7 +842,7 @@ def tabela_minimos_quadrados(x, y):
     df = pd.concat([df, pd.DataFrame([soma])], ignore_index=True)
     print(df.to_string(index=False))
     msg = (df.to_string(index=False))
-    log_output(msg)
+    # log_output(msg)
 
 def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
     """
@@ -906,7 +906,7 @@ def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
            f"\nSQReg = {SQReg:.6f}"
            f"\nR² = {r2:.6f}"
            )
-    log_output(msg)
+    # log_output(msg)
 
     return {
         'Chi2': chi2,
@@ -996,7 +996,7 @@ def regressaolinear(x, y):
            f"\nR² = {estatisticas['R2']:.4f}"
            f"\n=========================\nTabela p1(x)\n========================="
            )
-    log_output(msg)
+    # log_output(msg)
     
     # Exibe tabela e resultados
     if tabela==True:
@@ -1110,7 +1110,7 @@ def regressaolinear_intervalo(x, y):
            f"\nR² = {estatisticas['R2']:.4f}"
            f"\n=========================\nTabela p1(x)\n========================="
            )
-    log_output(msg)
+    # log_output(msg)
     
     if tabela==True:
         tabela_interpolador(x, y, p1x)
@@ -1197,7 +1197,7 @@ def minquadrados(x, y):
            f"\nR² = {estatisticas['R2']:.4f}"
            f"\n=========================\nTabela Mínimos Quadrados\n========================="
            )
-    log_output(msg)
+    # log_output(msg)
     
     #criação da tabela de mínimos quadrados
     if tabela==True:
@@ -1301,11 +1301,8 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
     chi2 = SQRes / (n - (ordem + 1)) if (n - (ordem + 1)) > 0 else float('nan')
 
     ## Resolver a equação (Estimar Valores)
-
-
-    eq1 = resolver_equacao(coef[0],coef[1])
-    
-    eq2 = resolver_equacao_inversa(coef[0],coef[1])
+    resolver_equacao(coef[0],coef[1])
+    resolver_equacao_inversa(coef[0],coef[1])
     
     # equação da reta
     termos = [f"({coef[i]:.6f})x^{i}" if i > 0 else f"({coef[i]:.6f})" for i in range(ordem + 1)]
@@ -1373,17 +1370,15 @@ def resolver_equacao(b0,b1):
     Peso (y) = a + b * estimativa
     """
     
-    op = input("Deseja resolver a equação?")
-    
+    op = input("Deseja resolver a equação? (s/n) ")
     if op == 's':
-        estimativa = input("Qual o valor de x?")
+        estimativa = float(input("Qual o valor de x? "))
         res = b0 + b1*estimativa
         print(f'O valor estimado de y é: {res}')
-        return res
     else:
-        pass    
+        return
 
-def resolver_equacao_inversa(b0,b1,estimativa):
+def resolver_equacao_inversa(b0,b1):
     """
     Função genérica para resolver a equação inversa (Estimar valores)
     Aqui ele dá o valor de y e pede o x
@@ -1393,15 +1388,14 @@ def resolver_equacao_inversa(b0,b1,estimativa):
     Peso (x) = (estimativa - b0)/b1
     """
     
-    op = input("Deseja resolver a equação (inversa)?")
+    op = input("Deseja resolver a equação (inversa)? (s/n) ")
     
     if op == 's':
-        estimativa = input("Qual o valor de y?")
+        estimativa = float(input("Qual o valor de y? "))
         res = (estimativa - b0)/b1
         print(f'O valor estimado de é: {res}')
-        return res
     else:
-        pass
+        return
 
 def menu_bases():
     while True:
@@ -1450,7 +1444,7 @@ def menu_sistemas():
             break
 
         try:
-            A, b, vars = montar_sistema_valores()
+            A, b, vars = dados_sistemas()
             if opcao == '1':
                 x, Atri, bmod, _ = eliminacao_gauss_sem_pivotamento(A, b) # variavel, a trinangular, b _ era uma opcao para trocar q removi
                 if x is None:
