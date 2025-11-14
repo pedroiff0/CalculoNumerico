@@ -21,7 +21,8 @@ Autor: Pedro Henrique Rocha de Andrade
 Orientador: Rodrigo Lacerda da Silva
 Ano Início: 2025.2
 
-Paper:
+Github: https://github.com/pedroiff0/CalculoNumerico
+Paper: 
 Documentação:
 Tutoriais:
 
@@ -1266,6 +1267,12 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
     Sxy = [np.sum((x ** k) * y) for k in range(ordem + 1)]
 
     # Montar matriz do sistema normal (seria o equivalente a usar a funcao de montar sistema que fiz em sistemaslineares.py)
+    """
+    Aqui a matriz (2x2) obdece a:
+    n | sum(xi) | b0 = sum(yi)
+    sum(xi) | sum(xi^2) | b1 = sum(yixi)
+    """
+    
     ATA = np.zeros((ordem+1, ordem+1))
     for i in range(ordem + 1):
         for j in range(ordem + 1):
@@ -1275,8 +1282,9 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
 
     # Resolver sistema pelo método manual
     ## aqui ta retornando mais de uma variável, fazer o tratamento adequado.
-    coef = eliminacao_gauss_sem_pivotamento(ATA, ATy)
-
+    coef = eliminacao_gauss_com_pivotamento(ATA, ATy)[0]
+    res = exibir_residuo_detalhado(ATA,coef,ATy)
+    
     # Calcular valores ajustados
     Ui = np.zeros(n)
     for k in range(ordem + 1):
@@ -1292,6 +1300,13 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
     r2 = 1 - (SQRes / SQT) if SQT != 0 else float('nan')
     chi2 = SQRes / (n - (ordem + 1)) if (n - (ordem + 1)) > 0 else float('nan')
 
+    ## Resolver a equação (Estimar Valores)
+
+
+    eq1 = resolver_equacao(coef[0],coef[1])
+    
+    eq2 = resolver_equacao_inversa(coef[0],coef[1])
+    
     # equação da reta
     termos = [f"({coef[i]:.6f})x^{i}" if i > 0 else f"({coef[i]:.6f})" for i in range(ordem + 1)]
     equacao = " + ".join(termos)
@@ -1348,6 +1363,46 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
 
     return coef
 
+def resolver_equacao(b0,b1):
+    """
+    Função genérica para resolver a equação (Estimar valores)
+    Aqui ele dá o valor de y e pede o x
+    Altura (x): 175
+    Peso (y): ?
+
+    Peso (y) = a + b * estimativa
+    """
+    
+    op = input("Deseja resolver a equação?")
+    
+    if op == 's':
+        estimativa = input("Qual o valor de x?")
+        res = b0 + b1*estimativa
+        print(f'O valor estimado de y é: {res}')
+        return res
+    else:
+        pass    
+
+def resolver_equacao_inversa(b0,b1,estimativa):
+    """
+    Função genérica para resolver a equação inversa (Estimar valores)
+    Aqui ele dá o valor de y e pede o x
+    Altura (y): 175
+    Peso (x): ?
+
+    Peso (x) = (estimativa - b0)/b1
+    """
+    
+    op = input("Deseja resolver a equação (inversa)?")
+    
+    if op == 's':
+        estimativa = input("Qual o valor de y?")
+        res = (estimativa - b0)/b1
+        print(f'O valor estimado de é: {res}')
+        return res
+    else:
+        pass
+
 def menu_bases():
     while True:
         opcao = dados_bases()
@@ -1382,78 +1437,63 @@ def menu_bases():
 
 def menu_sistemas():
     while True:
-        print("\n=== Sistemas Lineares ===")
-        print("1 - Eliminação de Gauss (sem pivotamento)")
-        print("2 - Eliminação de Gauss (com pivotamento parcial)")
-        print("3 - Decomposição LU (sem pivotamento)")
-        print("4 - Decomposição LU (com pivotamento)")
-        print("5 - Calcular resíduo (b - A x)")
-        print("0 - Voltar")
-        op = input("Escolha uma opção: ").strip()
-        if op == '0':
-            return
+        print("\nMenu de métodos para resolver sistemas lineares:")
+        print("1 - Método de Gauss sem pivotamento")
+        print("2 - Método de Gauss com pivotamento")
+        print("3 - Decomposição LU sem pivotamento")
+        print("4 - Decomposição LU com pivotamento")
+        print("0 - Sair")
+        opcao = input("Escolha a opção desejada: ")
+
+        if opcao == '0':
+            print("Encerrando o programa.")
+            break
+
         try:
             A, b, vars = montar_sistema_valores()
-        except Exception as e:
-            print(f"Erro ao montar o sistema: {e}")
-            continue
-
-        if op == '1':
-            x, Atri, btri, flag = eliminacao_gauss_sem_pivotamento(A, b)
-            if x is None:
-                print("Não foi possível obter solução.")
-            else:
-                print(f"Solução x = {x}")
-        elif op == '2':
-            x, Atri, btri = eliminacao_gauss_com_pivotamento(A, b)
-            if x is None:
-                print("Não foi possível obter solução.")
-            else:
-                print(f"Solução x = {x}")
-        elif op == '3':
-            try:
-                L, U = lu_sem_pivot(A, b)
-                y = forward_solve(L, b)
-                x = backward_solve(U, y)
-                print(f"Solução x = {x}")
-            except Exception as e:
-                print(f"Erro na LU sem pivotamento: {e}")
-        elif op == '4':
-            res = lu_com_pivot(A, b)
-            if res is None:
-                print("LU com pivotamento falhou.")
-            else:
-                P, L, U = res
-                # aplica permutação P ao vetor b
-                try:
-                    Pb = P @ b
-                    y = forward_solve(L, Pb)
-                    x = backward_solve(U, y)
-                    print(f"Solução x = {x}")
-                except Exception as e:
-                    print(f"Erro ao resolver após pivotamento: {e}")
-        elif op == '5':
-            # pede sistema e solução do usuário ou resolver pelo próprio método
-            escolha = input("Deseja inserir solução x manualmente? (s/n): ").strip().lower()
-            if escolha == 's':
-                try:
-                    x_vals = list(map(float, input("Digite x separados por espaço: ").split()))
-                    x = np.array(x_vals, dtype=float)
-                    r = calcular_residuo(A, x, b)
-                    print(f"Resíduo r = {r}")
-                except Exception as e:
-                    print(f"Entrada inválida: {e}")
-            else:
-                # tenta resolver por gauss com pivot
-                x, *_ = eliminacao_gauss_com_pivotamento(A, b)
+            if opcao == '1':
+                x, Atri, bmod, _ = eliminacao_gauss_sem_pivotamento(A, b) # variavel, a trinangular, b _ era uma opcao para trocar q removi
                 if x is None:
-                    print("Não foi possível resolver o sistema para calcular resíduo.")
-                else:
-                    r = calcular_residuo(A, x, b)
-                    print(f"Solução x = {x}")
-                    print(f"Resíduo r = {r}")
-        else:
-            print("Opção inválida.")
+                    print("Sistema impossível pelo método sem pivotamento.") # se der algum 0 diagonal, ou encontrar pivo 0.
+                    continue
+                print("\nSolução pelo método de Gauss sem pivotamento:")
+                for var, val in zip(vars, x):
+                    print(f"{var} = {val}") # exibir a solução
+                exibir_residuo_detalhado(A, x, b) # resíduo mostrando Ax - b = r
+            elif opcao == '2':
+                x, Atri, bmod = eliminacao_gauss_com_pivotamento(A, b) # variavel, a tringualar, b
+                if x is None:
+                    print("Sistema impossível pelo método com pivotamento.") # se o pivotamento ainda assim der 0 na diagonal.
+                    continue
+                print("\nSolução pelo método de Gauss com pivotamento:")
+                for var, val in zip(vars, x):
+                    print(f"{var} = {val}") # exibir solução
+                exibir_residuo_detalhado(A, x, b) # resíduo mostrando Ax - b = r 
+            elif opcao == '3':
+                L, U = lu_sem_pivot(A,b)
+                y = forward_solve(L, b) # resolve em baixo Ly = b
+                x = backward_solve(U, y) # resolve em cima = Ux = y
+                print("\nSolução pela decomposição LU sem pivotamento:")
+                for var, val in zip(vars, x):
+                    print(f"{var} = {val}") # exibir solução
+                exibir_residuo_detalhado(A, x, b) # resíduo mostrando Ax - b = r
+            elif opcao == '4':
+                result = lu_com_pivot(A,b)
+                if result is None:
+                    print("Sistema impossível pela decomposição LU com pivotamento.")
+                    continue
+                P, L, U = result # P (matriz Identidade), L = Lower, U = Upper
+                b_mod = P @ b # operação para multiplicar as duas matrizes 
+                y = forward_solve(L, b_mod) # resolve em baixo Ly = b
+                x = backward_solve(U, y) # resolve em cima = Ux = y
+                print("\nSolução pela decomposição LU com pivotamento:")
+                for var, val in zip(vars, x):
+                    print(f"{var} = {val}") # exibir solução
+                exibir_residuo_detalhado(A, x, b) # resíduo mostrando Ax - b = r
+            else:
+                print("Opção inválida. Tente novamente.")
+        except Exception as e:
+            print(f"Erro: {e}")
 
 def menu_interpolacao():
     while True:
