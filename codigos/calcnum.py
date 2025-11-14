@@ -13,13 +13,15 @@ import sympy as sp # pro erro e truncamento
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
 """
 
 Projeto de Cálculo Numérico:
 Autor: Pedro Henrique Rocha de Andrade
 Orientador: Rodrigo Lacerda da Silva
 Ano Início: 2025.2
+
+Ideia: Reunir os códigos em um pacote, tornar público para o instituto e auxiliar os alunos a melhor compreender a lógica de programação resolvendo problemas de cálculo, álgebra e computação.
+Apresentar ao instituto futuramente. 
 
 Github: https://github.com/pedroiff0/CalculoNumerico
 Paper: 
@@ -1357,6 +1359,7 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
         plt.title(f'Regressão Mínimos Quadrados - Grau {ordem}')
         plt.legend(title=legenda, loc='upper left', fontsize=10, title_fontsize=10)
         plt.show()
+        # plt.close(fig=1)
 
     return coef
 
