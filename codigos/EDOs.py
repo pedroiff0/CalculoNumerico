@@ -1,3 +1,7 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
 def resolver_edo_2ordem():
     print("\n=== Resolução de EDO de 2ª ordem: y'' = f(x, y, y') ===")
     print("Digite f(x, y, yp) usando x, y, yp (exemplo: yp + 2*y - x**2)")
@@ -132,9 +136,6 @@ def resolver_edo_2ordem():
     plt.legend()
     plt.grid(True)
     plt.show()
-import numpy as np
-import matplotlib.pyplot as plt
-import math
 
 def menu():
     print("\n===== MENU DE EQUAÇÕES DIFERENCIAIS =====")
@@ -569,27 +570,30 @@ def executar_edo_2ordem():
     except Exception as e:
         print(f"Erro: {e}")
 
-# === PROGRAMA PRINCIPAL ===
-while True:
-    opcao = menu()
-    if opcao == '1':
-        # Método de Euler (ordem 1)
-        executar_runge_kutta(1)
-    elif opcao == '2':
-        try:
-            ordem = int(input("Digite a ordem do método de Runge-Kutta (2-4): "))
-            if 2 <= ordem <= 4:
-                executar_runge_kutta(ordem)
-            else:
-                print("Ordem deve estar entre 2 e 4.")
-        except ValueError:
-            print("Entrada inválida. Digite um número inteiro.")
-    elif opcao == '3':
-        executar_sistema_edos()
-    elif opcao == '4':
-        resolver_edo_2ordem()
-    elif opcao == '0':
-        print("Encerrando o programa.")
-        break
-    else:
-        print("Opção inválida.")
+def menu_principal():
+    while True:
+        opcao = menu()
+        if opcao == '1':
+            # Método de Euler (ordem 1)
+            executar_runge_kutta(1)
+        elif opcao == '2':
+            try:
+                ordem = int(input("Digite a ordem do método de Runge-Kutta (2-4): "))
+                if 2 <= ordem <= 4:
+                    executar_runge_kutta(ordem)
+                else:
+                    print("Ordem deve estar entre 2 e 4.")
+            except ValueError:
+                print("Entrada inválida. Digite um número inteiro.")
+        elif opcao == '3':
+            executar_sistema_edos()
+        elif opcao == '4':
+            resolver_edo_2ordem()
+        elif opcao == '0':
+            print("Encerrando o programa.")
+            break
+        else:
+            print("Opção inválida.")
+
+if __name__ == "__main__":
+    menu_principal()
