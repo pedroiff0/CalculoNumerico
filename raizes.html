@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Métodos de Raízes &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Aviso — Passos futuros" href="disclaimer.html" />
+    <link rel="prev" title="Equações Diferenciais Ordinárias (EDOs)" href="edos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="calcnum_matrix.html">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sistemas.html">Sistemas Lineares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integracoes.html">Integrações Numéricas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Métodos de Raízes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#documentacao">Documentação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exemplo-de-uso">Exemplo de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testes-de-integracao">Testes de Integração</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testes-unitarios-visiveis">Testes Unitários (visíveis)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#links-rapidos">Links rápidos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Métodos de Raízes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/raizes.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="metodos-de-raizes">
+<h1>Métodos de Raízes<a class="headerlink" href="#metodos-de-raizes" title="Link para este cabeçalho"></a></h1>
+<p>Funções do módulo <a class="reference internal" href="modules.html#module-codigos.raizes" title="codigos.raizes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.raizes</span></code></a> para cálculo de raízes (Bisseção, Newton, Secante).</p>
+<section id="documentacao">
+<h2>Documentação<a class="headerlink" href="#documentacao" title="Link para este cabeçalho"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">bissecao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#bissecao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Método da bisseção para encontrar raiz de uma função dada por string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_str</strong> (<em>str</em>) – Expressão Python de <code class="docutils literal notranslate"><span class="pre">f(x)</span></code> (ex.: <code class="docutils literal notranslate"><span class="pre">'x**2</span> <span class="pre">-</span> <span class="pre">4'</span></code>).</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Intervalo inicial [a, b] com sinais opostos.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Intervalo inicial [a, b] com sinais opostos.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerância para critério de parada.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Número máximo de iterações.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (raiz_aproximada, n_iter) ou (None, 0) se os sinais em a/b não forem opostos.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">newton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#newton"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Método de Newton-Raphson para encontrar raiz de função dada por string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_str</strong> (<em>str</em>) – Expressão Python de <code class="docutils literal notranslate"><span class="pre">f(x)</span></code>.</p></li>
+<li><p><strong>x0</strong> (<em>float</em>) – Chute inicial.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerância para critério de parada.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Número máximo de iterações.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (raiz_aproximada, n_iter) ou (None, n_iter) se houver erro.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">secante</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#secante"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Método da secante para encontrar raiz de função dada por string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_str</strong> (<em>str</em>) – Expressão Python de <code class="docutils literal notranslate"><span class="pre">f(x)</span></code>.</p></li>
+<li><p><strong>x0</strong> (<em>float</em>) – Dois chutes iniciais.</p></li>
+<li><p><strong>x1</strong> (<em>float</em>) – Dois chutes iniciais.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerância para critério de parada.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Número máximo de iterações.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (raiz_aproximada, n_iter) ou (None, n_iter) em caso de erro.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">pedir_dados_raizes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metodo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#pedir_dados_raizes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Lê os dados necessários para o método de raízes.</p>
+<p>Se <code class="docutils literal notranslate"><span class="pre">metodo</span></code> for <code class="docutils literal notranslate"><span class="pre">None</span></code>, comporta-se como modo interativo completo
+(executa o método e plota o resultado). Se <code class="docutils literal notranslate"><span class="pre">metodo</span></code> for uma das strings
+<code class="docutils literal notranslate"><span class="pre">'bissecao'</span></code>, <code class="docutils literal notranslate"><span class="pre">'newton'</span></code> ou <code class="docutils literal notranslate"><span class="pre">'secante'</span></code>, apenas lê os parâmetros e
+retorna uma tupla <code class="docutils literal notranslate"><span class="pre">(func_str,</span> <span class="pre">tol,</span> <span class="pre">max_iter,</span> <span class="pre">params)</span></code> para uso por
+menus externos (compatibilidade com <cite>menu_raizes</cite>).</p>
+</dd></dl>
+
+</section>
+<section id="exemplo-de-uso">
+<h2>Exemplo de Uso<a class="headerlink" href="#exemplo-de-uso" title="Link para este cabeçalho"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="sd">&quot;&quot;&quot;Exemplo simples de uso: encontrar raiz com bisseção&quot;&quot;&quot;</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">raizes</span>
+<span class="linenos">4</span>
+<span class="linenos">5</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">6</span>    <span class="n">raiz</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">raizes</span><span class="o">.</span><span class="n">bissecao</span><span class="p">(</span><span class="s2">&quot;x**2 - 4&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="linenos">7</span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Raiz encontrada: </span><span class="si">{</span><span class="n">raiz</span><span class="si">}</span><span class="s2"> (iteração </span><span class="si">{</span><span class="n">iters</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="testes-de-integracao">
+<h2>Testes de Integração<a class="headerlink" href="#testes-de-integracao" title="Link para este cabeçalho"></a></h2>
+<p>Coberto pelo caso de integração em:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_inputs_calcnum</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">test_calcnum_inputs_basic</span> <span class="o">-</span><span class="n">q</span>
+</pre></div>
+</div>
+<p>Teste correspondente: <code class="file docutils literal notranslate"><span class="pre">tests/inputs/inputRaizes.txt</span></code></p>
+</section>
+<section id="testes-unitarios-visiveis">
+<h2>Testes Unitários (visíveis)<a class="headerlink" href="#testes-unitarios-visiveis" title="Link para este cabeçalho"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">raizes</span>
+<span class="linenos"> 3</span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">def</span><span class="w"> </span><span class="nf">test_bissecao_basic</span><span class="p">():</span>
+<span class="linenos"> 6</span>    <span class="n">raiz</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">raizes</span><span class="o">.</span><span class="n">bissecao</span><span class="p">(</span><span class="s1">&#39;x**2 - 4&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="linenos"> 7</span>    <span class="k">assert</span> <span class="n">raiz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos"> 8</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">raiz</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+<span class="linenos"> 9</span>    <span class="k">assert</span> <span class="n">iters</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">def</span><span class="w"> </span><span class="nf">test_bissecao_invalid_interval</span><span class="p">():</span>
+<span class="linenos">12</span>    <span class="n">raiz</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">raizes</span><span class="o">.</span><span class="n">bissecao</span><span class="p">(</span><span class="s1">&#39;x**2 + 1&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="linenos">13</span>    <span class="k">assert</span> <span class="n">raiz</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="linenos">14</span>    <span class="k">assert</span> <span class="n">iters</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_basic</span><span class="p">():</span>
+<span class="linenos">17</span>    <span class="n">raiz</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">raizes</span><span class="o">.</span><span class="n">newton</span><span class="p">(</span><span class="s1">&#39;x**2 - 2&#39;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="linenos">18</span>    <span class="k">assert</span> <span class="n">raiz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos">19</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">raiz</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_derivative_zero</span><span class="p">():</span>
+<span class="linenos">22</span>    <span class="c1"># f(x) = x^3 at x=0 has derivative = 0; finite-difference may yield tiny derivative,</span>
+<span class="linenos">23</span>    <span class="c1"># but the method should produce a root (x=0) or None; accept 0.0 as valid root here.</span>
+<span class="linenos">24</span>    <span class="n">raiz</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">raizes</span><span class="o">.</span><span class="n">newton</span><span class="p">(</span><span class="s1">&#39;x**3&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="linenos">25</span>    <span class="k">assert</span> <span class="n">raiz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos">26</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">raiz</span> <span class="o">-</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="k">def</span><span class="w"> </span><span class="nf">test_secante_basic</span><span class="p">():</span>
+<span class="linenos">29</span>    <span class="n">raiz</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">raizes</span><span class="o">.</span><span class="n">secante</span><span class="p">(</span><span class="s1">&#39;x**3 - 0.5&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="linenos">30</span>    <span class="k">assert</span> <span class="n">raiz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos">31</span>    <span class="c1"># verify residual is small</span>
+<span class="linenos">32</span>    <span class="n">fval</span> <span class="o">=</span> <span class="p">(</span><span class="n">raiz</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">33</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fval</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="k">def</span><span class="w"> </span><span class="nf">test_pedir_dados_raizes_for_menu</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+<span class="linenos">36</span>    <span class="c1"># Simulate inputs for bissecao: func, tol, max_iter, a, b</span>
+<span class="linenos">37</span>    <span class="n">inputs</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([</span><span class="s1">&#39;x**2 - 4&#39;</span><span class="p">,</span> <span class="s1">&#39;1e-8&#39;</span><span class="p">,</span> <span class="s1">&#39;100&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">])</span>
+<span class="linenos">38</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+<span class="linenos">39</span>    <span class="n">func_str</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">raizes</span><span class="o">.</span><span class="n">pedir_dados_raizes</span><span class="p">(</span><span class="s1">&#39;bissecao&#39;</span><span class="p">)</span>
+<span class="linenos">40</span>    <span class="k">assert</span> <span class="n">func_str</span> <span class="o">==</span> <span class="s1">&#39;x**2 - 4&#39;</span>
+<span class="linenos">41</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tol</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-20</span>
+<span class="linenos">42</span>    <span class="k">assert</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_iter</span><span class="p">)</span> <span class="o">==</span> <span class="mi">100</span>
+<span class="linenos">43</span>    <span class="k">assert</span> <span class="n">params</span> <span class="o">==</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="links-rapidos">
+<h2>Links rápidos<a class="headerlink" href="#links-rapidos" title="Link para este cabeçalho"></a></h2>
+<ul class="simple">
+<li><p>Testes unitários: <code class="file docutils literal notranslate"><span class="pre">tests/test_raizes.py</span></code></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="edos.html" class="btn btn-neutral float-left" title="Equações Diferenciais Ordinárias (EDOs)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="disclaimer.html" class="btn btn-neutral float-right" title="Aviso — Passos futuros" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

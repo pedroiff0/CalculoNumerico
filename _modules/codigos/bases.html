@@ -1,0 +1,321 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>codigos.bases &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/translations.js?v=71a39b36"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../calcnum_matrix.html">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sistemas.html">Sistemas Lineares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../integracoes.html">Integrações Numéricas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Código do módulo</a></li>
+      <li class="breadcrumb-item active">codigos.bases</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código-fonte para codigos.bases</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="dados">
+<a class="viewcode-back" href="../../modules.html#codigos.bases.dados">[documentos]</a>
+<span></span><span class="k">def</span><span class="w"> </span><span class="nf">dados</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Conversor de Bases ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Binário para Decimal&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Decimal para Binário&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Binário para Hexadecimal&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Hexadecimal para Binário&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5 - Decimal para Hexadecimal&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6 - Hexadecimal para Decimal&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Sair&quot;</span><span class="p">)</span>
+    <span class="n">opcao</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha a conversão desejada: &quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">opcao</span></div>
+
+
+<div class="viewcode-block" id="binario_para_decimal">
+<a class="viewcode-back" href="../../modules.html#codigos.bases.binario_para_decimal">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">binario_para_decimal</span><span class="p">(</span><span class="n">bin_str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte uma string binária para inteiro decimal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bin_str : str</span>
+<span class="sd">        Representação binária (ex.: ``&#39;1011&#39;``).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Valor decimal correspondente.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">decimal</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">digito</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">bin_str</span><span class="p">)):</span>
+        <span class="n">decimal</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">digito</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">decimal</span></div>
+
+
+<div class="viewcode-block" id="decimal_para_binario">
+<a class="viewcode-back" href="../../modules.html#codigos.bases.decimal_para_binario">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">decimal_para_binario</span><span class="p">(</span><span class="n">numDecimal</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte um inteiro decimal para sua representação binária em string.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    numDecimal : int</span>
+<span class="sd">        Número decimal não-negativo.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Representação binária (ex.: ``&#39;1011&#39;``).</span>
+
+<span class="sd">    Exemplos</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; decimal_para_binario(11)</span>
+<span class="sd">    &#39;1011&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">numDecimal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;0&quot;</span>
+    <span class="n">binario</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">while</span> <span class="n">numDecimal</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">binario</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">numDecimal</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">binario</span>
+        <span class="n">numDecimal</span> <span class="o">=</span> <span class="n">numDecimal</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">binario</span></div>
+
+
+<div class="viewcode-block" id="decimal_para_hexadecimal">
+<a class="viewcode-back" href="../../modules.html#codigos.bases.decimal_para_hexadecimal">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">decimal_para_hexadecimal</span><span class="p">(</span><span class="n">numDecimal</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte um inteiro decimal para representação hexadecimal (maiúscula).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    numDecimal : int</span>
+<span class="sd">        Número decimal não-negativo.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Representação hexadecimal (ex.: ``&#39;FE&#39;``).</span>
+
+<span class="sd">    Exemplos</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; decimal_para_hexadecimal(254)</span>
+<span class="sd">    &#39;FE&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">numDecimal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;0&quot;</span>
+    <span class="n">digitos</span> <span class="o">=</span> <span class="s2">&quot;0123456789ABCDEF&quot;</span>
+    <span class="n">hexa</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">while</span> <span class="n">numDecimal</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">hexa</span> <span class="o">=</span> <span class="n">digitos</span><span class="p">[</span><span class="n">numDecimal</span> <span class="o">%</span> <span class="mi">16</span><span class="p">]</span> <span class="o">+</span> <span class="n">hexa</span>
+        <span class="n">numDecimal</span> <span class="o">=</span> <span class="n">numDecimal</span> <span class="o">//</span> <span class="mi">16</span>
+    <span class="k">return</span> <span class="n">hexa</span></div>
+
+
+<div class="viewcode-block" id="hexadecimal_para_decimal">
+<a class="viewcode-back" href="../../modules.html#codigos.bases.hexadecimal_para_decimal">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">hexadecimal_para_decimal</span><span class="p">(</span><span class="n">hex_str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte uma string hexadecimal (base 16) para inteiro decimal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hex_str : str</span>
+<span class="sd">        Representação hexadecimal (ex.: ``&#39;FE&#39;``).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Valor decimal correspondente.</span>
+
+<span class="sd">    Exemplos</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; hexadecimal_para_decimal(&#39;FE&#39;)</span>
+<span class="sd">    254</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hex_str</span> <span class="o">=</span> <span class="n">hex_str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">digitos</span> <span class="o">=</span> <span class="s2">&quot;0123456789ABCDEF&quot;</span>
+    <span class="n">decimal</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">digito</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">hex_str</span><span class="p">)):</span>
+        <span class="n">valor</span> <span class="o">=</span> <span class="n">digitos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">digito</span><span class="p">)</span>
+        <span class="n">decimal</span> <span class="o">+=</span> <span class="n">valor</span> <span class="o">*</span> <span class="p">(</span><span class="mi">16</span> <span class="o">**</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">decimal</span></div>
+
+
+<div class="viewcode-block" id="binario_para_hexadecimal">
+<a class="viewcode-back" href="../../modules.html#codigos.bases.binario_para_hexadecimal">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">binario_para_hexadecimal</span><span class="p">(</span><span class="n">bin_str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte uma string binária para representação hexadecimal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bin_str : str</span>
+<span class="sd">        Representação binária.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Representação hexadecimal em maiúsculas.</span>
+
+<span class="sd">    Exemplos</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; binario_para_hexadecimal(&#39;1111&#39;)</span>
+<span class="sd">    &#39;F&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">decimal</span> <span class="o">=</span> <span class="n">binario_para_decimal</span><span class="p">(</span><span class="n">bin_str</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">decimal_para_hexadecimal</span><span class="p">(</span><span class="n">decimal</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="hexadecimal_para_binario">
+<a class="viewcode-back" href="../../modules.html#codigos.bases.hexadecimal_para_binario">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">hexadecimal_para_binario</span><span class="p">(</span><span class="n">hex_str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte uma string hexadecimal para representação binária.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hex_str : str</span>
+<span class="sd">        Representação hexadecimal (ex.: ``&#39;F&#39;``).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Representação binária (ex.: ``&#39;1111&#39;``).</span>
+
+<span class="sd">    Exemplos</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; hexadecimal_para_binario(&#39;F&#39;)</span>
+<span class="sd">    &#39;1111&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">decimal</span> <span class="o">=</span> <span class="n">hexadecimal_para_decimal</span><span class="p">(</span><span class="n">hex_str</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">decimal_para_binario</span><span class="p">(</span><span class="n">decimal</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../modules.html#codigos.bases.main">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">escolha</span> <span class="o">=</span> <span class="n">dados</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Encerrando...&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">]:</span>
+            <span class="n">valor</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o valor binário: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">binario_para_decimal</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Binário para Decimal: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">binario_para_hexadecimal</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Binário para Hexadecimal: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">]:</span>
+            <span class="n">valor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o valor decimal: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">decimal_para_binario</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decimal para Binário: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">decimal_para_hexadecimal</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decimal para Hexadecimal: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">]:</span>
+            <span class="n">valor</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o valor hexadecimal: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">hexadecimal_para_binario</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hexadecimal para Binário: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">hexadecimal_para_decimal</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hexadecimal para Decimal: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida. Tente novamente.&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

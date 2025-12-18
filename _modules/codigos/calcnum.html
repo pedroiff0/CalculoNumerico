@@ -1,0 +1,751 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>codigos.calcnum &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/translations.js?v=71a39b36"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Buscar" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../calcnum_matrix.html">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sistemas.html">Sistemas Lineares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../integracoes.html">Integrações Numéricas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Código do módulo</a></li>
+      <li class="breadcrumb-item active">codigos.calcnum</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código-fonte para codigos.calcnum</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Requirements do projeto:</span>
+
+<span class="sd">matplotlib==3.10.7</span>
+<span class="sd">numpy==2.3.4</span>
+<span class="sd">sympy==1.14.0</span>
+<span class="sd">pandas==2.3.3</span>
+<span class="sd">mpmath==1.3.0</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="kn">import</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">integrate</span><span class="p">,</span> <span class="n">sympify</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">tan</span><span class="p">,</span> <span class="n">asin</span><span class="p">,</span> <span class="n">acos</span><span class="p">,</span> <span class="n">atan</span><span class="p">,</span> <span class="n">sinh</span><span class="p">,</span> <span class="n">cosh</span><span class="p">,</span> <span class="n">tanh</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">Abs</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">E</span>
+
+<span class="c1"># Mapeamento padrão para uso com sympify (padroniza nomes de funções/constantes)</span>
+<span class="n">SYMPY_LOCALS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;sin&#39;</span><span class="p">:</span> <span class="n">sin</span><span class="p">,</span> <span class="s1">&#39;cos&#39;</span><span class="p">:</span> <span class="n">cos</span><span class="p">,</span> <span class="s1">&#39;tan&#39;</span><span class="p">:</span> <span class="n">tan</span><span class="p">,</span>
+    <span class="s1">&#39;asin&#39;</span><span class="p">:</span> <span class="n">asin</span><span class="p">,</span> <span class="s1">&#39;acos&#39;</span><span class="p">:</span> <span class="n">acos</span><span class="p">,</span> <span class="s1">&#39;atan&#39;</span><span class="p">:</span> <span class="n">atan</span><span class="p">,</span>
+    <span class="s1">&#39;sinh&#39;</span><span class="p">:</span> <span class="n">sinh</span><span class="p">,</span> <span class="s1">&#39;cosh&#39;</span><span class="p">:</span> <span class="n">cosh</span><span class="p">,</span> <span class="s1">&#39;tanh&#39;</span><span class="p">:</span> <span class="n">tanh</span><span class="p">,</span>
+    <span class="s1">&#39;exp&#39;</span><span class="p">:</span> <span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">:</span> <span class="n">sqrt</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span> <span class="n">log</span><span class="p">,</span> <span class="s1">&#39;abs&#39;</span><span class="p">:</span> <span class="n">Abs</span><span class="p">,</span>
+    <span class="s1">&#39;pi&#39;</span><span class="p">:</span> <span class="n">pi</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">E</span>
+<span class="p">}</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">Projeto de Cálculo Numérico:</span>
+<span class="sd">Autor: Pedro Henrique Rocha de Andrade</span>
+<span class="sd">Orientador: Rodrigo Lacerda da Silva</span>
+<span class="sd">Ano Início: 2025.2</span>
+
+<span class="sd">Ideia: Reunir os códigos em um pacote, tornar público para o instituto e auxiliar os alunos a melhor compreender a lógica de programação resolvendo problemas de cálculo, álgebra e computação.</span>
+<span class="sd">Apresentar ao instituto futuramente. </span>
+
+<span class="sd">Github: https://github.com/pedroiff0/CalculoNumerico</span>
+<span class="sd">Paper: </span>
+<span class="sd">Documentação:</span>
+<span class="sd">Tutoriais:</span>
+
+<span class="sd">% pip3 install calculonumiff</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Sistema de Conversão de Bases - Parte 0 (Teórica)</span>
+
+<span class="sd">    Funções:</span>
+<span class="sd">    - binario_para_decimal(s)</span>
+<span class="sd">    - decimal_para_binario(n)</span>
+<span class="sd">    - decimal_para_hexadecimal(n)</span>
+<span class="sd">    - hexadecimal_para_decimal(s)</span>
+<span class="sd">    - binario_para_hexadecimal(s)</span>
+<span class="sd">    - hexadecimal_para_binario(s)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.bases</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">dados</span> <span class="k">as</span> <span class="n">dados_bases</span><span class="p">,</span>
+    <span class="n">binario_para_decimal</span><span class="p">,</span>
+    <span class="n">decimal_para_binario</span><span class="p">,</span>
+    <span class="n">decimal_para_hexadecimal</span><span class="p">,</span>
+    <span class="n">hexadecimal_para_decimal</span><span class="p">,</span>
+    <span class="n">binario_para_hexadecimal</span><span class="p">,</span>
+    <span class="n">hexadecimal_para_binario</span><span class="p">,</span>
+<span class="p">)</span>
+
+<div class="viewcode-block" id="menu_bases">
+<a class="viewcode-back" href="../../modules.html#codigos.calcnum.menu_bases">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">menu_bases</span><span class="p">():</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">opcao</span> <span class="o">=</span> <span class="n">dados_bases</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o número binário (ex: 1011): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decimal: </span><span class="si">{</span><span class="n">binario_para_decimal</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o número decimal (inteiro): &quot;</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Binário: </span><span class="si">{</span><span class="n">decimal_para_binario</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entrada inválida. Digite um inteiro.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o número binário (ex: 1111): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hexadecimal: </span><span class="si">{</span><span class="n">binario_para_hexadecimal</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o número hexadecimal (ex: FE): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Binário: </span><span class="si">{</span><span class="n">hexadecimal_para_binario</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;5&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o número decimal (inteiro): &quot;</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hexadecimal: </span><span class="si">{</span><span class="n">decimal_para_hexadecimal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entrada inválida. Digite um inteiro.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;6&#39;</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o número hexadecimal (ex: 1A3): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decimal: </span><span class="si">{</span><span class="n">hexadecimal_para_decimal</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida. Tente novamente.&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">Sistemas Lineares - Parte 1</span>
+
+<span class="sd">    Funções:</span>
+<span class="sd">    - eliminacao_gauss_sem_pivotamento(A, b)</span>
+<span class="sd">    - eliminacao_gauss_com_pivotamento(A, b)</span>
+<span class="sd">    - lu_sem_pivot(A,b)</span>
+<span class="sd">    - lu_com_pivot(A,b)</span>
+<span class="sd">    - forward_solve(L, b)</span>
+<span class="sd">    - backward_solve(U, y)</span>
+<span class="sd">    - calcular_residuo(A, x, b)</span>
+<span class="sd">    </span>
+<span class="sd">    Funções Auxiliares:</span>
+<span class="sd">    - imprimir_sistema_linear()</span>
+<span class="sd">    - montar_sistema_valores() # (pedir dados ao usuario)</span>
+<span class="sd">    - exibir_residuo_detalhado(A, x, b)</span>
+<span class="sd">    - matriz_zeros_manual(n) # opcional</span>
+<span class="sd">    - multiplicar_matrizes(A, B) # opcional</span>
+<span class="sd">    - matriz_identidade(n) # opcional</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.sistemaslineares</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">eliminacao_gauss_sem_pivotamento</span><span class="p">,</span>
+    <span class="n">eliminacao_gauss_com_pivotamento</span><span class="p">,</span>
+    <span class="n">lu_sem_pivot</span><span class="p">,</span>
+    <span class="n">lu_com_pivot</span><span class="p">,</span>
+    <span class="n">montar_sistema_valores</span><span class="p">,</span>
+    <span class="n">forward_solve</span><span class="p">,</span>
+    <span class="n">backward_solve</span><span class="p">,</span>
+    <span class="n">calcular_residuo</span><span class="p">,</span>
+    <span class="n">exibir_residuo_detalhado</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="menu_sistemas">
+<a class="viewcode-back" href="../../modules.html#codigos.calcnum.menu_sistemas">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">menu_sistemas</span><span class="p">():</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Menu de métodos para resolver sistemas lineares:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Método de Gauss sem pivotamento&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Método de Gauss com pivotamento&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Decomposição LU sem pivotamento&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Decomposição LU com pivotamento&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Sair&quot;</span><span class="p">)</span>
+        <span class="n">opcao</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha a opção desejada: &quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Encerrando o programa.&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="nb">vars</span> <span class="o">=</span> <span class="n">montar_sistema_valores</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">Atri</span><span class="p">,</span> <span class="n">bmod</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">eliminacao_gauss_sem_pivotamento</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># variavel, a trinangular, b _ era uma opcao para trocar q removi</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sistema impossível pelo método sem pivotamento.&quot;</span><span class="p">)</span> <span class="c1"># se der algum 0 diagonal, ou encontrar pivo 0.</span>
+                    <span class="k">continue</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Solução pelo método de Gauss sem pivotamento:&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">vars</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># exibir a solução</span>
+                <span class="n">exibir_residuo_detalhado</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># resíduo mostrando Ax - b = r</span>
+            <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">Atri</span><span class="p">,</span> <span class="n">bmod</span> <span class="o">=</span> <span class="n">eliminacao_gauss_com_pivotamento</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># variavel, a tringualar, b</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sistema impossível pelo método com pivotamento.&quot;</span><span class="p">)</span> <span class="c1"># se o pivotamento ainda assim der 0 na diagonal.</span>
+                    <span class="k">continue</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Solução pelo método de Gauss com pivotamento:&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">vars</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># exibir solução</span>
+                <span class="n">exibir_residuo_detalhado</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># resíduo mostrando Ax - b = r </span>
+            <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+                <span class="n">L</span><span class="p">,</span> <span class="n">U</span> <span class="o">=</span> <span class="n">lu_sem_pivot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">forward_solve</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># resolve em baixo Ly = b</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">backward_solve</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># resolve em cima = Ux = y</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Solução pela decomposição LU sem pivotamento:&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">vars</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># exibir solução</span>
+                <span class="n">exibir_residuo_detalhado</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># resíduo mostrando Ax - b = r</span>
+            <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">lu_com_pivot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sistema impossível pela decomposição LU com pivotamento.&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="n">P</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">U</span> <span class="o">=</span> <span class="n">result</span> <span class="c1"># P (matriz Identidade), L = Lower, U = Upper</span>
+                <span class="n">b_mod</span> <span class="o">=</span> <span class="n">P</span> <span class="o">@</span> <span class="n">b</span> <span class="c1"># operação para multiplicar as duas matrizes </span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">forward_solve</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">b_mod</span><span class="p">)</span> <span class="c1"># resolve em baixo Ly = b</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">backward_solve</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># resolve em cima = Ux = y</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Solução pela decomposição LU com pivotamento:&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">vars</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># exibir solução</span>
+                <span class="n">exibir_residuo_detalhado</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># resíduo mostrando Ax - b = r</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida. Tente novamente.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Interpolações - Parte 2</span>
+
+<span class="sd">    Funções:</span>
+<span class="sd">    - newton_dif_divididas(x, tabela, xp, max_grau=None)</span>
+<span class="sd">    - gregory_newton_progressivo(x, y, xp, max_grau=None)</span>
+<span class="sd">    - lagrange_interpol(x, y, xp, max_grau=None)</span>
+<span class="sd">    - dispositivo_pratico_lagrange(x, y, xp, max_grau=None)</span>
+<span class="sd">    - calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado)</span>
+<span class="sd">    </span>
+<span class="sd">    Funções Auxiliares:</span>
+<span class="sd">    - dados_interpolacao()</span>
+<span class="sd">    - obter_max_grau(n):</span>
+<span class="sd">    - verifica_espaçamento_uniforme(x, tol=1e-15)</span>
+<span class="sd">    - tabela_diferencas_divididas(x, y)</span>
+<span class="sd">    - imprimir_tabela_diferencas_divididas(tabela)</span>
+<span class="sd">    - tabela_diferencas_finitas(y)</span>
+<span class="sd">    - imprimir_tabela_diferencas_finitas(tabela)</span>
+<span class="sd">    - perguntar_erro(x_vals, x_interp, grau, valor_interpolado)</span>
+<span class="sd">    </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.interpolacoes</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">newton_dif_divididas</span><span class="p">,</span>
+    <span class="n">gregory_newton_progressivo</span><span class="p">,</span>
+    <span class="n">lagrange_interpol</span><span class="p">,</span>
+    <span class="n">dispositivo_pratico_lagrange</span><span class="p">,</span>
+    <span class="n">dados_interpolacao</span><span class="p">,</span>
+    <span class="n">obter_max_grau</span><span class="p">,</span>
+    <span class="n">verifica_espaçamento_uniforme</span><span class="p">,</span>
+    <span class="n">tabela_diferencas_divididas</span><span class="p">,</span>
+<span class="p">)</span>
+
+<div class="viewcode-block" id="menu_interpolacao">
+<a class="viewcode-back" href="../../modules.html#codigos.calcnum.menu_interpolacao">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">menu_interpolacao</span><span class="p">():</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Interpolações ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Newton (diferenças divididas)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Gregory-Newton progressivo&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Lagrange&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Dispositivo prático Lagrange&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Voltar&quot;</span><span class="p">)</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha uma opção: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">xp</span> <span class="o">=</span> <span class="n">dados_interpolacao</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na leitura dos pontos: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="n">max_grau</span> <span class="o">=</span> <span class="n">obter_max_grau</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_vals</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+            <span class="n">tabela</span> <span class="o">=</span> <span class="n">tabela_diferencas_divididas</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">)</span>
+            <span class="n">resultado</span> <span class="o">=</span> <span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado (Newton): </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+            <span class="n">uniforme</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">verifica_espaçamento_uniforme</span><span class="p">(</span><span class="n">x_vals</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">uniforme</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Atenção: pontos não têm espaçamento uniforme. Gregory-Newton pode ser impreciso.&quot;</span><span class="p">)</span>
+            <span class="n">resultado</span> <span class="o">=</span> <span class="n">gregory_newton_progressivo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_vals</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_vals</span><span class="p">),</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado (Gregory-Newton): </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+            <span class="n">resultado</span> <span class="o">=</span> <span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_vals</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_vals</span><span class="p">),</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado (Lagrange): </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span>
+            <span class="n">resultado</span> <span class="o">=</span> <span class="n">dispositivo_pratico_lagrange</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_vals</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_vals</span><span class="p">),</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado (Dispositivo de Lagrange): </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida.&quot;</span><span class="p">)</span></div>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Ajustes de Curvas - Parte 3</span>
+
+<span class="sd">    Funções:</span>
+<span class="sd">    - regressaolinear(x, y) # opcional!</span>
+<span class="sd">    - regressaolinear_intervalo(x, y) # opcional!</span>
+<span class="sd">    - minquadrados(x, y)</span>
+<span class="sd">    - minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True)</span>
+<span class="sd">    - calcula_chi_e_r2(x, y, b0, b1, n_params=2)</span>
+<span class="sd">    </span>
+<span class="sd">    Funções Auxiliares:</span>
+<span class="sd">    - log_output(message, logfile=&#39;log_resultados.txt&#39;) # opcional</span>
+<span class="sd">    - dados() # especificamente  (pode ser para Interpolações e Ajustes de Curvas)</span>
+<span class="sd">    - tabela_interpolador(x, y, p1x) # opcional</span>
+<span class="sd">    - tabela_minimos_quadrados(x, y) # opcional</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.ajustecurvasv2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">regressaolinear</span><span class="p">,</span>
+    <span class="n">regressaolinear_intervalo</span><span class="p">,</span>
+    <span class="n">minquadrados</span><span class="p">,</span>
+    <span class="n">dados</span> <span class="k">as</span> <span class="n">dados_ajustes</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.ajustecurvasOrdemn</span><span class="w"> </span><span class="kn">import</span> <span class="n">minquadrados_ordem_n_manual</span>
+
+<div class="viewcode-block" id="menu_ajustes">
+<a class="viewcode-back" href="../../modules.html#codigos.calcnum.menu_ajustes">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">menu_ajustes</span><span class="p">():</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Ajustes de Curvas ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Regressão linear (método 1)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Regressão linear por intervalo (método 2)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Mínimos quadrados (linear)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Mínimos quadrados (ordem n)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Voltar&quot;</span><span class="p">)</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha uma opção: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dados_ajustes</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nenhum dado fornecido.&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+            <span class="n">regressaolinear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+            <span class="n">regressaolinear_intervalo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+            <span class="n">minquadrados</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ordem</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite a ordem do polinômio (inteiro &gt;=0): &quot;</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ordem inválida. Usando ordem 1.&quot;</span><span class="p">)</span>
+                <span class="n">ordem</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">minquadrados_ordem_n_manual</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ordem</span><span class="o">=</span><span class="n">ordem</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida.&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Ajustes de Curvas - Parte 3</span>
+
+<span class="sd">    Funções:</span>
+<span class="sd">    - regressaolinear(x, y) # opcional!</span>
+<span class="sd">    - regressaolinear_intervalo(x, y) # opcional!</span>
+<span class="sd">    - minquadrados(x, y)</span>
+<span class="sd">    - minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True)</span>
+<span class="sd">    - calcula_chi_e_r2(x, y, b0, b1, n_params=2)</span>
+<span class="sd">    </span>
+<span class="sd">    Funções Auxiliares:</span>
+<span class="sd">    - log_output(message, logfile=&#39;log_resultados.txt&#39;) # opcional</span>
+<span class="sd">    - dados() # especificamente  (pode ser para Interpolações e Ajustes de Curvas)</span>
+<span class="sd">    - tabela_interpolador(x, y, p1x) # opcional</span>
+<span class="sd">    - tabela_minimos_quadrados(x, y) # opcional</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.integracoes</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">pedir_dados_integral</span><span class="p">,</span>
+    <span class="n">trapezio_composta</span><span class="p">,</span>
+    <span class="n">simpson_1_3_composta</span><span class="p">,</span>
+    <span class="n">simpson_3_8_composta</span><span class="p">,</span>
+    <span class="n">trapezio_tabela</span><span class="p">,</span>
+    <span class="n">simpson_1_3_tabela</span><span class="p">,</span>
+    <span class="n">simpson_3_8_tabela</span><span class="p">,</span>
+    <span class="n">newton_cotes</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="menu_integracoes">
+<a class="viewcode-back" href="../../modules.html#codigos.calcnum.menu_integracoes">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">menu_integracoes</span><span class="p">():</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- MÉTODOS DE INTEGRAÇÃO NUMÉRICA ---&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Regra do Trapézio&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Regra de Simpson 1/3&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Regra de Simpson 3/8&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Voltar ao menu principal&quot;</span><span class="p">)</span>
+
+        <span class="n">opcao</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha uma opção: &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja inserir dados em tabela (x, y)? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span>
+        <span class="k">if</span> <span class="n">tabela</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+                <span class="n">trapezio_tabela</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+                <span class="n">simpson_1_3_tabela</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+                <span class="n">simpson_3_8_tabela</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida.&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        
+        <span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">composta</span> <span class="o">=</span> <span class="n">pedir_dados_integral</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">resultado</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">composta</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">trapezio_composta</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">newton_cotes</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">composta</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">simpson_1_3_composta</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">newton_cotes</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">composta</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">simpson_3_8_composta</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">newton_cotes</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida. Tente novamente.&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">resultado</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">valor_exato</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">calc_exata</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja calcular a integral exata (simbólica)? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span>
+            <span class="k">if</span> <span class="n">calc_exata</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+                <span class="n">func_sympy</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;math.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">funcao</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_sympy</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
+                    <span class="n">integral_exata</span> <span class="o">=</span> <span class="n">integrate</span><span class="p">(</span><span class="n">funcao</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">valor_exato</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">integral_exata</span><span class="o">.</span><span class="n">evalf</span><span class="p">())</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="n">valor_exato</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">integral_exata</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado exato da integral de </span><span class="si">{</span><span class="n">func_sympy</span><span class="si">}</span><span class="s2"> de </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2"> a </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">valor_exato</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="c1"># Se foi pedido o exato e estamos em caso composto, mostra erro relativo (módulo)</span>
+                    <span class="k">if</span> <span class="n">composta</span> <span class="ow">and</span> <span class="n">valor_exato</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">erro_rel</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">valor_exato</span><span class="p">))</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">valor_exato</span><span class="p">))</span> <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">valor_exato</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro relativo (módulo) entre o valor numérico composto e o exato: </span><span class="si">{</span><span class="n">erro_rel</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Não foi possível calcular o erro relativo.&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Erro ao calcular a integral simbolicamente:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">composta</span><span class="p">:</span>
+                <span class="n">calc_erro</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja calcular o erro de truncamento? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span>
+                <span class="k">if</span> <span class="n">calc_erro</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">valor_exato</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">v_str</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite o valor EXATO da integral (analítico): &quot;</span><span class="p">)</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">valor_exato</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sympify</span><span class="p">(</span><span class="n">v_str</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">))</span>
+                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">valor_exato</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">v_str</span><span class="p">)</span>
+                            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Valor exato inválido.&quot;</span><span class="p">)</span>
+                                <span class="n">valor_exato</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">erro</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">valor_exato</span><span class="p">)</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">))</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Valor exato informado: </span><span class="si">{</span><span class="n">valor_exato</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado numérico: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro de truncamento: </span><span class="si">{</span><span class="n">erro</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Ajustes de Curvas - Parte 3</span>
+
+<span class="sd">    Funções:</span>
+<span class="sd">    - regressaolinear(x, y) # opcional!</span>
+<span class="sd">    - regressaolinear_intervalo(x, y) # opcional!</span>
+<span class="sd">    - minquadrados(x, y)</span>
+<span class="sd">    - minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True)</span>
+<span class="sd">    - calcula_chi_e_r2(x, y, b0, b1, n_params=2)</span>
+<span class="sd">    </span>
+<span class="sd">    Funções Auxiliares:</span>
+<span class="sd">    - log_output(message, logfile=&#39;log_resultados.txt&#39;) # opcional</span>
+<span class="sd">    - dados() # especificamente  (pode ser para Interpolações e Ajustes de Curvas)</span>
+<span class="sd">    - tabela_interpolador(x, y, p1x) # opcional</span>
+<span class="sd">    - tabela_minimos_quadrados(x, y) # opcional</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.edos</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">resolver_edo_2ordem</span><span class="p">,</span>
+    <span class="n">executar_runge_kutta</span><span class="p">,</span>
+    <span class="n">executar_sistema_edos</span><span class="p">,</span>
+<span class="p">)</span>
+
+<div class="viewcode-block" id="menu_edos">
+<a class="viewcode-back" href="../../modules.html#codigos.calcnum.menu_edos">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">menu_edos</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Submenu interativo para resolver Equações Diferenciais Ordinárias (EDOs).</span>
+<span class="sd">    Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">===== MENU DE EQUAÇÕES DIFERENCIAIS =====&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Método de Euler (Runge-Kutta 1ª ordem)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Método de Runge-Kutta (2ª, 3ª ou 4ª ordem)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Sistemas de EDOs&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Equações Diferenciais de 2ª Ordem&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Voltar ao menu principal&quot;</span><span class="p">)</span>
+
+        <span class="n">opcao</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha uma opção: &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+            <span class="n">executar_runge_kutta</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ordem</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Digite a ordem do método de Runge-Kutta (2-4): &quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">ordem</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">executar_runge_kutta</span><span class="p">(</span><span class="n">ordem</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ordem deve estar entre 2 e 4.&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entrada inválida. Digite um número inteiro.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+            <span class="n">executar_sistema_edos</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span>
+            <span class="n">resolver_edo_2ordem</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida.&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Ajustes de Curvas - Parte 3</span>
+
+<span class="sd">    Funções:</span>
+<span class="sd">    - regressaolinear(x, y) # opcional!</span>
+<span class="sd">    - regressaolinear_intervalo(x, y) # opcional!</span>
+<span class="sd">    - minquadrados(x, y)</span>
+<span class="sd">    - minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True)</span>
+<span class="sd">    - calcula_chi_e_r2(x, y, b0, b1, n_params=2)</span>
+<span class="sd">    </span>
+<span class="sd">    Funções Auxiliares:</span>
+<span class="sd">    - log_output(message, logfile=&#39;log_resultados.txt&#39;) # opcional</span>
+<span class="sd">    - dados() # especificamente  (pode ser para Interpolações e Ajustes de Curvas)</span>
+<span class="sd">    - tabela_interpolador(x, y, p1x) # opcional</span>
+<span class="sd">    - tabela_minimos_quadrados(x, y) # opcional</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.raizes</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">plotar_funcao</span><span class="p">,</span>
+    <span class="n">bissecao</span><span class="p">,</span>
+    <span class="n">newton</span><span class="p">,</span>
+    <span class="n">secante</span><span class="p">,</span>
+    <span class="n">pedir_dados_raizes</span><span class="p">,</span>
+<span class="p">)</span>
+
+<div class="viewcode-block" id="menu_raizes">
+<a class="viewcode-back" href="../../modules.html#codigos.calcnum.menu_raizes">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">menu_raizes</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Menu interativo para os métodos de cálculo de raízes (Bisseção, Newton, Secante).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- MÉTODOS PARA CÁLCULO DE RAÍZES ---&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Bisseção&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Newton-Raphson (Tangente)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Secante&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Voltar ao menu principal&quot;</span><span class="p">)</span>
+
+        <span class="n">escolha</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha o método: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+            <span class="n">func_str</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">pedir_dados_raizes</span><span class="p">(</span><span class="s1">&#39;bissecao&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">func_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">params</span>
+            <span class="n">raiz</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">bissecao</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">raiz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">A raiz encontrada é: </span><span class="si">{</span><span class="n">raiz</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número total de iterações: </span><span class="si">{</span><span class="n">iters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">plotar_funcao</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">raiz</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+            <span class="n">func_str</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">pedir_dados_raizes</span><span class="p">(</span><span class="s1">&#39;newton&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">func_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">raiz</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">newton</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">raiz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">A raiz encontrada é: </span><span class="si">{</span><span class="n">raiz</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número total de iterações: </span><span class="si">{</span><span class="n">iters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">plotar_funcao</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="n">x0</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="n">x0</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="n">raiz</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+            <span class="n">func_str</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">pedir_dados_raizes</span><span class="p">(</span><span class="s1">&#39;secante&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">func_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">params</span>
+            <span class="n">raiz</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">secante</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">raiz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">A raiz encontrada é: </span><span class="si">{</span><span class="n">raiz</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número total de iterações: </span><span class="si">{</span><span class="n">iters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">plotar_funcao</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="n">raiz</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="menu_principal">
+<a class="viewcode-back" href="../../modules.html#codigos.calcnum.menu_principal">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">menu_principal</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Menu principal do pacote de Cálculo Numérico.</span>
+
+<span class="sd">    Apresenta as opções principais (Bases, Sistemas, Interpolações, Ajustes  de EDOs, Integração Numérica e Métodos de Raízes). </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Cálculo Numérico - Menu Principal ===&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Conversão de Bases&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Sistemas Lineares&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Interpolações&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Ajustes de Curvas&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5 - Equações Diferenciais (EDOs)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6 - Integração Numérica&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;7 - Métodos de Raízes&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Sair&quot;</span><span class="p">)</span>
+        <span class="n">escolha</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha uma opção: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saindo...&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+            <span class="n">menu_bases</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+            <span class="n">menu_sistemas</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+            <span class="n">menu_interpolacao</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span>
+            <span class="n">menu_ajustes</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;5&#39;</span><span class="p">:</span>
+            <span class="n">menu_edos</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;6&#39;</span><span class="p">:</span>
+            <span class="n">menu_integracoes</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;7&#39;</span><span class="p">:</span>
+            <span class="n">menu_raizes</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida. Tente novamente.&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">menu_principal</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matriz de Cobertura — calcnum &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Tutorial — calcnum" href="tutorial_calcnum.html" />
+    <link rel="prev" title="Cálculo Numérico" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sistemas.html">Sistemas Lineares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integracoes.html">Integrações Numéricas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Matriz de Cobertura — <cite>calcnum</cite></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/calcnum_matrix.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="matriz-de-cobertura-calcnum">
+<h1>Matriz de Cobertura — <cite>calcnum</cite><a class="headerlink" href="#matriz-de-cobertura-calcnum" title="Link para este cabeçalho"></a></h1>
+<p>Esta página apresenta o estado atual de testes, documentação e exemplos para as
+funcionalidades principais expostas pelo <cite>menu_principal</cite> em <a class="reference internal" href="modules.html#module-codigos.calcnum" title="codigos.calcnum"><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.calcnum</span></code></a>.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Matriz de Cobertura — <cite>calcnum</cite></span><a class="headerlink" href="#id1" title="Link para esta tabela"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Item do Menu</p></th>
+<th class="head"><p>Módulo(s)</p></th>
+<th class="head"><p>Testes (mód.)</p></th>
+<th class="head"><p>Testes (calcnum)</p></th>
+<th class="head"><p>Sphinx/Tutorial</p></th>
+<th class="head"><p>Exemplos (tests/exemplos/)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1 - Conversão de Bases</p></td>
+<td><p><a class="reference internal" href="modules.html#module-codigos.bases" title="codigos.bases"><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.bases</span></code></a></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">tests/exemplos/exemplo_bases.py</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2 - Sistemas Lineares</p></td>
+<td><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.sistemaslineares</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">tests/exemplos/exemplo_resolver_sistema.py</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>3 - Interpolações</p></td>
+<td><p><a class="reference internal" href="modules.html#module-codigos.interpolacoes" title="codigos.interpolacoes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.interpolacoes</span></code></a></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">tests/exemplos/exemplo_interpolacoes.py</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>4 - Ajustes de Curvas</p></td>
+<td><p><a class="reference internal" href="modules.html#module-codigos.ajustecurvas" title="codigos.ajustecurvas"><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.ajustecurvas</span></code></a></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">tests/exemplos/exemplo_ajuste_curvas.py</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>5 - Equações Diferenciais</p></td>
+<td><p><a class="reference internal" href="modules.html#module-codigos.edos" title="codigos.edos"><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.edos</span></code></a></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">tests/exemplos/exemplo_edos.py</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>6 - Integração Numérica</p></td>
+<td><p><a class="reference internal" href="modules.html#module-codigos.integracoes" title="codigos.integracoes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.integracoes</span></code></a></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">tests/exemplos/exemplo_integracoes.py</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>7 - Métodos de Raízes</p></td>
+<td><p><a class="reference internal" href="modules.html#module-codigos.raizes" title="codigos.raizes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.raizes</span></code></a></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes (<code class="docutils literal notranslate"><span class="pre">tests/exemplos/exemplo_busca_raiz.py</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Legenda: “Partial” indica que há testes/documentação mas nem todas as funções
+públicas foram cobertas ainda.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="index.html" class="btn btn-neutral float-left" title="Cálculo Numérico" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="tutorial_calcnum.html" class="btn btn-neutral float-right" title="Tutorial — calcnum" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

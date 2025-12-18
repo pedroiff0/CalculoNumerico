@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistemas Lineares &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Interpolações" href="interpolacoes.html" />
+    <link rel="prev" title="Conversões de Bases" href="bases.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="calcnum_matrix.html">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sistemas Lineares</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#documentacao">Documentação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exemplo-de-uso">Exemplo de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testes-de-integracao">Testes de Integração</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testes-unitarios-visiveis">Testes Unitários (visíveis)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#links-rapidos">Links rápidos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integracoes.html">Integrações Numéricas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Sistemas Lineares</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sistemas.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sistemas-lineares">
+<h1>Sistemas Lineares<a class="headerlink" href="#sistemas-lineares" title="Link para este cabeçalho"></a></h1>
+<p>Documentação das funções do módulo <code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.sistemaslineares</span></code> para montagem e
+resolução de sistemas lineares (Eliminação de Gauss, Pivotamento, Decomposição LU,
+forward/backward solves e cálculo de residuo).</p>
+<section id="documentacao">
+<h2>Documentação<a class="headerlink" href="#documentacao" title="Link para este cabeçalho"></a></h2>
+<p>As funções listadas abaixo implementam métodos clássicos para resolver sistemas
+lineares e utilitários de inspeção/depuração. Estão escritas para aceitar e
+retornar objetos do tipo <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.sistemaslineares.</span></span><span class="sig-name descname"><span class="pre">montar_sistema_valores</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/sistemaslineares.html#montar_sistema_valores"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Lê interativamente os coeficientes de um sistema linear quadrado.</p>
+<p>Solicita ao usuário o número de variáveis <code class="docutils literal notranslate"><span class="pre">n</span></code>, em seguida lê <code class="docutils literal notranslate"><span class="pre">n</span></code> linhas
+com <code class="docutils literal notranslate"><span class="pre">n</span></code> coeficientes cada e um vetor <code class="docutils literal notranslate"><span class="pre">b</span></code> com <code class="docutils literal notranslate"><span class="pre">n</span></code> termos. Faz validações
+simples de comprimento e converte para <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Retorna<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>A</strong> (<em>np.ndarray</em>) – Matriz dos coeficientes (n x n).</p></li>
+<li><p><strong>b</strong> (<em>np.ndarray</em>) – Vetor dos termos independentes (n,).</p></li>
+<li><p><strong>vars</strong> (<em>list</em>) – Lista de nomes das variáveis (ex.: [‘x1’,’x2’, …]).</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Levanta<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Se o número de elementos fornecidos por linha não corresponder a <code class="docutils literal notranslate"><span class="pre">n</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.sistemaslineares.</span></span><span class="sig-name descname"><span class="pre">eliminacao_gauss_sem_pivotamento</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/sistemaslineares.html#eliminacao_gauss_sem_pivotamento"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Executa a eliminação de Gauss sem pivotamento parcial.</p>
+<p>Triangulariza a matriz <code class="docutils literal notranslate"><span class="pre">A</span></code> e aplica substituição regressiva para
+obter a solução <code class="docutils literal notranslate"><span class="pre">x</span></code>. Esta versão não realiza trocas de linha, por
+isso pode falhar para matrizes que exigem pivotamento.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>, </em><em>n</em><em>)</em>) – Matriz dos coeficientes do sistema linear.</p></li>
+<li><p><strong>b</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Vetor dos termos independentes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">A_triangular,</span> <span class="pre">b_modificado,</span> <span class="pre">erro_flag)</span></code> onde <code class="docutils literal notranslate"><span class="pre">x</span></code> é o vetor
+solução (ou <code class="docutils literal notranslate"><span class="pre">None</span></code> em caso de falha), <code class="docutils literal notranslate"><span class="pre">A_triangular</span></code> é a matriz A
+após eliminação e <code class="docutils literal notranslate"><span class="pre">b_modificado</span></code> o vetor b modificado. <code class="docutils literal notranslate"><span class="pre">erro_flag</span></code> é
+<code class="docutils literal notranslate"><span class="pre">False</span></code> em execução bem-sucedida ou <code class="docutils literal notranslate"><span class="pre">True</span></code>/detalhe em caso de erro.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.sistemaslineares.</span></span><span class="sig-name descname"><span class="pre">lu_sem_pivot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/sistemaslineares.html#lu_sem_pivot"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Decomposição LU sem pivotamento.</p>
+<p>Calcula matrizes <code class="docutils literal notranslate"><span class="pre">L</span></code> (inferior) e <code class="docutils literal notranslate"><span class="pre">U</span></code> (superior) tais que
+<code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">=</span> <span class="pre">L</span> <span class="pre">&#64;</span> <span class="pre">U</span></code> quando possível. Não realiza pivotamento; um pivô zero
+provoca exceção <code class="docutils literal notranslate"><span class="pre">ZeroDivisionError</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>, </em><em>n</em><em>)</em>) – Matriz a ser decomposta.</p></li>
+<li><p><strong>b</strong> (<em>array_like</em>) – (opcional) vetor usado apenas para exibição durante passos (pode ser
+<code class="docutils literal notranslate"><span class="pre">None</span></code> quando não for necessário).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>L, U</strong> – Matrizes inferior e superior da decomposição LU.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.sistemaslineares.</span></span><span class="sig-name descname"><span class="pre">lu_com_pivot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/sistemaslineares.html#lu_com_pivot"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Decomposição LU com pivotamento parcial.</p>
+<p>Retorna a tripla <code class="docutils literal notranslate"><span class="pre">P,</span> <span class="pre">L,</span> <span class="pre">U</span></code> tal que <code class="docutils literal notranslate"><span class="pre">P</span> <span class="pre">&#64;</span> <span class="pre">A</span> <span class="pre">=</span> <span class="pre">L</span> <span class="pre">&#64;</span> <span class="pre">U</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>, </em><em>n</em><em>)</em>) – Matriz a ser decomposta.</p></li>
+<li><p><strong>b</strong> (<em>array_like</em>) – (opcional) vetor usado apenas para exibição durante passos.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>P, L, U</strong> – <code class="docutils literal notranslate"><span class="pre">P</span></code> matriz de permutação, <code class="docutils literal notranslate"><span class="pre">L</span></code> inferior, <code class="docutils literal notranslate"><span class="pre">U</span></code> superior.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.sistemaslineares.</span></span><span class="sig-name descname"><span class="pre">forward_solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/sistemaslineares.html#forward_solve"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Resolve o sistema triangular inferior L y = b por substituição progressiva.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>, </em><em>n</em><em>)</em>) – Matriz triangular inferior (diagonal não-nula esperada).</p></li>
+<li><p><strong>b</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Vetor de termos independentes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>y</strong> – Solução do sistema triangular inferior.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.sistemaslineares.</span></span><span class="sig-name descname"><span class="pre">backward_solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/sistemaslineares.html#backward_solve"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Resolve o sistema triangular superior U x = y por substituição regressiva.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>U</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>, </em><em>n</em><em>)</em>) – Matriz triangular superior.</p></li>
+<li><p><strong>y</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Vetor do lado direito (resultado da forward_solve).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>x</strong> – Solução do sistema triangular superior.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.sistemaslineares.</span></span><span class="sig-name descname"><span class="pre">calcular_residuo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/sistemaslineares.html#calcular_residuo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Calcula o resíduo r = b - A x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<em>array_like</em>) – Matriz dos coeficientes.</p></li>
+<li><p><strong>x</strong> (<em>array_like</em>) – Solução candidata do sistema.</p></li>
+<li><p><strong>b</strong> (<em>array_like</em>) – Vetor do lado direito.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>r</strong> – Vetor resíduo (b - A x).</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.sistemaslineares.</span></span><span class="sig-name descname"><span class="pre">exibir_residuo_detalhado</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/sistemaslineares.html#exibir_residuo_detalhado"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Exibe detalhadamente as matrizes A, x, b e o resíduo r = b - A x.</p>
+<p>Útil para depuração e apresentação passo a passo da solução do sistema.</p>
+</dd></dl>
+
+</section>
+<section id="exemplo-de-uso">
+<h2>Exemplo de Uso<a class="headerlink" href="#exemplo-de-uso" title="Link para este cabeçalho"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="sd">&quot;&quot;&quot;Exemplo: resolver sistema linear via LU e verificações.&quot;&quot;&quot;</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">sistemaslineares</span> <span class="k">as</span> <span class="n">sl</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="linenos"> 8</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]])</span>
+<span class="linenos"> 9</span>    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">])</span>
+<span class="linenos">10</span>    <span class="n">P</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">U</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">lu_com_pivot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos">11</span>    <span class="n">b_mod</span> <span class="o">=</span> <span class="n">P</span> <span class="o">@</span> <span class="n">b</span>
+<span class="linenos">12</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">forward_solve</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">b_mod</span><span class="p">)</span>
+<span class="linenos">13</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">backward_solve</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="linenos">14</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solução encontrada:&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="linenos">15</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Resíduo:&quot;</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">calcular_residuo</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="testes-de-integracao">
+<h2>Testes de Integração<a class="headerlink" href="#testes-de-integracao" title="Link para este cabeçalho"></a></h2>
+<p>O teste de integração que valida a opção de sistemas no menu principal é:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_inputs_calcnum</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">test_calcnum_inputs_basic</span> <span class="o">-</span><span class="n">q</span>
+</pre></div>
+</div>
+<p>Teste correspondente: <code class="file docutils literal notranslate"><span class="pre">tests/inputs/inputSistemas.txt</span></code></p>
+</section>
+<section id="testes-unitarios-visiveis">
+<h2>Testes Unitários (visíveis)<a class="headerlink" href="#testes-unitarios-visiveis" title="Link para este cabeçalho"></a></h2>
+<p>Abaixo estão os testes unitários para as funções de sistemas. Eles são incluídos
+para referência e para facilitar revisão rápida do comportamento implementado.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">sistemaslineares</span> <span class="k">as</span> <span class="n">sl</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">def</span><span class="w"> </span><span class="nf">test_eliminacao_sem_pivotamento_basic</span><span class="p">():</span>
+<span class="linenos"> 6</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.0</span><span class="p">]])</span>
+<span class="linenos"> 7</span>    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">])</span>
+<span class="linenos"> 8</span>    <span class="n">x</span><span class="p">,</span> <span class="n">Atri</span><span class="p">,</span> <span class="n">bmod</span><span class="p">,</span> <span class="n">flag</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">eliminacao_gauss_sem_pivotamento</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos"> 9</span>    <span class="k">assert</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos">10</span>    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">def</span><span class="w"> </span><span class="nf">test_eliminacao_sem_pivotamento_pivo_zero</span><span class="p">():</span>
+<span class="linenos">14</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]])</span>
+<span class="linenos">15</span>    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>
+<span class="linenos">16</span>    <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">eliminacao_gauss_sem_pivotamento</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos">17</span>    <span class="k">assert</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="k">def</span><span class="w"> </span><span class="nf">test_eliminacao_com_pivotamento_basic</span><span class="p">():</span>
+<span class="linenos">21</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]])</span>
+<span class="linenos">22</span>    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span>
+<span class="linenos">23</span>    <span class="n">x</span><span class="p">,</span> <span class="n">A_mod</span><span class="p">,</span> <span class="n">b_mod</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">eliminacao_gauss_com_pivotamento</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos">24</span>    <span class="k">assert</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos">25</span>    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="k">def</span><span class="w"> </span><span class="nf">test_lu_sem_pivot_reconstructs_A</span><span class="p">():</span>
+<span class="linenos">29</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]])</span>
+<span class="linenos">30</span>    <span class="n">L</span><span class="p">,</span> <span class="n">U</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">lu_sem_pivot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos">31</span>    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">L</span> <span class="o">@</span> <span class="n">U</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span><span class="k">def</span><span class="w"> </span><span class="nf">test_lu_com_pivot_reconstructs_PA</span><span class="p">():</span>
+<span class="linenos">35</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]])</span>
+<span class="linenos">36</span>    <span class="n">P</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">U</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">lu_com_pivot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos">37</span>    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">P</span> <span class="o">@</span> <span class="n">A</span><span class="p">,</span> <span class="n">L</span> <span class="o">@</span> <span class="n">U</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span><span class="k">def</span><span class="w"> </span><span class="nf">test_calcular_residuo_zero_for_exact_solution</span><span class="p">():</span>
+<span class="linenos">41</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]])</span>
+<span class="linenos">42</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="linenos">43</span>    <span class="n">b</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span>
+<span class="linenos">44</span>    <span class="n">r</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">calcular_residuo</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos">45</span>    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="links-rapidos">
+<h2>Links rápidos<a class="headerlink" href="#links-rapidos" title="Link para este cabeçalho"></a></h2>
+<ul class="simple">
+<li><p>Teste de integração relacionado: <code class="file docutils literal notranslate"><span class="pre">tests/test_inputs_calcnum.py::test_calcnum_inputs_basic</span></code></p></li>
+<li><p>Testes unitários: <code class="file docutils literal notranslate"><span class="pre">tests/test_sistemaslineares.py</span></code>, <code class="file docutils literal notranslate"><span class="pre">tests/test_calcnum_linear_solve.py</span></code></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="bases.html" class="btn btn-neutral float-left" title="Conversões de Bases" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="interpolacoes.html" class="btn btn-neutral float-right" title="Interpolações" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

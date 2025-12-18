@@ -1,0 +1,1062 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulos &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="calcnum_matrix.html">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sistemas.html">Sistemas Lineares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integracoes.html">Integrações Numéricas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Módulos</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modulos">
+<h1>Módulos<a class="headerlink" href="#modulos" title="Link para este cabeçalho"></a></h1>
+<p>Módulos visíveis do pacote <cite>codigos</cite>.</p>
+<div class="toctree-wrapper compound">
+</div>
+<p id="module-codigos.calcnum">Requirements do projeto:</p>
+<p>matplotlib==3.10.7
+numpy==2.3.4
+sympy==1.14.0
+pandas==2.3.3
+mpmath==1.3.0</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="codigos.calcnum.SYMPY_LOCALS">
+<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">SYMPY_LOCALS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'E':</span> <span class="pre">E,</span> <span class="pre">'abs':</span> <span class="pre">Abs,</span> <span class="pre">'acos':</span> <span class="pre">acos,</span> <span class="pre">'asin':</span> <span class="pre">asin,</span> <span class="pre">'atan':</span> <span class="pre">atan,</span> <span class="pre">'cos':</span> <span class="pre">cos,</span> <span class="pre">'cosh':</span> <span class="pre">cosh,</span> <span class="pre">'e':</span> <span class="pre">E,</span> <span class="pre">'exp':</span> <span class="pre">exp,</span> <span class="pre">'log':</span> <span class="pre">log,</span> <span class="pre">'pi':</span> <span class="pre">pi,</span> <span class="pre">'sin':</span> <span class="pre">sin,</span> <span class="pre">'sinh':</span> <span class="pre">sinh,</span> <span class="pre">'sqrt':</span> <span class="pre">&lt;function</span> <span class="pre">sqrt&gt;,</span> <span class="pre">'tan':</span> <span class="pre">tan,</span> <span class="pre">'tanh':</span> <span class="pre">tanh}</span></em><a class="headerlink" href="#codigos.calcnum.SYMPY_LOCALS" title="Link para esta definição"></a></dt>
+<dd><p>Projeto de Cálculo Numérico:
+Autor: Pedro Henrique Rocha de Andrade
+Orientador: Rodrigo Lacerda da Silva
+Ano Início: 2025.2</p>
+<p>Ideia: Reunir os códigos em um pacote, tornar público para o instituto e auxiliar os alunos a melhor compreender a lógica de programação resolvendo problemas de cálculo, álgebra e computação.
+Apresentar ao instituto futuramente.</p>
+<p>Github: <a class="reference external" href="https://github.com/pedroiff0/CalculoNumerico">https://github.com/pedroiff0/CalculoNumerico</a>
+Paper:
+Documentação:
+Tutoriais:</p>
+<p>% pip3 install calculonumiff</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.calcnum.menu_bases">
+<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">menu_bases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#menu_bases"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.menu_bases" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.calcnum.menu_sistemas">
+<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">menu_sistemas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#menu_sistemas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.menu_sistemas" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.calcnum.menu_interpolacao">
+<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">menu_interpolacao</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#menu_interpolacao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.menu_interpolacao" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.calcnum.menu_ajustes">
+<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">menu_ajustes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#menu_ajustes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.menu_ajustes" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.calcnum.menu_integracoes">
+<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">menu_integracoes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#menu_integracoes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.menu_integracoes" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.calcnum.menu_edos">
+<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">menu_edos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#menu_edos"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.menu_edos" title="Link para esta definição"></a></dt>
+<dd><p>Submenu interativo para resolver Equações Diferenciais Ordinárias (EDOs).
+Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.calcnum.menu_raizes">
+<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">menu_raizes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#menu_raizes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.menu_raizes" title="Link para esta definição"></a></dt>
+<dd><p>Menu interativo para os métodos de cálculo de raízes (Bisseção, Newton, Secante).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.calcnum.menu_principal">
+<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">menu_principal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#menu_principal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.menu_principal" title="Link para esta definição"></a></dt>
+<dd><p>Menu principal do pacote de Cálculo Numérico.</p>
+<p>Apresenta as opções principais (Bases, Sistemas, Interpolações, Ajustes  de EDOs, Integração Numérica e Métodos de Raízes).</p>
+</dd></dl>
+
+<dl class="py function" id="module-codigos.raizes">
+<dt class="sig sig-object py" id="codigos.raizes.f">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#f"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.f" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.raizes.plotar_funcao">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">plotar_funcao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raiz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#plotar_funcao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.plotar_funcao" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.raizes.bissecao">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">bissecao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#bissecao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.bissecao" title="Link para esta definição"></a></dt>
+<dd><p>Método da bisseção para encontrar raiz de uma função dada por string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_str</strong> (<em>str</em>) – Expressão Python de <code class="docutils literal notranslate"><span class="pre">f(x)</span></code> (ex.: <code class="docutils literal notranslate"><span class="pre">'x**2</span> <span class="pre">-</span> <span class="pre">4'</span></code>).</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Intervalo inicial [a, b] com sinais opostos.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Intervalo inicial [a, b] com sinais opostos.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerância para critério de parada.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Número máximo de iterações.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (raiz_aproximada, n_iter) ou (None, 0) se os sinais em a/b não forem opostos.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.raizes.newton">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">newton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#newton"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.newton" title="Link para esta definição"></a></dt>
+<dd><p>Método de Newton-Raphson para encontrar raiz de função dada por string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_str</strong> (<em>str</em>) – Expressão Python de <code class="docutils literal notranslate"><span class="pre">f(x)</span></code>.</p></li>
+<li><p><strong>x0</strong> (<em>float</em>) – Chute inicial.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerância para critério de parada.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Número máximo de iterações.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (raiz_aproximada, n_iter) ou (None, n_iter) se houver erro.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.raizes.secante">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">secante</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#secante"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.secante" title="Link para esta definição"></a></dt>
+<dd><p>Método da secante para encontrar raiz de função dada por string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_str</strong> (<em>str</em>) – Expressão Python de <code class="docutils literal notranslate"><span class="pre">f(x)</span></code>.</p></li>
+<li><p><strong>x0</strong> (<em>float</em>) – Dois chutes iniciais.</p></li>
+<li><p><strong>x1</strong> (<em>float</em>) – Dois chutes iniciais.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerância para critério de parada.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Número máximo de iterações.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (raiz_aproximada, n_iter) ou (None, n_iter) em caso de erro.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.raizes.pedir_dados_raizes">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">pedir_dados_raizes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metodo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#pedir_dados_raizes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.pedir_dados_raizes" title="Link para esta definição"></a></dt>
+<dd><p>Lê os dados necessários para o método de raízes.</p>
+<p>Se <code class="docutils literal notranslate"><span class="pre">metodo</span></code> for <code class="docutils literal notranslate"><span class="pre">None</span></code>, comporta-se como modo interativo completo
+(executa o método e plota o resultado). Se <code class="docutils literal notranslate"><span class="pre">metodo</span></code> for uma das strings
+<code class="docutils literal notranslate"><span class="pre">'bissecao'</span></code>, <code class="docutils literal notranslate"><span class="pre">'newton'</span></code> ou <code class="docutils literal notranslate"><span class="pre">'secante'</span></code>, apenas lê os parâmetros e
+retorna uma tupla <code class="docutils literal notranslate"><span class="pre">(func_str,</span> <span class="pre">tol,</span> <span class="pre">max_iter,</span> <span class="pre">params)</span></code> para uso por
+menus externos (compatibilidade com <cite>menu_raizes</cite>).</p>
+</dd></dl>
+
+<dl class="py function" id="module-codigos.integracoes">
+<dt class="sig sig-object py" id="codigos.integracoes.plotar_funcoes">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">plotar_funcoes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pontos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#plotar_funcoes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.plotar_funcoes" title="Link para esta definição"></a></dt>
+<dd><p>Plota uma ou várias funções simbólicas no intervalo [a, b].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>funcs</strong> (<em>str</em>) – String com expressões separadas por vírgula (ex.: <code class="docutils literal notranslate"><span class="pre">'sin(x),</span> <span class="pre">cos(x)'</span></code>).</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Limites do intervalo de plotagem.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Limites do intervalo de plotagem.</p></li>
+<li><p><strong>pontos</strong> (<em>int</em><em>, </em><em>optional</em>) – Número de pontos no eixo x usados para amostragem (padrão: 400).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.plotar_funcao_e_aproximacao">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">plotar_funcao_e_aproximacao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metodo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pontos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#plotar_funcao_e_aproximacao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.plotar_funcao_e_aproximacao" title="Link para esta definição"></a></dt>
+<dd><p>Plota a função e a aproximação composta baseada em nós igualmente espaçados.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Intervalo da integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Intervalo da integração.</p></li>
+<li><p><strong>m</strong> (<em>int</em>) – Número de subintervalos (m &gt; 0).</p></li>
+<li><p><strong>metodo</strong> (<em>str</em><em>, </em><em>optional</em>) – Legenda para a aproximação (ex.: <code class="docutils literal notranslate"><span class="pre">'Trapézio</span> <span class="pre">composta'</span></code>).</p></li>
+<li><p><strong>pontos</strong> (<em>int</em><em>, </em><em>optional</em>) – Número de pontos para plotagem da função exata.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.pedir_dados_integral">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">pedir_dados_integral</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#pedir_dados_integral"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.pedir_dados_integral" title="Link para esta definição"></a></dt>
+<dd><p>Lê interativamente a função e limites para integração.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Retorna<span class="colon">:</span></dt>
+<dd class="field-odd"><p>func : str ou None - expressão da função
+a, b : float - limites do intervalo
+composta : bool - se deve usar regra composta
+Retorna (None, None, None, None) em caso de erro de parsing.</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>(func, a, b, composta)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.pedir_m_ou_h">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">pedir_m_ou_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regra</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#pedir_m_ou_h"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.pedir_m_ou_h" title="Link para esta definição"></a></dt>
+<dd><p>Auxiliar que solicita <code class="docutils literal notranslate"><span class="pre">m</span></code> (número de subintervalos) ou <code class="docutils literal notranslate"><span class="pre">h</span></code> (tamanho do passo).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) – Intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Intervalo de integração.</p></li>
+<li><p><strong>regra</strong> (<em>str</em>) – Identificador da regra (‘trapezio’, ‘simpson13’, ‘simpson38’) usado para validar requisitos (paridade, múltiplos).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (m, h) calculada, ou (None, None) em caso de entrada inválida.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(int, float) or (None, None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.erro_truncamento_composta">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">erro_truncamento_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">derivada_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metodo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#erro_truncamento_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.erro_truncamento_composta" title="Link para esta definição"></a></dt>
+<dd><p>Estimativa do erro de truncamento para regras compostas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) – Intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Intervalo de integração.</p></li>
+<li><p><strong>m</strong> (<em>int</em>) – Número de subintervalos.</p></li>
+<li><p><strong>derivada_max</strong> (<em>float</em>) – Valor máximo estimado da derivada relevante no intervalo (ex.: segunda derivada para trapézio).</p></li>
+<li><p><strong>metodo</strong> (<em>str</em>) – ‘trapezio’, ‘simpson13’ ou ‘simpson38’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estimativa do erro de truncamento (pode ser negativa conforme fórmula) ou None se método desconhecido.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.trapezio_tabela">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">trapezio_tabela</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#trapezio_tabela"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.trapezio_tabela" title="Link para esta definição"></a></dt>
+<dd><p>Regra do Trapézio para dados em tabela (x, y).</p>
+<p>Requer que o número de pontos seja pelo menos 2
+Fórmula: int_a^b f(x) dx ≈ (h/2) * [f(x0) + f(xn)]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.simpson_1_3_tabela">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_1_3_tabela</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_1_3_tabela"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.simpson_1_3_tabela" title="Link para esta definição"></a></dt>
+<dd><p>Regra de Simpson 1/3 para dados em tabela (x, y).</p>
+<p>Requer que o número de pontos seja ímpar
+Fórmula: int_a^b f(x) dx ≈ (h/3) * [f(x0) + 4f(x1) + 2f(x2) + … + 4f(xn-1) + f(xn)]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.simpson_3_8_tabela">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_3_8_tabela</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_3_8_tabela"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.simpson_3_8_tabela" title="Link para esta definição"></a></dt>
+<dd><p>‘
+Regra de Simpson 3/8 para dados em tabela (x, y).</p>
+<p>Requer que os intervalos sejam multiplo de 3
+Fórmula: int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + 2f(x3) + … + 3f(xn-1) + f(xn)]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.calcular_integral_analitica">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">calcular_integral_analitica</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#calcular_integral_analitica"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.calcular_integral_analitica" title="Link para esta definição"></a></dt>
+<dd><p>Calcula a integral de uma função simbolicamente usando SymPy.</p>
+<p>Requer a função e os limites de integração.
+Fórmula: int_a^b f(x) dx</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.newton_cotes">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">newton_cotes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#newton_cotes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.newton_cotes" title="Link para esta definição"></a></dt>
+<dd><p>Newton-Cotes para integração numérica.</p>
+<p>Suporta ordens 1 (Trapézio), 2 (Simpson 1/3), 3 (Simpson 3/8) e 4.
+Fórmulas:
+Ordem 1 (Trapézio): int_a^b f(x) dx ≈ (h/2) * [f(x0) + f(x1)]
+Ordem 2 (Simpson 1/3): int_a^b f(x) dx ≈ (h/3) * [f(x0) + 4f(x1) + f(x2)]
+Ordem 3 (Simpson 3/8): int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + f(x3)]</p>
+<p>Quando usar? Para integrais simples com poucos pontos (&gt;= ordem)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.trapezio_composta">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">trapezio_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#trapezio_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.trapezio_composta" title="Link para esta definição"></a></dt>
+<dd><p>Regra do Trapézio composta para integração numérica.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code> (usada via <code class="docutils literal notranslate"><span class="pre">eval</span></code> no contexto seguro).</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aproximação da integral ou <code class="docutils literal notranslate"><span class="pre">None</span></code> em caso de erro/entrada inválida.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.simpson_1_3_composta">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_1_3_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_1_3_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.simpson_1_3_composta" title="Link para esta definição"></a></dt>
+<dd><p>Regra de Simpson 1/3 composta para integração numérica.</p>
+<p>Quando usar: m deve ser par, pois cada aplicação usa 2 subintervalos.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.simpson_3_8_composta">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_3_8_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_3_8_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.simpson_3_8_composta" title="Link para esta definição"></a></dt>
+<dd><p>Regra de Simpson 3/8 composta para integração numérica.</p>
+<p>Quando usar: n deve ser múltiplo de 3
+Passos manuais:
+1. Calcular h = (b - a) / n
+2. Calcular os pontos x_i = a + i*h para i = 0, 1, …, n
+3. Avaliar f(x_i) para cada ponto
+4. Aplicar a fórmula composta</p>
+<p>Fórmula: int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + 2f(x3) + … + 3f(xn-1) + f(xn)]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.menu">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#menu"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.menu" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function" id="module-codigos.interpolacoes">
+<dt class="sig sig-object py" id="codigos.interpolacoes.dados_interpolacao">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">dados_interpolacao</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#dados_interpolacao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.dados_interpolacao" title="Link para esta definição"></a></dt>
+<dd><p>Lê interativamente pontos para interpolação.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Retorna<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tupla <code class="docutils literal notranslate"><span class="pre">(x_vals,</span> <span class="pre">y_vals,</span> <span class="pre">x_interp)</span></code> onde <code class="docutils literal notranslate"><span class="pre">x_vals</span></code> e <code class="docutils literal notranslate"><span class="pre">y_vals</span></code> são
+listas de pontos e <code class="docutils literal notranslate"><span class="pre">x_interp</span></code> é o valor a ser interpolado.</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.obter_max_grau">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">obter_max_grau</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#obter_max_grau"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.obter_max_grau" title="Link para esta definição"></a></dt>
+<dd><p>Solicita ao usuário o grau máximo para interpolação.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – Número de pontos disponíveis.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Grau máximo escolhido ou <code class="docutils literal notranslate"><span class="pre">None</span></code> para usar o máximo disponível.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.verifica_espacamento_uniforme">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">verifica_espaçamento_uniforme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#verifica_espaçamento_uniforme"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.verifica_espacamento_uniforme" title="Link para esta definição"></a></dt>
+<dd><p>Verifica se os pontos x possuem espaçamento uniforme.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>sequence</em><em> of </em><em>float</em>) – Pontos x ordenados.</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerância absoluta para comparação (padrão 1e-15).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (eh_uniforme, h) onde h é o passo estimado entre pontos.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(bool, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.tabela_diferencas_divididas">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">tabela_diferencas_divididas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#tabela_diferencas_divididas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.tabela_diferencas_divididas" title="Link para esta definição"></a></dt>
+<dd><p>Calcula a tabela de diferenças divididas (Newton).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>sequence</em><em> of </em><em>float</em>) – Nós e valores correspondentes.</p></li>
+<li><p><strong>y</strong> (<em>sequence</em><em> of </em><em>float</em>) – Nós e valores correspondentes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tabela em que cada linha j contém as diferenças divididas de ordem j.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of lists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.imprimir_tabela_diferencas_divididas">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">imprimir_tabela_diferencas_divididas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#imprimir_tabela_diferencas_divididas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.imprimir_tabela_diferencas_divididas" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.tabela_diferencas_finitas">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">tabela_diferencas_finitas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#tabela_diferencas_finitas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.tabela_diferencas_finitas" title="Link para esta definição"></a></dt>
+<dd><p>Calcula tabela de diferenças finitas progressivas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong> (<em>sequence</em><em> of </em><em>float</em>) – Valores y nos nós igualmente espaçados.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tabela de diferenças finitas progressivas.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of lists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.imprimir_tabela_diferencas_finitas">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">imprimir_tabela_diferencas_finitas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#imprimir_tabela_diferencas_finitas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.imprimir_tabela_diferencas_finitas" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.perguntar_erro">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">perguntar_erro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_interp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valor_interpolado</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#perguntar_erro"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.perguntar_erro" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.calcular_erro">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">calcular_erro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_interp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valor_interpolado</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#calcular_erro"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.calcular_erro" title="Link para esta definição"></a></dt>
+<dd><p>Calcula estimativa do erro de truncamento do polinômio interpolador.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_str</strong> (<em>str</em>) – Expressão simbólica de f(x).</p></li>
+<li><p><strong>x_vals</strong> (<em>sequence</em>) – Nós usados na interpolação.</p></li>
+<li><p><strong>x_interp</strong> (<em>float</em>) – Ponto em que a interpolação foi avaliada.</p></li>
+<li><p><strong>grau</strong> (<em>int</em>) – Grau do polinômio usado.</p></li>
+<li><p><strong>valor_interpolado</strong> (<em>float</em>) – Valor interpolado (não usado diretamente no cálculo aqui).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Erro de truncamento máximo estimado e None (placeholder para erro real).</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(float, None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.newton_dif_divididas">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">newton_dif_divididas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#newton_dif_divididas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.newton_dif_divididas" title="Link para esta definição"></a></dt>
+<dd><p>Avalia o polinômio interpolador de Newton (diferenças divididas) em xp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>sequence</em>) – Nós usados.</p></li>
+<li><p><strong>tabela</strong> (<em>list</em><em> of </em><em>lists</em>) – Tabela de diferenças divididas (como retornada por <code class="docutils literal notranslate"><span class="pre">tabela_diferencas_divididas</span></code>).</p></li>
+<li><p><strong>xp</strong> (<em>float</em>) – Ponto onde avaliar o polinômio.</p></li>
+<li><p><strong>max_grau</strong> (<em>int</em><em> or </em><em>None</em>) – Grau máximo a ser usado.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Valor do polinômio interpolador em <code class="docutils literal notranslate"><span class="pre">xp</span></code>.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.gregory_newton_progressivo">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">gregory_newton_progressivo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#gregory_newton_progressivo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.gregory_newton_progressivo" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.lagrange_interpol">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">lagrange_interpol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#lagrange_interpol"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.lagrange_interpol" title="Link para esta definição"></a></dt>
+<dd><p>Avalia o polinômio interpolador de Lagrange em xp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>sequence</em>) – Nós e valores correspondentes.</p></li>
+<li><p><strong>y</strong> (<em>sequence</em>) – Nós e valores correspondentes.</p></li>
+<li><p><strong>xp</strong> (<em>float</em>) – Ponto a ser interpolado.</p></li>
+<li><p><strong>max_grau</strong> (<em>int</em><em> or </em><em>None</em>) – Grau máximo a ser usado.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Valor interpolado em <code class="docutils literal notranslate"><span class="pre">xp</span></code>.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.dispositivo_pratico_lagrange">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">dispositivo_pratico_lagrange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#dispositivo_pratico_lagrange"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.dispositivo_pratico_lagrange" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.menu">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#menu"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.menu" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function" id="module-codigos.edos">
+<dt class="sig sig-object py" id="codigos.edos.pedir_dados_edo">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">pedir_dados_edo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#pedir_dados_edo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.pedir_dados_edo" title="Link para esta definição"></a></dt>
+<dd><p>Obtém entradas do usuário para resolução de EDOs (RK/Euler).</p>
+<p>A função solicita interativamente a função <code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">y)</span></code>, intervalo de integração,
+condições iniciais e passo (<code class="docutils literal notranslate"><span class="pre">h</span></code>) ou número de subintervalos (<code class="docutils literal notranslate"><span class="pre">m</span></code>). Também
+permite informar uma solução exata opcional.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Retorna<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dicionário com chaves: ‘func_input’, ‘a’, ‘b’, ‘x0’, ‘y0’, ‘h’, ‘m’, ‘xn’,
+‘solucao_exata’ (callable ou None) e ‘sol_exata_expr’ (string).</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.passos_edo">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">passos_edo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#passos_edo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.passos_edo" title="Link para esta definição"></a></dt>
+<dd><p>Normaliza e retorna (h, xn) dado h ou m. xn é sempre b.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.plotar_grafico_edo">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">plotar_grafico_edo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solucao_exata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">titulo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Solução</span> <span class="pre">da</span> <span class="pre">EDO'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#plotar_grafico_edo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.plotar_grafico_edo" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.mostrar_tabela_e_grafico_edo">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">mostrar_tabela_e_grafico_edo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solucao_exata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">titulo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Solução</span> <span class="pre">da</span> <span class="pre">EDO'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#mostrar_tabela_e_grafico_edo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.mostrar_tabela_e_grafico_edo" title="Link para esta definição"></a></dt>
+<dd><p>Mostra a tabela de pontos (x, y) e chama o plot se <cite>plotar</cite> for True.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.resolver_edo_2ordem">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">resolver_edo_2ordem</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#resolver_edo_2ordem"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.resolver_edo_2ordem" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.runge_kutta">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">runge_kutta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#runge_kutta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.runge_kutta" title="Link para esta definição"></a></dt>
+<dd><p>Resolve EDOs escalares usando métodos de Runge-Kutta de ordem 1 a 4.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_input</strong> (<em>str</em>) – Expressão para f(x, y) como string (ex.: <code class="docutils literal notranslate"><span class="pre">'y'</span></code> para dy/dx = y).</p></li>
+<li><p><strong>x0</strong> (<em>float</em>) – Ponto inicial.</p></li>
+<li><p><strong>y0</strong> (<em>float</em>) – Valor inicial y(x0).</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – Tamanho do passo (deve dividir o intervalo (xn-x0)).</p></li>
+<li><p><strong>xn</strong> (<em>float</em>) – Ponto final onde se integra até (xn &gt; x0 esperado).</p></li>
+<li><p><strong>ordem</strong> (<em>int</em>) – Ordem do método (1, 2, 3 ou 4).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla <code class="docutils literal notranslate"><span class="pre">(x_vals,</span> <span class="pre">y_vals)</span></code> com os pontos de amostragem e as aproximações y.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(list, list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.executar_runge_kutta">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">executar_runge_kutta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#executar_runge_kutta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.executar_runge_kutta" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.runge_kutta_sistema">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">runge_kutta_sistema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#runge_kutta_sistema"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.runge_kutta_sistema" title="Link para esta definição"></a></dt>
+<dd><p>Resolve sistemas de EDOs usando Runge-Kutta (vetorial).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>funcs_input</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>callables</em>) – Lista de expressões/funcões que descrevem cada componente do sistema. Use a notação
+<code class="docutils literal notranslate"><span class="pre">y[1]</span></code>, <code class="docutils literal notranslate"><span class="pre">y[2]</span></code> etc. quando passar strings (1-based index).</p></li>
+<li><p><strong>u0</strong> (<em>array_like</em>) – Vetor de condições iniciais (tamanho n, onde n é número de equações).</p></li>
+<li><p><strong>t0</strong> (<em>float</em>) – Tempo inicial.</p></li>
+<li><p><strong>tf</strong> (<em>float</em>) – Tempo final para integração.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – Passo de tempo.</p></li>
+<li><p><strong>ordem</strong> (<em>int</em>) – Ordem do método de Runge-Kutta (1-4).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla <code class="docutils literal notranslate"><span class="pre">(t_vals,</span> <span class="pre">u_vals)</span></code> onde <code class="docutils literal notranslate"><span class="pre">t_vals</span></code> é lista de tempos e <code class="docutils literal notranslate"><span class="pre">u_vals</span></code> é array (m x n)
+com as soluções em cada tempo.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(list, ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.executar_sistema_edos">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">executar_sistema_edos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#executar_sistema_edos"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.executar_sistema_edos" title="Link para esta definição"></a></dt>
+<dd><p>Interface para resolução de sistemas de EDOs usando Runge-Kutta.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.executar_edo_2ordem">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">executar_edo_2ordem</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#executar_edo_2ordem"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.executar_edo_2ordem" title="Link para esta definição"></a></dt>
+<dd><p>Interface para resolução de EDOs de 2ª ordem convertidas em sistemas.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.menu_principal">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">menu_principal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#menu_principal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.menu_principal" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function" id="module-codigos.bases">
+<dt class="sig sig-object py" id="codigos.bases.dados">
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#dados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.dados" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.bases.binario_para_decimal">
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.binario_para_decimal" title="Link para esta definição"></a></dt>
+<dd><p>Converte uma string binária para inteiro decimal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bin_str</strong> (<em>str</em>) – Representação binária (ex.: <code class="docutils literal notranslate"><span class="pre">'1011'</span></code>).</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Valor decimal correspondente.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.bases.decimal_para_binario">
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numDecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.decimal_para_binario" title="Link para esta definição"></a></dt>
+<dd><p>Converte um inteiro decimal para sua representação binária em string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>numDecimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – Representação binária (ex.: <code class="docutils literal notranslate"><span class="pre">'1011'</span></code>).</p></li>
+<li><p><em>Exemplos</em></p></li>
+<li><p><em>——–</em></p></li>
+<li><p><em>&gt;&gt;&gt; decimal_para_binario(11)</em></p></li>
+<li><p><em>’1011’</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.bases.decimal_para_hexadecimal">
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numDecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.decimal_para_hexadecimal" title="Link para esta definição"></a></dt>
+<dd><p>Converte um inteiro decimal para representação hexadecimal (maiúscula).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>numDecimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'FE'</span></code>).</p></li>
+<li><p><em>Exemplos</em></p></li>
+<li><p><em>——–</em></p></li>
+<li><p><em>&gt;&gt;&gt; decimal_para_hexadecimal(254)</em></p></li>
+<li><p><em>’FE’</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.bases.hexadecimal_para_decimal">
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.hexadecimal_para_decimal" title="Link para esta definição"></a></dt>
+<dd><p>Converte uma string hexadecimal (base 16) para inteiro decimal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_str</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'FE'</span></code>).</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>int</em> – Valor decimal correspondente.</p></li>
+<li><p><em>Exemplos</em></p></li>
+<li><p><em>——–</em></p></li>
+<li><p><em>&gt;&gt;&gt; hexadecimal_para_decimal(‘FE’)</em></p></li>
+<li><p><em>254</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.bases.binario_para_hexadecimal">
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.binario_para_hexadecimal" title="Link para esta definição"></a></dt>
+<dd><p>Converte uma string binária para representação hexadecimal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bin_str</strong> (<em>str</em>) – Representação binária.</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – Representação hexadecimal em maiúsculas.</p></li>
+<li><p><em>Exemplos</em></p></li>
+<li><p><em>——–</em></p></li>
+<li><p><em>&gt;&gt;&gt; binario_para_hexadecimal(‘1111’)</em></p></li>
+<li><p><em>’F’</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.bases.hexadecimal_para_binario">
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.hexadecimal_para_binario" title="Link para esta definição"></a></dt>
+<dd><p>Converte uma string hexadecimal para representação binária.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_str</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'F'</span></code>).</p>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> – Representação binária (ex.: <code class="docutils literal notranslate"><span class="pre">'1111'</span></code>).</p></li>
+<li><p><em>Exemplos</em></p></li>
+<li><p><em>——–</em></p></li>
+<li><p><em>&gt;&gt;&gt; hexadecimal_para_binario(‘F’)</em></p></li>
+<li><p><em>’1111’</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.bases.main">
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#main"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.main" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function" id="module-codigos.ajustecurvas">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.log_output">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">log_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log_resultados.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#log_output"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.log_output" title="Link para esta definição"></a></dt>
+<dd><p>Função para registrar logs em arquivo com timestamp</p>
+<p>Parâmetros:
+- message: string com o conteúdo a ser registrado (pode conter múltiplas linhas)
+- logfile: nome do arquivo de log (padrão ‘log_resultados.txt’)</p>
+<p>O arquivo é aberto em modo append e cada chamada adiciona a mensagem com a data/hora corrente</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.dados">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#dados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.dados" title="Link para esta definição"></a></dt>
+<dd><p>Função de entrada de dados:</p>
+<ul class="simple">
+<li><p>Tratamento de zeros e entradas inválidas</p></li>
+</ul>
+<p>Saídas:
+- Vetor x
+- Vetor y</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.tabela_interpolador">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">tabela_interpolador</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#tabela_interpolador"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.tabela_interpolador" title="Link para esta definição"></a></dt>
+<dd><p>Tabela para exibição dos cálculos pelo método dos mínimos quadrados:</p>
+<p>Entradas/Parâmetros:
+- x (vetor de pontos em x)
+- y (vetor de pontos em y)
+- p1x (valores do polinomio interpolador de x)</p>
+<p>Fórmulas
+di = yi - p1(xi)</p>
+<p>Saídas:
+- Tabela com i,xi,yi,p_1(xi),di,di**2</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.tabela_minimos_quadrados">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">tabela_minimos_quadrados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#tabela_minimos_quadrados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.tabela_minimos_quadrados" title="Link para esta definição"></a></dt>
+<dd><p>Tabela para exibição dos cálculos pelo método dos mínimos quadrados:</p>
+<p>Entradas/Parâmetros:
+- x (vetor de pontos em x)
+- y (vetor de pontos em y)</p>
+<p>Fórmulas
+b1 = (sum_xi * sum_yi - n * sum_xiyi) / (sum_xi ** 2 - n * sum_xi**2)
+b0 = (sum_yi - b1 * sum_xi) / n</p>
+<p>Saídas:
+- Tabela com i,xi,yi,xi**2,yi**2,xiyi,ui,di,di**2</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.calcula_chi_e_r2">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">calcula_chi_e_r2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#calcula_chi_e_r2"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.calcula_chi_e_r2" title="Link para esta definição"></a></dt>
+<dd><p>Calcula chi-quadrado (ajustado), soma dos quadrados dos resíduos (desvio) e coeficiente de determinação R^2,
+recebendo explicitamente os coeficientes da reta (b0, b1) e os pontos (x, y).</p>
+<p>Parâmetros:
+x (np.array): valores de x
+y (np.array): valores observados
+b0 (float): coeficiente linear da reta
+b1 (float): coeficiente angular da reta
+n_params (int): número de parâmetros do modelo (p), padrão 2 para regressão linear</p>
+<p>Fórmulas:
+D(a0,a1) = sum((y_i - b0 - b1*x_i)^2)
+SQT = sum((y_i - y_media)^2)
+SQRes = sum((y_i - Ui)^2) onde Ui = b0 + b1 * x_i
+SQReg = sum((Ui - y_media)^2)
+R^2 = 1 - (SQRes / SQT)
+Chi^2 = D(a0,a1) / (n - p) (n = número de pontos, p = número de parâmetros do modelo)</p>
+<dl class="simple">
+<dt>Retorna:</dt><dd><p>chi2, r2, Desvio, SQT, SQRes, SQReg, Ui</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.regressaolinear">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">regressaolinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#regressaolinear"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.regressaolinear" title="Link para esta definição"></a></dt>
+<dd><p>Método 1: Polinômio interpolador de ordem 1
+- Escolhendo o primeiro e o último ponto, ou qualquer outro par de pontos inserido previamente pelo usuário.</p>
+<p>Entradas/Parâmetros:
+- x (vetor de pontos em x)
+- y (vetor de pontos em y)
+- x0,y0; x1,y1 (pares de pontos escolhidos por indice)</p>
+<p>Fórmulas
+b1 = (y1 - y0) / (x1 - x0)         # Coeficiente angular (m)
+b0 = y0 - b1 * x0                  # Coeficiente linear (y)
+P_1(x) = y0 - ((y1 - y0)/(x1 - x0))*(x-x0)
+D(a0,a1) = sum((yi - p1(xi))^2)</p>
+<p>Saídas:
+- Tabela com i,xi,yi,p_1(xi),di
+- Equação da reta
+- Desvio D(a0,a1)
+- Chi2, R2
+- Gráfico ilustrativo</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.regressaolinear_intervalo">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">regressaolinear_intervalo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#regressaolinear_intervalo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.regressaolinear_intervalo" title="Link para esta definição"></a></dt>
+<dd><p>Método 2: Polinômio interpolador de ordem 1 dentro do intervalo (x.min(x), x.max(x))
+- Inserindo pontos manualmente dentro do intervalo previamente definido com os dados da funcao dados()</p>
+<p>Entradas/Parâmetros:
+- x (vetor de pontos em x)
+- y (vetor de pontos em y)</p>
+<p>Fórmulas
+P_1(x) = y0 - ((y1 - y0)/(x1 - x0))*(x-x0)
+D(a0,a1) = sum((yi - p1(xi))^2)</p>
+<p>Saídas:
+- Tabela com i,xi,yi,p_1(xi),di
+- Equação da reta
+- Desvio D(a0,a1)
+- Chi2, R2
+- Gráfico ilustrativo</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.minquadrados">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">minquadrados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#minquadrados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.minquadrados" title="Link para esta definição"></a></dt>
+<dd><p>Método 3: Mínimos Quadrados
+- É a derivada do desvio igualada a 0 com respeito a b0 e b1 (parciais)</p>
+<p>Entradas/Parâmetros:
+- x (vetor de pontos em x)
+- y (vetor de pontos em y)</p>
+<p>Fórmulas:
+b0 = (sum(yi) - b1*sum(xi)) / n
+b1 = (sum(xi)*sum(yi) - n*sum(xiyi))/((sum(xi)**2) - n*sum(xi**2))
+D(b0,b1) = sum((yi - (b0 + b1*xi))^2)</p>
+<p>Saídas:
+- Tabela com i,xi,yi,xi**2,yi**2,xiyi,ui,di,di**2
+- Equação da reta
+- Desvio D(b0,b1)
+- Chi2, R2
+- Gráfico ilustrativo</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.minquadrados_ordem_n_manual">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">minquadrados_ordem_n_manual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#minquadrados_ordem_n_manual"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.minquadrados_ordem_n_manual" title="Link para esta definição"></a></dt>
+<dd><p>Método 3: Mínimos Quadrados</p>
+<p>Entradas/Parâmetros:
+- x (vetor de pontos em x)
+- y (vetor de pontos em y)
+- ordem (1,n)
+- tabela (pra mostrar x,ui,di,di**2)
+- gráfico com legenda mostrando as infos calculadas.</p>
+<p>Fórmulas:
+basicamente montar um sistema e resolver por Gauss (poderia ser por decomposição LU tb)</p>
+<p>Saídas:
+- Equação da reta
+- Desvio
+- Chi2, R2
+- Gráfico ilustrativo</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.questao1c">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">questao1c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#questao1c"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.questao1c" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.questao1e">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">questao1e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#questao1e"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.questao1e" title="Link para esta definição"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.ajustecurvas.menu">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#menu"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.menu" title="Link para esta definição"></a></dt>
+<dd><p>Menu interativo de demonstração para Ajustes de Curvas.</p>
+<p>Fornece opções para regressão linear, mínimos quadrados (linear) e ajuste
+polinomial de ordem n. Este docstring foi simplificado para evitar problemas
+de formatação no Sphinx e melhorar a legibilidade.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

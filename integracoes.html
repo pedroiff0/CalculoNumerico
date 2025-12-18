@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Integrações Numéricas &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Equações Diferenciais Ordinárias (EDOs)" href="edos.html" />
+    <link rel="prev" title="Ajustes de Curvas" href="ajustes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="calcnum_matrix.html">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sistemas.html">Sistemas Lineares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Integrações Numéricas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#documentacao">Documentação</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exemplo-de-uso">Exemplo de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testes-de-integracao">Testes de Integração</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testes-unitarios-visiveis">Testes Unitários (visíveis)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#links-rapidos">Links rápidos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Integrações Numéricas</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/integracoes.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="integracoes-numericas">
+<h1>Integrações Numéricas<a class="headerlink" href="#integracoes-numericas" title="Link para este cabeçalho"></a></h1>
+<p>Funções do módulo <a class="reference internal" href="modules.html#module-codigos.integracoes" title="codigos.integracoes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">codigos.integracoes</span></code></a> para regras compostas e auxiliares.</p>
+<section id="documentacao">
+<h2>Documentação<a class="headerlink" href="#documentacao" title="Link para este cabeçalho"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">pedir_dados_integral</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#pedir_dados_integral"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Lê interativamente a função e limites para integração.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Retorna<span class="colon">:</span></dt>
+<dd class="field-odd"><p>func : str ou None - expressão da função
+a, b : float - limites do intervalo
+composta : bool - se deve usar regra composta
+Retorna (None, None, None, None) em caso de erro de parsing.</p>
+</dd>
+<dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-even"><p>(func, a, b, composta)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">pedir_m_ou_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regra</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#pedir_m_ou_h"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Auxiliar que solicita <code class="docutils literal notranslate"><span class="pre">m</span></code> (número de subintervalos) ou <code class="docutils literal notranslate"><span class="pre">h</span></code> (tamanho do passo).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) – Intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Intervalo de integração.</p></li>
+<li><p><strong>regra</strong> (<em>str</em>) – Identificador da regra (‘trapezio’, ‘simpson13’, ‘simpson38’) usado para validar requisitos (paridade, múltiplos).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tupla (m, h) calculada, ou (None, None) em caso de entrada inválida.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(int, float) or (None, None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">erro_truncamento_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">derivada_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metodo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#erro_truncamento_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Estimativa do erro de truncamento para regras compostas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) – Intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Intervalo de integração.</p></li>
+<li><p><strong>m</strong> (<em>int</em>) – Número de subintervalos.</p></li>
+<li><p><strong>derivada_max</strong> (<em>float</em>) – Valor máximo estimado da derivada relevante no intervalo (ex.: segunda derivada para trapézio).</p></li>
+<li><p><strong>metodo</strong> (<em>str</em>) – ‘trapezio’, ‘simpson13’ ou ‘simpson38’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estimativa do erro de truncamento (pode ser negativa conforme fórmula) ou None se método desconhecido.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">newton_cotes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#newton_cotes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Newton-Cotes para integração numérica.</p>
+<p>Suporta ordens 1 (Trapézio), 2 (Simpson 1/3), 3 (Simpson 3/8) e 4.
+Fórmulas:
+Ordem 1 (Trapézio): int_a^b f(x) dx ≈ (h/2) * [f(x0) + f(x1)]
+Ordem 2 (Simpson 1/3): int_a^b f(x) dx ≈ (h/3) * [f(x0) + 4f(x1) + f(x2)]
+Ordem 3 (Simpson 3/8): int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + f(x3)]</p>
+<p>Quando usar? Para integrais simples com poucos pontos (&gt;= ordem)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">trapezio_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#trapezio_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Regra do Trapézio composta para integração numérica.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code> (usada via <code class="docutils literal notranslate"><span class="pre">eval</span></code> no contexto seguro).</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aproximação da integral ou <code class="docutils literal notranslate"><span class="pre">None</span></code> em caso de erro/entrada inválida.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_1_3_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_1_3_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Regra de Simpson 1/3 composta para integração numérica.</p>
+<p>Quando usar: m deve ser par, pois cada aplicação usa 2 subintervalos.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_3_8_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_3_8_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Regra de Simpson 3/8 composta para integração numérica.</p>
+<p>Quando usar: n deve ser múltiplo de 3
+Passos manuais:
+1. Calcular h = (b - a) / n
+2. Calcular os pontos x_i = a + i*h para i = 0, 1, …, n
+3. Avaliar f(x_i) para cada ponto
+4. Aplicar a fórmula composta</p>
+<p>Fórmula: int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + 2f(x3) + … + 3f(xn-1) + f(xn)]</p>
+</dd></dl>
+
+</section>
+<section id="exemplo-de-uso">
+<h2>Exemplo de Uso<a class="headerlink" href="#exemplo-de-uso" title="Link para este cabeçalho"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="sd">&quot;&quot;&quot;Exemplo: integrações numéricas simples&quot;&quot;&quot;</span>
+<span class="linenos">2</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">integracoes</span> <span class="k">as</span> <span class="n">ig</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="linenos">5</span>    <span class="c1"># Evita prompts interativos; usa newton_cotes simples (não composta) para exemplos não interativos</span>
+<span class="linenos">6</span>    <span class="n">res_trap</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">newton_cotes</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">7</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Trapézio (x) [0,1] -&gt;&#39;</span><span class="p">,</span> <span class="n">res_trap</span><span class="p">)</span>
+<span class="linenos">8</span>    <span class="n">res_simp</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">newton_cotes</span><span class="p">(</span><span class="s1">&#39;x**2&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">9</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Simpson 1/3 (x**2) [0,1] -&gt;&#39;</span><span class="p">,</span> <span class="n">res_simp</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="testes-de-integracao">
+<h2>Testes de Integração<a class="headerlink" href="#testes-de-integracao" title="Link para este cabeçalho"></a></h2>
+<p>Coberto pelo caso de integração em:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_inputs_calcnum</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">test_calcnum_inputs_basic</span> <span class="o">-</span><span class="n">q</span>
+</pre></div>
+</div>
+<p>Teste correspondente: <code class="file docutils literal notranslate"><span class="pre">tests/inputs/inputIntegracoes_calcnum.txt</span></code></p>
+</section>
+<section id="testes-unitarios-visiveis">
+<h2>Testes Unitários (visíveis)<a class="headerlink" href="#testes-unitarios-visiveis" title="Link para este cabeçalho"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">integracoes</span> <span class="k">as</span> <span class="n">ig</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">def</span><span class="w"> </span><span class="nf">test_erro_truncamento_composta</span><span class="p">():</span>
+<span class="linenos"> 6</span>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
+<span class="linenos"> 7</span>    <span class="c1"># derivada_max = 1 for testing</span>
+<span class="linenos"> 8</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;trapezio&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+<span class="linenos"> 9</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;simpson13&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span><span class="o">/</span><span class="mi">180</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+<span class="linenos">10</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;simpson38&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span><span class="o">/</span><span class="mi">80</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">def</span><span class="w"> </span><span class="nf">test_trapezio_composta_simple</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+<span class="linenos">14</span>    <span class="c1"># Integral of f(x)=x from 0 to 1 is 0.5</span>
+<span class="linenos">15</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">ig</span><span class="p">,</span> <span class="s1">&#39;pedir_m_ou_h&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">regra</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span>
+<span class="linenos">16</span>    <span class="c1"># avoid interactive plotting and error estimation: patch input to always &#39;n&#39;</span>
+<span class="linenos">17</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="linenos">18</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">trapezio_composta</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="linenos">19</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">res</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-3</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="k">def</span><span class="w"> </span><span class="nf">test_erro_truncamento_composta_values</span><span class="p">():</span>
+<span class="linenos">23</span>    <span class="c1"># For trapezio with derivada_max = 1 on [0,1], m=10 -&gt; formula: -((b-a)^3)/(12*m^2)*derivada_max</span>
+<span class="linenos">24</span>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">1.0</span>
+<span class="linenos">25</span>    <span class="n">expected</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">derivada_max</span>
+<span class="linenos">26</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;trapezio&#39;</span><span class="p">))</span> <span class="o">==</span> <span class="n">expected</span>
+<span class="linenos">27</span>    <span class="c1"># Simpson 1/3</span>
+<span class="linenos">28</span>    <span class="n">expected_s13</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">180</span> <span class="o">*</span> <span class="n">m</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">derivada_max</span>
+<span class="linenos">29</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;simpson13&#39;</span><span class="p">))</span> <span class="o">==</span> <span class="n">expected_s13</span>
+<span class="linenos">30</span>    <span class="c1"># Simpson 3/8</span>
+<span class="linenos">31</span>    <span class="n">expected_s38</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">80</span> <span class="o">*</span> <span class="n">m</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">derivada_max</span>
+<span class="linenos">32</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;simpson38&#39;</span><span class="p">))</span> <span class="o">==</span> <span class="n">expected_s38</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_cotes_trapezio_linear</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+<span class="linenos">36</span>    <span class="c1"># Prevent interactive plotting prompt</span>
+<span class="linenos">37</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="linenos">38</span>    <span class="c1"># integral of x from 0 to 1 = 0.5</span>
+<span class="linenos">39</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">newton_cotes</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">40</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.5</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span>
+<span class="linenos">43</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_cotes_simpson_on_quadratic</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+<span class="linenos">44</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="linenos">45</span>    <span class="c1"># integral of x**2 from 0 to 1 = 1/3</span>
+<span class="linenos">46</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">newton_cotes</span><span class="p">(</span><span class="s1">&#39;x**2&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">47</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span>
+<span class="linenos">50</span><span class="k">def</span><span class="w"> </span><span class="nf">test_trapezio_composta_monkeypatch</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+<span class="linenos">51</span>    <span class="c1"># Make pedir_m_ou_h return m=4, h=0.25 for interval 0..1</span>
+<span class="linenos">52</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">ig</span><span class="p">,</span> <span class="s1">&#39;pedir_m_ou_h&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">regra</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
+<span class="linenos">53</span>    <span class="c1"># Prevent interactive plotting/error prompts (always &#39;n&#39;)</span>
+<span class="linenos">54</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="linenos">55</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">trapezio_composta</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="linenos">56</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.5</span>
+<span class="linenos">57</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span><span class="k">def</span><span class="w"> </span><span class="nf">test_simpson_1_3_composta_monkeypatch</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+<span class="linenos">60</span>    <span class="c1"># m must be even; choose m=4</span>
+<span class="linenos">61</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">ig</span><span class="p">,</span> <span class="s1">&#39;pedir_m_ou_h&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">regra</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
+<span class="linenos">62</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="linenos">63</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">simpson_1_3_composta</span><span class="p">(</span><span class="s1">&#39;x**2&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="linenos">64</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span>
+<span class="linenos">65</span>
+<span class="linenos">66</span>
+<span class="linenos">67</span><span class="k">def</span><span class="w"> </span><span class="nf">test_simpson_3_8_composta_monkeypatch</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
+<span class="linenos">68</span>    <span class="c1"># m must be multiple of 3; choose m=3</span>
+<span class="linenos">69</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">ig</span><span class="p">,</span> <span class="s1">&#39;pedir_m_ou_h&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">regra</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)))</span>
+<span class="linenos">70</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="linenos">71</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">simpson_3_8_composta</span><span class="p">(</span><span class="s1">&#39;x**3&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="linenos">72</span>    <span class="c1"># integral of x^3 from 0 to1 = 1/4</span>
+<span class="linenos">73</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.25</span>
+</pre></div>
+</div>
+</section>
+<section id="links-rapidos">
+<h2>Links rápidos<a class="headerlink" href="#links-rapidos" title="Link para este cabeçalho"></a></h2>
+<ul class="simple">
+<li><p>Teste de integração relacionado: <code class="file docutils literal notranslate"><span class="pre">tests/test_inputs_calcnum.py::test_calcnum_inputs_basic</span></code></p></li>
+<li><p>Testes unitários: <code class="file docutils literal notranslate"><span class="pre">tests/test_integracoes.py</span></code></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="ajustes.html" class="btn btn-neutral float-left" title="Ajustes de Curvas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="edos.html" class="btn btn-neutral float-right" title="Equações Diferenciais Ordinárias (EDOs)" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
