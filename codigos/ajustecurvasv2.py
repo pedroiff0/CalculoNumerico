@@ -2,9 +2,6 @@
 #pip3 install numpy, matplotlib, pandas
 
 import numpy as np #opcional, apenas para simplificar os somatórios, vetores, etc...
-import matplotlib.pyplot as plt #opcional, apenas para exibir os gráficos
-from codigos.sistemaslineares import eliminacao_gauss_com_pivotamento
-import pandas as pd
 
 # Configurações base para plotagem (aproveitamento codigo do projeto da bolsa)
 plotpars_1x1 = {'axes.linewidth': 1.0,
@@ -565,118 +562,6 @@ def minquadrados(x, y):
     else:
         pass
 
-def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
-    """
-    Método 3: Mínimos Quadrados
-
-    Entradas/Parâmetros: 
-    - x (vetor de pontos em x)
-    - y (vetor de pontos em y)
-    - ordem (1,n)
-    - tabela (pra mostrar x,ui,di,di**2)
-    - gráfico com legenda mostrando as infos calculadas.
-
-    Fórmulas:
-    basicamente montar um sistema e resolver por Gauss (poderia ser por decomposição LU tb)
-    
-    Saídas:     
-    - Equação da reta
-    - Desvio
-    - Chi2, R2
-    - Gráfico ilustrativo
-    """
-    n = len(x)
-    if n == 0 or ordem < 0:
-        print("Dados insuficientes ou ordem inválida.")
-        return None
-
-    # Somatórios S_x^k para k=0..2*ordem
-    Sx = [np.sum(x ** k) for k in range(2 * ordem + 1)]
-    # Somatórios S_x^k y para k=0..ordem
-    Sxy = [np.sum((x ** k) * y) for k in range(ordem + 1)]
-
-    # Montar matriz do sistema normal (seria o equivalente a usar a funcao de montar sistema que fiz em sistemaslineares.py)
-    ATA = np.zeros((ordem+1, ordem+1))
-    for i in range(ordem + 1):
-        for j in range(ordem + 1):
-            ATA[i, j] = Sx[i + j]
-    # Lado direito
-    ATy = np.array(Sxy)
-
-    # Resolver sistema pelo método manual
-    coef = eliminacao_gauss_com_pivotamento(ATA, ATy)
-
-    # Calcular valores ajustados
-    Ui = np.zeros(n)
-    for k in range(ordem + 1):
-        Ui += coef[k] * (x ** k)
-
-    """
-    Estatísticas calculadas internamente direto, poderia ter usado a função, mas como é só um método não achei necessário
-    """
-    y_media = np.mean(y)
-    SQT = np.sum((y - y_media) ** 2)
-    SQRes = np.sum((y - Ui) ** 2)
-    SQReg = np.sum((Ui - y_media) ** 2)
-    r2 = 1 - (SQRes / SQT) if SQT != 0 else float('nan')
-    chi2 = SQRes / (n - (ordem + 1)) if (n - (ordem + 1)) > 0 else float('nan')
-
-    # equação da reta
-    termos = [f"({coef[i]:.6f})x^{i}" if i > 0 else f"({coef[i]:.6f})" for i in range(ordem + 1)]
-    equacao = " + ".join(termos)
-    print("\nEquação ajustada:")
-    print("p(x) = " + equacao)
-
-    # Coeficientes
-    print("\nCoeficientes:")
-    for i, c in enumerate(coef):
-        print(f"a{i} = {c:.6f}")
-
-    print(f"\nEstatísticas do ajuste:")
-    print(f"Desvio (SQRes) = {SQRes:.6f}")
-    print(f"Chi² ajustado = {chi2:.6f}")
-    print(f"R² = {r2:.6f}")
-
-
-    # Tabela contendo os dados assim como para o MMQ de ordem 1 (reaproveitado, apenas fiz direto aqui pra poupar linhas de código)
-    if tabela:
-        data = {
-            'i': np.arange(1, n+1),
-            'xi': x,
-            'yi': y,
-        }
-        for k in range(ordem + 1):
-            data[f'x^{k}'] = x ** k
-        data['Ui'] = Ui
-        data['di'] = y - Ui
-        data['di^2'] = (y - Ui) ** 2
-
-        df = pd.DataFrame(data)
-        soma = df.sum(numeric_only=True)
-        df = pd.concat([df, pd.DataFrame([soma])], ignore_index=True)
-        print("\nTabela de cálculos intermediários:")
-        print(df.to_string(index=False))
-
-    if grafico:
-        xp = np.linspace(np.min(x), np.max(x), 500)
-        yp = np.zeros_like(xp)
-        for k in range(ordem + 1):
-            yp += coef[k] * (xp ** k)
-
-        legenda = (f'y = {equacao}\n'
-                f'Desvio = {SQRes:.6f}\n'
-                f'Chi² = {chi2:.6f}\n'
-                f'R² = {r2:.6f}')
-        plt.scatter(x, y, color='purple', label='Pontos originais')
-        plt.plot(xp, yp, color='red', label=f'Ajuste - Polinômio grau {ordem}')
-        plt.xlabel('x')
-        plt.ylabel('y')
-        plt.title(f'Regressão Mínimos Quadrados - Grau {ordem}')
-        plt.legend(title=legenda, loc='upper left', fontsize=10, title_fontsize=10)
-        plt.show()
-
-    return coef
-
 #resolução específica da questão 1c (para as estimatias, só substituir!)
 # para utilizar, descomente a chamada na função minquadrados()
 def questao1c(b0,b1):
@@ -706,11 +591,71 @@ def questao1e(b0,b1):
 # //TODO: Adicionar FIT EXPONENCIAL, LOGARÍTMICO, TRIGONOMÉTRICO
 
 def menu():
-    """Menu interativo de demonstração para Ajustes de Curvas.
-
-    Fornece opções para regressão linear, mínimos quadrados (linear) e ajuste
-    polinomial de ordem n. Este docstring foi simplificado para evitar problemas
-    de formatação no Sphinx e melhorar a legibilidade.
+    """
+    Menu principal, ex1 e ex2 são dados prontos dos exemplos realizados em aula, para usar, comente as linhas 484,485 use apenas a linha 486. (Faça o mesmo para as outras opções)        
+    # ex1 
+    x = [0.3, 2.7, 4.5, 5.9, 7.8]
+    y = [1.8, 1.9, 3.1, 3.9, 3.3]
+    Saídas: 
+        Método 1:
+        Polinômio interpolador: p1(x) = 1.7400 + 0.2000 * x
+        Desvio D(a0,a1) (SQRes) = 1.3164
+        Chi² ajustado = 0.4388
+        R² = 0.6082
+        
+        Método 2:
+        Equação da reta manual: y = 1.500000 + 0.250000 * x
+        Desvio D(a0,a1) (SQRes) = 1.230000
+        Chi² ajustado = 0.410000
+        R² = 0.633929
+        
+        Método 3:
+        Equação da reta (método dos mínimos quadrados): y = 0.26982510781025404x + 1.6559415428845228
+        Desvio D(a0,a1) = 0.9288757786296118
+        Qui-quadrado (Chi²) ajustado = 0.3096252595432039
+        Coeficiente de determinação (R²): 0.7235488754078536
+        Variância residual (σ²): 0.3096252595432039
+        
+    # ex2
+    x = [1.2, 2.5, 3.0, 4.1, 6.2, 7.1, 8.8, 9.5]
+    y = [6.8, 6.1, 9.9, 9.7, 12.1, 17.9, 18.0, 21.5]
+    
+    Saídas: 
+        (Só foi utilizado para o método 3 em aula!)
+        Método 3:
+        Equação da reta (método dos mínimos quadrados): y = 1.7917942437232108x + 3.2534905082669816
+        Desvio D(a0,a1) = 18.40840171463564
+        Qui-quadrado (Chi²) ajustado = 3.0680669524392736
+        Coeficiente de determinação (R²): 0.9193038676370523
+        Variância residual (σ²): 3.0680669524392736
+        
+    ex3: 
+    Altura (cm):
+    x = [183, 173, 168, 188, 158, 163, 193, 163, 178]
+    Peso (kg)
+    y = [79, 69, 70, 81, 61, 63, 79, 71, 73]
+    
+    Saidas:
+        a) Gráfico
+        b) Ajustes 
+        Método 3 (Mínimos Quadrados):
+        Função: b0+b1*x
+        Equação da reta: y = 0.527570x + -20.078037
+        Desvio D(a0,a1) (SQRes) = 64.651869
+        Chi² = 9.235981
+        R²: 0.836554
+        c) Estimativas:
+        Peso estimado para altura 175 cm: 72.25 kg
+        Altura estimada para peso 80 kg: 189.70 cm
+        d) Gráfico (Eixos Invertidos)
+        Função: b0+b1*x
+        Equação da reta: y = 1.585674x + 60.294944
+        Desvio D(a0,a1) (SQRes) = 194.318820
+        Chi² = 27.759831
+        R²: 0.836554
+        e) Estimativas (Eixos Invertidos)
+        Altura estimada para peso 80.00 kg: 187.15 cm
+        Peso estimado para altura 175.00 cm: 72.34 kg
     """
     x = []
     y = []

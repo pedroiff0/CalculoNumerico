@@ -281,13 +281,14 @@ Ajustes de Curvas - Parte 3
 
 """
 
-from codigos.ajustecurvas import (
+from codigos.ajustecurvasv2 import (
     regressaolinear,
     regressaolinear_intervalo,
     minquadrados,
     dados as dados_ajustes,
-    minquadrados_ordem_n_manual,
 )
+
+from codigos.ajustecurvasOrdemn import minquadrados_ordem_n_manual
 
 def menu_ajustes():
     while True:
@@ -459,7 +460,7 @@ Ajustes de Curvas - Parte 3
 
 """
 
-from codigos.edos import (
+from codigos.EDOs import (
     pedir_dados_edo,
     passos_edo,
     plotar_grafico_edo,
