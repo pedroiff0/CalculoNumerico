@@ -460,15 +460,9 @@ Ajustes de Curvas - Parte 3
 
 """
 
-from codigos.EDOs import (
-    pedir_dados_edo,
-    passos_edo,
-    plotar_grafico_edo,
-    mostrar_tabela_e_grafico_edo,
+from codigos.edos import (
     resolver_edo_2ordem,
-    runge_kutta,
     executar_runge_kutta,
-    runge_kutta_sistema,
     executar_sistema_edos,
 )
 
