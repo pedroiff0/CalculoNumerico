@@ -603,8 +603,18 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
     # Lado direito
     ATy = np.array(Sxy)
 
-    # Resolver sistema pelo método manual
-    coef = eliminacao_gauss_com_pivotamento(ATA, ATy)
+# Resolver sistema dos normais usando numpy (mais robusto)
+    try:
+        coef = np.linalg.solve(ATA, ATy)
+    except np.linalg.LinAlgError:
+        # fallback para método de eliminação com pivotamento, que retorna (x, A, b)
+        sol = eliminacao_gauss_com_pivotamento(ATA, ATy)
+        if sol is None:
+            raise RuntimeError("Falha ao resolver sistema normal para mínimos quadrados de ordem n")
+        if isinstance(sol, (tuple, list)):
+            coef = np.array(sol[0], dtype=float)
+        else:
+            coef = np.array(sol, dtype=float)
 
     # Calcular valores ajustados
     Ui = np.zeros(n)
