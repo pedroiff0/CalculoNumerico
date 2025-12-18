@@ -474,6 +474,8 @@
 
     <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;h deve ser &gt; 0&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ordem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ordem deve ser 1, 2, 3 ou 4&#39;</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">xn</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
     <span class="n">x_vals</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">y_vals</span> <span class="o">=</span> <span class="p">[]</span>
