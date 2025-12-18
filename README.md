@@ -105,15 +105,35 @@ Bom Jesus do Itabapoana - RJ.
 ### Prerequisitos
 
 ```
-Python 3.14.0
+Python 3.8+
 ```
 
 ### Instalando
 
-Apenas instale o Python, e as bibliotecas com
+Instale o pacote diretamente do repositório:
 
+```bash
+pip install git+https://github.com/pedroiff0/CalculoNumerico.git
 ```
-pip install -r requirements.txt
+
+Ou clone e instale localmente:
+
+```bash
+git clone https://github.com/pedroiff0/CalculoNumerico.git
+cd CalculoNumerico
+pip install -e .
+```
+
+Após a instalação, execute o menu interativo:
+
+```bash
+calcnum
+```
+
+Ou importe os módulos em Python:
+
+```python
+from codigos import bases, sistemaslineares, edos
 ```
 
 ## ⛏️ Requisitos <a name = "requisitos"></a>
