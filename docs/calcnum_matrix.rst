@@ -15,44 +15,44 @@ funcionalidades principais expostas pelo `menu_principal` em :mod:`codigos.calcn
      - Exemplos (tests/examples/)
    * - 1 - Conversão de Bases
      - :mod:`codigos.bases`
-     - Yes (partial)
-     - Partial
+     - Yes
+     - Yes
      - Yes (modules)
-     - No
+     - Yes (``tests/examples/bases_example.py``)
    * - 2 - Sistemas Lineares
-     - :mod:`codigos.calcnum`
-     - Partial
-     - Partial
-     - Yes (calcnum)
+     - :mod:`codigos.sistemaslineares`
+     - Yes
+     - Yes
+     - Yes (modules)
      - Yes (``tests/examples/solve_system.py``)
    * - 3 - Interpolações
      - :mod:`codigos.interpolacoes`
      - Yes
-     - Partial
-     - Yes (modules)
-     - No
-   * - 4 - Ajustes de Curvas
-     - :mod:`codigos.ajustecurvas`
-     - Partial
-     - Partial
-     - Yes (modules)
-     - No
-   * - 5 - Equações Diferenciais
-     - :mod:`codigos.EDOs` / calc
      - Yes
-     - Partial (menu)
+     - Yes (modules)
+     - Yes (``tests/examples/interpolacoes_example.py``)
+   * - 4 - Ajustes de Curvas
+     - :mod:`codigos.ajustecurvasv2`
+     - Yes
+     - Yes
+     - Yes (modules)
+     - Yes (``tests/examples/ajustecurvas_example.py``)
+   * - 5 - Equações Diferenciais
+     - :mod:`codigos.EDOs`
+     - Yes
+     - Yes (menu)
      - Yes (EDOs.rst)
      - Yes (``tests/examples/edo_example.py``)
    * - 6 - Integração Numérica
      - :mod:`codigos.integracoes`
      - Yes
-     - Partial
+     - Yes
      - Yes (modules)
-     - No
+     - Yes (``tests/examples/integracoes_example.py``)
    * - 7 - Métodos de Raízes
      - :mod:`codigos.raizes`
-     - Partial
-     - Partial
+     - Yes
+     - Yes
      - Yes (modules)
      - Yes (``tests/examples/simple_root_find.py``)
 
