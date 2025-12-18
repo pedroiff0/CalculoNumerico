@@ -1,5 +1,5 @@
 import numpy as np
-from codigos import ajustecurvasv2 as ac
+from codigos import ajustecurvas as ac
 
 
 def test_calcula_chi_e_r2_perfect_linear():
@@ -33,3 +33,15 @@ def test_tabela_minimos_quadrados_runs_without_error():
     y = np.array([1.0, 3.0, 5.0])
     # Should not raise
     ac.tabela_minimos_quadrados(x, y)
+
+
+def test_minquadrados_ordem_n_quadratic():
+    # Fit quadratic y = 1 + 2x + 3x^2
+    x = np.array([0.0, 1.0, 2.0, 3.0, 4.0])
+    y = 1.0 + 2.0 * x + 3.0 * (x ** 2)
+    coef = ac.minquadrados_ordem_n_manual(x, y, ordem=2, tabela=False, grafico=False)
+    # coef order: a0 + a1 x + a2 x^2
+    assert coef is not None
+    assert abs(coef[0] - 1.0) < 1e-8
+    assert abs(coef[1] - 2.0) < 1e-8
+    assert abs(coef[2] - 3.0) < 1e-8

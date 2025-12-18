@@ -1,7 +1,7 @@
 Ajustes de Curvas
 ==================
 
-Funções do módulo :mod:`codigos.ajustecurvasv2` para ajustes de curvas e estatísticas.
+Funções do módulo :mod:`codigos.ajustecurvas` para ajustes de curvas e estatísticas.
 
 Documentação
 ------------
@@ -10,7 +10,7 @@ As funções abaixo implementam métodos de ajuste (regressão linear, mínimos 
 ordem n, estatísticas de ajuste e utilitários de tabela). Todas aceitam ``numpy.ndarray``
 como entrada e retornam estruturas numpy para integração simples com outras rotinas.
 
-.. automodule:: codigos.ajustecurvasv2
+.. automodule:: codigos.ajustecurvas
     :members: minquadrados, calcula_chi_e_r2, tabela_minimos_quadrados, regressaolinear, regressaolinear_intervalo, dados
     :noindex:
 

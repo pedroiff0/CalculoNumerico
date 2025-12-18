@@ -17,31 +17,31 @@ funcionalidades principais expostas pelo `menu_principal` em :mod:`codigos.calcn
      - :mod:`codigos.bases`
      - Yes
      - Yes
-     - Yes (modules)
+     - Yes
      - Yes (``tests/exemplos/exemplo_bases.py``)
    * - 2 - Sistemas Lineares
      - :mod:`codigos.sistemaslineares`
      - Yes
      - Yes
-     - Yes (modules)
+     - Yes
      - Yes (``tests/exemplos/exemplo_resolver_sistema.py``)
    * - 3 - Interpolações
      - :mod:`codigos.interpolacoes`
      - Yes
      - Yes
-     - Yes (modules)
+     - Yes
      - Yes (``tests/exemplos/exemplo_interpolacoes.py``)
    * - 4 - Ajustes de Curvas
-     - :mod:`codigos.ajustecurvasv2`
+     - :mod:`codigos.ajustecurvas`
      - Yes
      - Yes
      - Yes
      - Yes (``tests/exemplos/exemplo_ajuste_curvas.py``)
    * - 5 - Equações Diferenciais
-     - :mod:`codigos.EDOs`
+     - :mod:`codigos.edos`
      - Yes
-     - Yes (menu)
-     - Yes (EDOs.rst)
+     - Yes
+     - Yes
      - Yes (``tests/exemplos/exemplo_edos.py``)
    * - 6 - Integração Numérica
      - :mod:`codigos.integracoes`
@@ -53,7 +53,7 @@ funcionalidades principais expostas pelo `menu_principal` em :mod:`codigos.calcn
      - :mod:`codigos.raizes`
      - Yes
      - Yes
-     - Yes (modules)
+     - Yes
      - Yes (``tests/exemplos/exemplo_busca_raiz.py``)
 
 

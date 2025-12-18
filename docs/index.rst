@@ -16,7 +16,7 @@ Nesta documentação encontram-se páginas por tópico com exemplos e referênci
    interpolacoes
    ajustes
    integracoes
-   EDOs
+   edos
    raizes
    disclaimer
 
