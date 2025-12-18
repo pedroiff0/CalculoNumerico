@@ -3,7 +3,6 @@ import pytest
 import math
 from codigos import edos
 
-
 def test_runge_kutta_scalar_exp():
     # dy/dx = y, y(0)=1 -> y(1)=e
     x_vals, y_vals = edos.runge_kutta('y', 0.0, 1.0, 0.01, 1.0, 4)
