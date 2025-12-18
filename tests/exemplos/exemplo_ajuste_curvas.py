@@ -1,6 +1,6 @@
-"""Exemplo: ajuste de curva linear simples (ajustecurvasv2)"""
+"""Exemplo: ajuste de curva linear simples (ajustecurvas)"""
 import numpy as np
-from codigos import ajustecurvasv2 as ac
+from codigos import ajustecurvas as ac
 
 if __name__ == '__main__':
     x = np.array([0.0,1.0,2.0])

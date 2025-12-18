@@ -706,71 +706,11 @@ def questao1e(b0,b1):
 # //TODO: Adicionar FIT EXPONENCIAL, LOGARÍTMICO, TRIGONOMÉTRICO
 
 def menu():
-    """
-    Menu principal, ex1 e ex2 são dados prontos dos exemplos realizados em aula, para usar, comente as linhas 484,485 use apenas a linha 486. (Faça o mesmo para as outras opções)        
-    # ex1 
-    x = [0.3, 2.7, 4.5, 5.9, 7.8]
-    y = [1.8, 1.9, 3.1, 3.9, 3.3]
-    Saídas: 
-        Método 1:
-        Polinômio interpolador: p1(x) = 1.7400 + 0.2000 * x
-        Desvio D(a0,a1) (SQRes) = 1.3164
-        Chi² ajustado = 0.4388
-        R² = 0.6082
-        
-        Método 2:
-        Equação da reta manual: y = 1.500000 + 0.250000 * x
-        Desvio D(a0,a1) (SQRes) = 1.230000
-        Chi² ajustado = 0.410000
-        R² = 0.633929
-        
-        Método 3:
-        Equação da reta (método dos mínimos quadrados): y = 0.26982510781025404x + 1.6559415428845228
-        Desvio D(a0,a1) = 0.9288757786296118
-        Qui-quadrado (Chi²) ajustado = 0.3096252595432039
-        Coeficiente de determinação (R²): 0.7235488754078536
-        Variância residual (σ²): 0.3096252595432039
-        
-    # ex2
-    x = [1.2, 2.5, 3.0, 4.1, 6.2, 7.1, 8.8, 9.5]
-    y = [6.8, 6.1, 9.9, 9.7, 12.1, 17.9, 18.0, 21.5]
-    
-    Saídas: 
-        (Só foi utilizado para o método 3 em aula!)
-        Método 3:
-        Equação da reta (método dos mínimos quadrados): y = 1.7917942437232108x + 3.2534905082669816
-        Desvio D(a0,a1) = 18.40840171463564
-        Qui-quadrado (Chi²) ajustado = 3.0680669524392736
-        Coeficiente de determinação (R²): 0.9193038676370523
-        Variância residual (σ²): 3.0680669524392736
-        
-    ex3: 
-    Altura (cm):
-    x = [183, 173, 168, 188, 158, 163, 193, 163, 178]
-    Peso (kg)
-    y = [79, 69, 70, 81, 61, 63, 79, 71, 73]
-    
-    Saidas:
-        a) Gráfico
-        b) Ajustes 
-        Método 3 (Mínimos Quadrados):
-        Função: b0+b1*x
-        Equação da reta: y = 0.527570x + -20.078037
-        Desvio D(a0,a1) (SQRes) = 64.651869
-        Chi² = 9.235981
-        R²: 0.836554
-        c) Estimativas:
-        Peso estimado para altura 175 cm: 72.25 kg
-        Altura estimada para peso 80 kg: 189.70 cm
-        d) Gráfico (Eixos Invertidos)
-        Função: b0+b1*x
-        Equação da reta: y = 1.585674x + 60.294944
-        Desvio D(a0,a1) (SQRes) = 194.318820
-        Chi² = 27.759831
-        R²: 0.836554
-        e) Estimativas (Eixos Invertidos)
-        Altura estimada para peso 80.00 kg: 187.15 cm
-        Peso estimado para altura 175.00 cm: 72.34 kg
+    """Menu interativo de demonstração para Ajustes de Curvas.
+
+    Fornece opções para regressão linear, mínimos quadrados (linear) e ajuste
+    polinomial de ordem n. Este docstring foi simplificado para evitar problemas
+    de formatação no Sphinx e melhorar a legibilidade.
     """
     x = []
     y = []
