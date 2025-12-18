@@ -6,7 +6,6 @@ Módulos visíveis do pacote `codigos`.
 .. toctree::
    :maxdepth: 1
 
-
 .. automodule:: codigos.calcnum
     :members:
     :undoc-members:
@@ -27,7 +26,7 @@ Módulos visíveis do pacote `codigos`.
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: codigos.EDOs
+.. automodule:: codigos.edos
     :members:
     :undoc-members:
     :show-inheritance:
