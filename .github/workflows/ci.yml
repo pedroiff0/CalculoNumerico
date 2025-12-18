@@ -26,6 +26,7 @@ jobs:
           pip install -r codigos/requirements.txt
           pip install -r docs/requirements.txt
           pip install pytest
+          pip install -e .  # Install the package
       - name: Run tests
         run: |
           # Execute tests with project PYTHONPATH so imports like `from codigos import ...` work
