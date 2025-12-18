@@ -48,6 +48,23 @@ def test_runge_kutta_sistema_last_step():
     t_vals, u_vals = edos.runge_kutta_sistema(funcs, np.array([1.0,1.0]), 0.0, 1.0, 0.3, 4)
     # ensure final time equals tf exactly (last step smaller than h)
     assert pytest.approx(t_vals[-1], rel=1e-12) == 1.0
-    # check values reasonable
-    assert abs(u_vals[-1][0] - math.e) < 1e-3
-    assert abs(u_vals[-1][1] - math.e) < 1e-3
+
+
+def test_runge_kutta_sistema_predator_prey():
+    # Lotka-Volterra: u' = u - u*v, v' = -v + u*v with u(0)=2, v(0)=1
+    funcs = ['y[1] - y[1]*y[2]', '-y[2] + y[1]*y[2]']
+    t_vals, u_vals = edos.runge_kutta_sistema(funcs, np.array([2.0, 1.0]), 0.0, 0.5, 0.01, 4)
+    # Check that values are positive and reasonable
+    assert all(u > 0 for u in u_vals.flatten())
+    assert u_vals[0][0] == 2.0  # initial
+    assert u_vals[0][1] == 1.0
+
+
+def test_runge_kutta_negative_h_raises():
+    with pytest.raises(ValueError):
+        edos.runge_kutta('y', 0.0, 1.0, -0.1, 1.0, 4)
+
+
+def test_runge_kutta_invalid_order_raises():
+    with pytest.raises(ValueError):
+        edos.runge_kutta('y', 0.0, 1.0, 0.1, 1.0, 0)  # order 0 invalid

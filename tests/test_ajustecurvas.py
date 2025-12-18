@@ -45,3 +45,33 @@ def test_minquadrados_ordem_n_quadratic():
     assert abs(coef[0] - 1.0) < 1e-8
     assert abs(coef[1] - 2.0) < 1e-8
     assert abs(coef[2] - 3.0) < 1e-8
+
+
+def test_minquadrados_ordem_n_linear():
+    # Fit linear y = 1 + 2x
+    x = np.array([0.0, 1.0, 2.0, 3.0])
+    y = 1.0 + 2.0 * x
+    coef = ac.minquadrados_ordem_n_manual(x, y, ordem=1, tabela=False, grafico=False)
+    assert coef is not None
+    assert abs(coef[0] - 1.0) < 1e-10
+    assert abs(coef[1] - 2.0) < 1e-10
+
+
+def test_minquadrados_ordem_n_cubic():
+    # Fit cubic y = 1 + 2x + 3x^2 + 4x^3
+    x = np.array([0.0, 1.0, 2.0, 3.0, 4.0, 5.0])
+    y = 1.0 + 2.0 * x + 3.0 * (x ** 2) + 4.0 * (x ** 3)
+    coef = ac.minquadrados_ordem_n_manual(x, y, ordem=3, tabela=False, grafico=False)
+    assert coef is not None
+    assert abs(coef[0] - 1.0) < 1e-6
+    assert abs(coef[1] - 2.0) < 1e-6
+    assert abs(coef[2] - 3.0) < 1e-6
+    assert abs(coef[3] - 4.0) < 1e-6
+
+
+def test_calcula_chi_e_r2_imperfect_fit():
+    x = np.array([0.0, 1.0, 2.0])
+    y = np.array([1.0, 3.1, 5.2])  # slight noise
+    stats = ac.calcula_chi_e_r2(x, y, b0=1.0, b1=2.0, n_params=2)
+    assert stats['R2'] < 1.0  # not perfect
+    assert stats['Chi2'] > 0

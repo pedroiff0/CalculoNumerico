@@ -376,6 +376,8 @@ def runge_kutta(func_input, x0, y0, h, xn, ordem):
 
     if h <= 0:
         raise ValueError('h deve ser > 0')
+    if ordem not in [1, 2, 3, 4]:
+        raise ValueError('ordem deve ser 1, 2, 3 ou 4')
     n = int((xn - x0) / h)
     x_vals = []
     y_vals = []
