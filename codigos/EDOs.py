@@ -18,14 +18,17 @@ SYMPY_LOCALS = {
 }
 
 def pedir_dados_edo():
-    """Pede ao usuário os dados básicos para resolver uma EDO usando RK/Euler.
-    Retorna um dicionário com keys: func_input, a, b, x0, y0, h, xn, solucao_exata (callable or None), sol_exata_expr
-    As entradas solicitadas na ordem:
-      - função f(x,y)
-      - intervalo [a,b]
-      - x0, y0
-      - escolher inserir h ou m (m → h = (b-a)/m)
-      - solução exata opcional
+    """Obtém entradas do usuário para resolução de EDOs (RK/Euler).
+
+    A função solicita interativamente a função ``f(x, y)``, intervalo de integração,
+    condições iniciais e passo (``h``) ou número de subintervalos (``m``). Também
+    permite informar uma solução exata opcional.
+
+    Returns
+    -------
+    dict
+        Dicionário com chaves: 'func_input', 'a', 'b', 'x0', 'y0', 'h', 'm', 'xn',
+        'solucao_exata' (callable ou None) e 'sol_exata_expr' (string).
     """
     print("Digite a função f(x,y) em notação matemática simples:")
     print("Exemplo: y - x  (será interpretado como y - x)")
@@ -257,42 +260,45 @@ def resolver_edo_2ordem():
         while t_vals[-1] < xf:
             x = t_vals[-1]
             y = u_vals[-1]
+            step = min(h, xf - x)
+            # Evitar passo nulo que causaria loop infinito
+            if step <= 0:
+                print("Passo nulo ou intervalo concluído; interrompendo resolução do sistema de 2ª ordem.")
+                break
             if ordem == 1:
                 k1 = np.array([
                         func0_callable(x, y),
                     funcs_input[1](x, y)
                 ])
-                y_new = y + h * k1
+                y_new = y + step * k1
             elif ordem == 2:
                 k1 = np.array([func0_callable(x, y), funcs_input[1](x, y)])
                 k2 = np.array([
-                    func0_callable(x+h, y+h*k1), funcs_input[1](x+h, y+h*k1)
+                    func0_callable(x+step, y+step*k1), funcs_input[1](x+step, y+step*k1)
                 ])
-                y_new = y + 0.5 * h * (k1 + k2)
+                y_new = y + 0.5 * step * (k1 + k2)
             elif ordem == 3:
                 k1 = np.array([func0_callable(x, y), funcs_input[1](x, y)])
                 k2 = np.array([
-                    func0_callable(x+h/2, y+h*k1/2), funcs_input[1](x+h/2, y+h*k1/2)
+                    func0_callable(x+step/2, y+step*k1/2), funcs_input[1](x+step/2, y+step*k1/2)
                 ])
                 k3 = np.array([
-                    func0_callable(x+h, y-h*k1+2*h*k2), funcs_input[1](x+h, y-h*k1+2*h*k2)
+                    func0_callable(x+step, y-step*k1+2*step*k2), funcs_input[1](x+step, y-step*k1+2*step*k2)
                 ])
-                y_new = y + (h/6) * (k1 + 4*k2 + k3)
+                y_new = y + (step/6) * (k1 + 4*k2 + k3)
             elif ordem == 4:
                 k1 = np.array([func0_callable(x, y), funcs_input[1](x, y)])
                 k2 = np.array([
-                    func0_callable(x+h/2, y+h*k1/2), funcs_input[1](x+h/2, y+h*k1/2)
+                    func0_callable(x+step/2, y+step*k1/2), funcs_input[1](x+step/2, y+step*k1/2)
                 ])
                 k3 = np.array([
-                    func0_callable(x+h/2, y+h*k2/2), funcs_input[1](x+h/2, y+h*k2/2)
+                    func0_callable(x+step/2, y+step*k2/2), funcs_input[1](x+step/2, y+step*k2/2)
                 ])
                 k4 = np.array([
-                    func0_callable(x+h, y+h*k3), funcs_input[1](x+h, y+h*k3)
+                    func0_callable(x+step, y+step*k3), funcs_input[1](x+step, y+step*k3)
                 ])
-                y_new = y + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
-            x_next = x + h
-            if x_next > xf + 1e-12:
-                break
+                y_new = y + (step/6) * (k1 + 2*k2 + 2*k3 + k4)
+            x_next = x + step
             t_vals.append(x_next)
             u_vals.append(y_new)
         return t_vals, np.array(u_vals)
@@ -322,20 +328,35 @@ def resolver_edo_2ordem():
             plt.grid(True)
             plt.show()
     except Exception:
-        # Se houver erro na leitura, mostrar o gráfico por padrão
-        plt.figure(figsize=(10, 5))
-        plt.plot(t_vals, u_vals[:, 0], label="y(x)", marker='o')
-        plt.plot(t_vals, u_vals[:, 1], label="y'(x)", marker='s')
-        plt.xlabel('x')
-        plt.ylabel('Soluções')
-        plt.title('Solução da EDO de 2ª ordem')
-        plt.legend()
-        plt.grid(True)
+        # Se houver erro na leitura (por ex. EOF em testes), não plotar por padrão
+        pass
         plt.show()
 
 
 
 def runge_kutta(func_input, x0, y0, h, xn, ordem):
+    """Resolve EDOs escalares usando métodos de Runge-Kutta de ordem 1 a 4.
+
+    Parameters
+    ----------
+    func_input : str
+        Expressão para f(x, y) como string (ex.: ``'y'`` para dy/dx = y).
+    x0 : float
+        Ponto inicial.
+    y0 : float
+        Valor inicial y(x0).
+    h : float
+        Tamanho do passo (deve dividir o intervalo (xn-x0)).
+    xn : float
+        Ponto final onde se integra até (xn > x0 esperado).
+    ordem : int
+        Ordem do método (1, 2, 3 ou 4).
+
+    Returns
+    -------
+    (list, list)
+        Tupla ``(x_vals, y_vals)`` com os pontos de amostragem e as aproximações y.
+    """
     func_input = func_input.replace(' ', '')  # Remove espaços
     func_input = re.sub(r'(\d)([xy])', r'\1*\2', func_input)
     # Usar sympy para avaliar a função f(x,y)
@@ -353,6 +374,8 @@ def runge_kutta(func_input, x0, y0, h, xn, ordem):
                 # última tentativa: avaliar com python direto
                 return eval(func_input)
 
+    if h <= 0:
+        raise ValueError('h deve ser > 0')
     n = int((xn - x0) / h)
     x_vals = []
     y_vals = []
@@ -409,12 +432,13 @@ def executar_runge_kutta(ordem):
         x_vals, y_vals = runge_kutta(func_input, x0, y0, h, xn, ordem)
 
         # Perguntar ao usuário se deseja plotar
-        plotar = True
+        plotar = False
         try:
             resp = input("Deseja plotar os gráficos? [s/n]: ").strip().lower()
             plotar = resp.startswith('s')
         except Exception:
-            plotar = True
+            # Em ambiente sem stdin/EOF (ex.: testes automatizados), não plotar
+            plotar = False
 
         # Exibir tabela e (opcionalmente) gráfico
         titulo = nomes.get(ordem, 'Runge-Kutta')
@@ -426,9 +450,29 @@ def executar_runge_kutta(ordem):
 # === NOVAS FUNÇÕES PARA SISTEMAS DE EDOS ===
 
 def runge_kutta_sistema(funcs_input, u0, t0, tf, h, ordem):
-    """
-    Versão vetorial do método de Runge-Kutta para sistemas de EDOs.
-    Mantém a mesma lógica dos métodos escalares, mas opera com vetores.
+    """Resolve sistemas de EDOs usando Runge-Kutta (vetorial).
+
+    Parameters
+    ----------
+    funcs_input : list of str or callables
+        Lista de expressões/funcões que descrevem cada componente do sistema. Use a notação
+        ``y[1]``, ``y[2]`` etc. quando passar strings (1-based index).
+    u0 : array_like
+        Vetor de condições iniciais (tamanho n, onde n é número de equações).
+    t0 : float
+        Tempo inicial.
+    tf : float
+        Tempo final para integração.
+    h : float
+        Passo de tempo.
+    ordem : int
+        Ordem do método de Runge-Kutta (1-4).
+
+    Returns
+    -------
+    (list, ndarray)
+        Tupla ``(t_vals, u_vals)`` onde ``t_vals`` é lista de tempos e ``u_vals`` é array (m x n)
+        com as soluções em cada tempo.
     """
     # Preprocessar cada função do sistema para aceitar y[1], y[2], ... (1-based)
     funcs = []
@@ -471,37 +515,43 @@ def runge_kutta_sistema(funcs_input, u0, t0, tf, h, ordem):
                 return f
             funcs.append(make_func(expr))
     
+    if h <= 0:
+        raise ValueError('h deve ser > 0')
     t_vals = [t0]
     u_vals = [u0.copy()]
     n = len(u0)  # número de equações
     
     while t0 < tf:
+        step = min(h, tf - t0)  # last step may be smaller than h
+        # Evitar passo nulo que causaria loop infinito
+        if step <= 0:
+            print("Passo nulo ou intervalo concluído; interrompendo resolução do sistema.")
+            break
         if ordem == 1:
             # Euler
             k1 = np.array([f(t0, u_vals[-1]) for f in funcs])
-            u_new = u_vals[-1] + h * k1
+            u_new = u_vals[-1] + step * k1
         elif ordem == 2:
             # RK2
             k1 = np.array([f(t0, u_vals[-1]) for f in funcs])
-            k2 = np.array([f(t0 + h, u_vals[-1] + h * k1) for f in funcs])
-            u_new = u_vals[-1] + 0.5 * h * (k1 + k2)
+            k2 = np.array([f(t0 + step, u_vals[-1] + step * k1) for f in funcs])
+            u_new = u_vals[-1] + 0.5 * step * (k1 + k2)
         elif ordem == 3:
             # RK3
             k1 = np.array([f(t0, u_vals[-1]) for f in funcs])
-            k2 = np.array([f(t0 + h/2, u_vals[-1] + h*k1/2) for f in funcs])
-            k3 = np.array([f(t0 + h, u_vals[-1] - h*k1 + 2*h*k2) for f in funcs])
-            u_new = u_vals[-1] + (h/6) * (k1 + 4*k2 + k3)
+            k2 = np.array([f(t0 + step/2, u_vals[-1] + step*k1/2) for f in funcs])
+            k3 = np.array([f(t0 + step, u_vals[-1] - step*k1 + 2*step*k2) for f in funcs])
+            u_new = u_vals[-1] + (step/6) * (k1 + 4*k2 + k3)
         elif ordem == 4:
             # RK4
             k1 = np.array([f(t0, u_vals[-1]) for f in funcs])
-            k2 = np.array([f(t0 + h/2, u_vals[-1] + h*k1/2) for f in funcs])
-            k3 = np.array([f(t0 + h/2, u_vals[-1] + h*k2/2) for f in funcs])
-            k4 = np.array([f(t0 + h, u_vals[-1] + h*k3) for f in funcs])
-            u_new = u_vals[-1] + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
+            k2 = np.array([f(t0 + step/2, u_vals[-1] + step*k1/2) for f in funcs])
+            k3 = np.array([f(t0 + step/2, u_vals[-1] + step*k2/2) for f in funcs])
+            k4 = np.array([f(t0 + step, u_vals[-1] + step*k3) for f in funcs])
+            u_new = u_vals[-1] + (step/6) * (k1 + 2*k2 + 2*k3 + k4)
         
-        t0 += h
-        if t0 > tf:
-            break
+        t0 += step
+        # append new time and value (ensures final tf is included)
         t_vals.append(t0)
         u_vals.append(u_new)
     
@@ -549,8 +599,14 @@ def executar_sistema_edos():
         escolha_h = input("Escolha (1 ou 2): ").strip()
         if escolha_h == '1':
             h = float(input("Digite o passo h: "))
+            if h <= 0:
+                print("Passo h inválido (<=0). Encerrando esta execução.")
+                return
         elif escolha_h == '2':
             m = int(input("Digite o número de subintervalos m: "))
+            if m <= 0:
+                print("Número de subintervalos inválido (<=0). Encerrando esta execução.")
+                return
             h = (xf - x0) / m
             print(f"Calculado h = {h}")
         else:
@@ -587,15 +643,8 @@ def executar_sistema_edos():
                 plt.grid(True)
                 plt.show()
         except Exception:
-            plt.figure(figsize=(10, 6))
-            for j in range(n):
-                plt.plot(t_vals, u_vals[:, j], label=f'y[{j+1}](x)', marker='o', markersize=2)
-            plt.xlabel('x')
-            plt.ylabel('y[j]')
-            plt.title(f'Solução do Sistema de EDOs - RK{ordem}')
-            plt.legend()
-            plt.grid(True)
-            plt.show()
+            # Em ambiente não-interativo, não mostrar gráficos por padrão
+            pass
         
     except Exception as e:
         print(f"Erro: {e}")
@@ -629,6 +678,9 @@ def executar_edo_2ordem():
         # Intervalo temporal
         xf = float(input("Digite x final: "))
         h = float(input("Digite o passo h: "))
+        if h <= 0:
+            print("Passo h inválido (<=0). Encerrando esta execução.")
+            return
         
         # Converter para sistema
         funcs_input = ['u[1]', f_input]  # dy1/dx = y2, dy2/dx = f
@@ -657,37 +709,20 @@ def executar_edo_2ordem():
                 plt.title('Solução y(x)')
                 plt.grid(True)
                 plt.legend()
-                
+
                 plt.subplot(1, 2, 2)
                 plt.plot(t_vals, u_vals[:, 1], 'r-', marker='s', markersize=3, label='y\'(x)')
                 plt.xlabel('x')
-                plt.ylabel('y\'')
-                plt.title('Derivada y\'(x)')
+                plt.ylabel("y'")
+                plt.title("Derivada y'(x)")
                 plt.grid(True)
                 plt.legend()
-                
+
                 plt.tight_layout()
                 plt.show()
         except Exception:
-            plt.figure(figsize=(12, 5))
-            plt.subplot(1, 2, 1)
-            plt.plot(t_vals, u_vals[:, 0], 'b-', marker='o', markersize=3, label='y(x)')
-            plt.xlabel('x')
-            plt.ylabel('y')
-            plt.title('Solução y(x)')
-            plt.grid(True)
-            plt.legend()
-            
-            plt.subplot(1, 2, 2)
-            plt.plot(t_vals, u_vals[:, 1], 'r-', marker='s', markersize=3, label='y\'(x)')
-            plt.xlabel('x')
-            plt.ylabel('y\'')
-            plt.title('Derivada y\'(x)')
-            plt.grid(True)
-            plt.legend()
-            
-            plt.tight_layout()
-            plt.show()
+            # Em ambiente não-interativo (tests), não plotar por padrão
+            pass
         
     except Exception as e:
         print(f"Erro: {e}")

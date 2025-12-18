@@ -15,10 +15,16 @@ SYMPY_LOCALS = {
 
 
 def plotar_funcoes(funcs, a, b, pontos=400):
-    """
-    Plota uma ou várias funções em 2D no intervalo [a, b].
-    `funcs` pode ser uma string com funções separadas por vírgula, ex: "sin(x), cos(x)".
-    Utiliza `SYMPY_LOCALS` para interpretar funções e constantes.
+    """Plota uma ou várias funções simbólicas no intervalo [a, b].
+
+    Parameters
+    ----------
+    funcs : str
+        String com expressões separadas por vírgula (ex.: ``'sin(x), cos(x)'``).
+    a, b : float
+        Limites do intervalo de plotagem.
+    pontos : int, optional
+        Número de pontos no eixo x usados para amostragem (padrão: 400).
     """
     x = symbols('x')
     lista = [f.strip() for f in funcs.split(',') if f.strip()]
@@ -51,10 +57,20 @@ def plotar_funcoes(funcs, a, b, pontos=400):
 
 
 def plotar_funcao_e_aproximacao(func, a, b, m, metodo=None, pontos=400):
-    """Plota a função exata e a aproximação baseada em m subintervalos.
-    - `func`: string com a função em termos de `x` (aceita `math.` ou funções simbólicas)
-    - `m`: número de subintervalos usados pela regra composta
-    - `metodo`: string opcional para legenda (ex: 'Trapézio composta')
+    """Plota a função e a aproximação composta baseada em nós igualmente espaçados.
+
+    Parameters
+    ----------
+    func : str
+        Expressão da função em termos de ``x``.
+    a, b : float
+        Intervalo da integração.
+    m : int
+        Número de subintervalos (m > 0).
+    metodo : str, optional
+        Legenda para a aproximação (ex.: ``'Trapézio composta'``).
+    pontos : int, optional
+        Número de pontos para plotagem da função exata.
     """
     try:
         import matplotlib.pyplot as plt
@@ -172,6 +188,16 @@ def plotar_funcao_e_aproximacao(func, a, b, m, metodo=None, pontos=400):
     plt.show()
 
 def pedir_dados_integral():
+    """Lê interativamente a função e limites para integração.
+
+    Returns
+    -------
+    (func, a, b, composta)
+        func : str ou None - expressão da função
+        a, b : float - limites do intervalo
+        composta : bool - se deve usar regra composta
+        Retorna (None, None, None, None) em caso de erro de parsing.
+    """
     func = input("Digite a função f(x) (ex: sin(x), log(x), exp(x), etc): ")
     a_str = input("Limite inferior (a): ")
     b_str = input("Limite superior (b): ")
@@ -185,10 +211,19 @@ def pedir_dados_integral():
     return func, a, b, composta
 
 def pedir_m_ou_h(a, b, regra):
-    """
-    Função auxiliar para pedir m ou h do usuário e ajustar conforme a regra.
-    regra: 'trapezio', 'simpson13', 'simpson38'
-    Retorna (m, h)
+    """Auxiliar que solicita ``m`` (número de subintervalos) ou ``h`` (tamanho do passo).
+
+    Parameters
+    ----------
+    a, b : float
+        Intervalo de integração.
+    regra : str
+        Identificador da regra ('trapezio', 'simpson13', 'simpson38') usado para validar requisitos (paridade, múltiplos).
+
+    Returns
+    -------
+    (int, float) or (None, None)
+        Tupla (m, h) calculada, ou (None, None) em caso de entrada inválida.
     """
     escolha = input("Deseja informar o número de subintervalos (m) ou o tamanho do passo (h)? [m/h]: ").strip().lower()
     if escolha == 'h':
@@ -234,9 +269,23 @@ def pedir_m_ou_h(a, b, regra):
     return m, h
 
 def erro_truncamento_composta(a, b, m, derivada_max, metodo):
-    """
-    Calcula o erro de truncamento estimado para métodos compostos.
-    metodo: 'trapezio', 'simpson13', 'simpson38'
+    """Estimativa do erro de truncamento para regras compostas.
+
+    Parameters
+    ----------
+    a, b : float
+        Intervalo de integração.
+    m : int
+        Número de subintervalos.
+    derivada_max : float
+        Valor máximo estimado da derivada relevante no intervalo (ex.: segunda derivada para trapézio).
+    metodo : str
+        'trapezio', 'simpson13' ou 'simpson38'.
+
+    Returns
+    -------
+    float or None
+        Estimativa do erro de truncamento (pode ser negativa conforme fórmula) ou None se método desconhecido.
     """
     if metodo == 'trapezio':
         return -((b-a)**3) / (12 * m**2) * derivada_max
@@ -427,12 +476,20 @@ def newton_cotes(func, a, b, ordem):
     return resultado
 
 def trapezio_composta(func, a, b):
+    """Regra do Trapézio composta para integração numérica.
 
-    '''
-    Regra do Trapézio composta para integração numérica.
-    
-    Utilizada quando subdividir os intervalos em m subintervalos iguais. [a,b]/m
-    '''
+    Parameters
+    ----------
+    func : str
+        Expressão da função em termos de ``x`` (usada via ``eval`` no contexto seguro).
+    a, b : float
+        Limites do intervalo de integração.
+
+    Returns
+    -------
+    float or None
+        Aproximação da integral ou ``None`` em caso de erro/entrada inválida.
+    """
     m, h = pedir_m_ou_h(a, b, 'trapezio')
     if m is None:
         return None

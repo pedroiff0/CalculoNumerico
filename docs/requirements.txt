@@ -1,0 +1,5 @@
+sphinx>=7.0
+sphinx-rtd-theme>=1.1
+pydata-sphinx-theme>=0.13
+sphinxcontrib-napoleon>=0.8
+sphinx-autodoc-typehints>=1.25

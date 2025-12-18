@@ -28,6 +28,24 @@ def plotar_funcao(func_str, a=None, b=None, raiz=None):
 
 # Método da Bisseção
 def bissecao(func_str, a, b, tol, max_iter):
+    """Método da bisseção para encontrar raiz de uma função dada por string.
+
+    Parameters
+    ----------
+    func_str : str
+        Expressão Python de ``f(x)`` (ex.: ``'x**2 - 4'``).
+    a, b : float
+        Intervalo inicial [a, b] com sinais opostos.
+    tol : float
+        Tolerância para critério de parada.
+    max_iter : int
+        Número máximo de iterações.
+
+    Returns
+    -------
+    (float, int)
+        Tupla (raiz_aproximada, n_iter) ou (None, 0) se os sinais em a/b não forem opostos.
+    """
     if f(a, func_str) * f(b, func_str) >= 0:
         print("Erro: f(a) e f(b) devem ter sinais opostos.")
         return None, 0
@@ -45,6 +63,24 @@ def bissecao(func_str, a, b, tol, max_iter):
 
 # Método de Newton-Raphson
 def newton(func_str, x0, tol, max_iter):
+    """Método de Newton-Raphson para encontrar raiz de função dada por string.
+
+    Parameters
+    ----------
+    func_str : str
+        Expressão Python de ``f(x)``.
+    x0 : float
+        Chute inicial.
+    tol : float
+        Tolerância para critério de parada.
+    max_iter : int
+        Número máximo de iterações.
+
+    Returns
+    -------
+    (float, int)
+        Tupla (raiz_aproximada, n_iter) ou (None, n_iter) se houver erro.
+    """
     h = 1e-6
     for i in range(1, max_iter + 1):
         fx = f(x0, func_str)
@@ -61,6 +97,24 @@ def newton(func_str, x0, tol, max_iter):
 
 # Método da Secante
 def secante(func_str, x0, x1, tol, max_iter):
+    """Método da secante para encontrar raiz de função dada por string.
+
+    Parameters
+    ----------
+    func_str : str
+        Expressão Python de ``f(x)``.
+    x0, x1 : float
+        Dois chutes iniciais.
+    tol : float
+        Tolerância para critério de parada.
+    max_iter : int
+        Número máximo de iterações.
+
+    Returns
+    -------
+    (float, int)
+        Tupla (raiz_aproximada, n_iter) ou (None, n_iter) em caso de erro.
+    """
     for i in range(1, max_iter + 1):
         fx0 = f(x0, func_str)
         fx1 = f(x1, func_str)
@@ -75,44 +129,76 @@ def secante(func_str, x0, x1, tol, max_iter):
     return x1, max_iter
 
 # Menu principal
-def main():
-    print("Métodos de Cálculo Numérico")
-    print("1 - Método da Bisseção")
-    print("2 - Método de Newton-Raphson (Tangente)")
-    print("3 - Método da Secante")
+def pedir_dados_raizes(metodo=None):
+    """Lê os dados necessários para o método de raízes.
 
-    escolha = int(input("Escolha o método: "))
+    Se ``metodo`` for ``None``, comporta-se como modo interativo completo
+    (executa o método e plota o resultado). Se ``metodo`` for uma das strings
+    ``'bissecao'``, ``'newton'`` ou ``'secante'``, apenas lê os parâmetros e
+    retorna uma tupla ``(func_str, tol, max_iter, params)`` para uso por
+    menus externos (compatibilidade com `menu_raizes`).
+    """
+    if metodo is None:
+        # modo interativo antigo (executa e plota)
+        print("Métodos de Cálculo Numérico")
+        print("1 - Método da Bisseção")
+        print("2 - Método de Newton-Raphson (Tangente)")
+        print("3 - Método da Secante")
+
+        escolha = int(input("Escolha o método: "))
+        func_str = input("Digite a função f(x) (ex: x**2 - 4): ")
+        tol = float(input("Digite a tolerância: "))
+        max_iter = int(input("Digite o número máximo de iterações: "))
+
+        if escolha == 1:
+            a = float(input("Digite o valor de a: "))
+            b = float(input("Digite o valor de b: "))
+            raiz, iters = bissecao(func_str, a, b, tol, max_iter)
+            if raiz is not None:
+                plotar_funcao(func_str, a, b, raiz)
+
+        elif escolha == 2:
+            x0 = float(input("Digite o valor inicial x0: "))
+            raiz, iters = newton(func_str, x0, tol, max_iter)
+            if raiz is not None:
+                plotar_funcao(func_str, x0 - 5, x0 + 5, raiz)
+
+        elif escolha == 3:
+            x0 = float(input("Digite o valor inicial x0: "))
+            x1 = float(input("Digite o valor inicial x1: "))
+            raiz, iters = secante(func_str, x0, x1, tol, max_iter)
+            if raiz is not None:
+                plotar_funcao(func_str, min(x0, x1) - 5, max(x0, x1) + 5, raiz)
+
+        else:
+            print("Opção inválida.")
+            return
+
+        if raiz is not None:
+            print(f"\nA raiz encontrada é: {raiz:.6f}")
+            print(f"Número total de iterações: {iters}")
+        return
+
+    # Modo de leitura para menu externo: não executar, apenas retornar parâmetros
     func_str = input("Digite a função f(x) (ex: x**2 - 4): ")
     tol = float(input("Digite a tolerância: "))
     max_iter = int(input("Digite o número máximo de iterações: "))
 
-    if escolha == 1:
+    if metodo == 'bissecao':
         a = float(input("Digite o valor de a: "))
         b = float(input("Digite o valor de b: "))
-        raiz, iters = bissecao(func_str, a, b, tol, max_iter)
-        if raiz is not None:
-            plotar_funcao(func_str, a, b, raiz)
-
-    elif escolha == 2:
+        params = (a, b)
+    elif metodo == 'newton':
         x0 = float(input("Digite o valor inicial x0: "))
-        raiz, iters = newton(func_str, x0, tol, max_iter)
-        if raiz is not None:
-            plotar_funcao(func_str, x0 - 5, x0 + 5, raiz)
-
-    elif escolha == 3:
+        params = (x0,)
+    elif metodo == 'secante':
         x0 = float(input("Digite o valor inicial x0: "))
         x1 = float(input("Digite o valor inicial x1: "))
-        raiz, iters = secante(func_str, x0, x1, tol, max_iter)
-        if raiz is not None:
-            plotar_funcao(func_str, min(x0, x1) - 5, max(x0, x1) + 5, raiz)
-
+        params = (x0, x1)
     else:
-        print("Opção inválida.")
-        return
+        print("Método desconhecido para leitura de parâmetros.")
+        return None, None, None, ()
 
-    if raiz is not None:
-        print(f"\nA raiz encontrada é: {raiz:.6f}")
-        print(f"Número total de iterações: {iters}")
-
+    return func_str, tol, max_iter, params
 if __name__ == "__main__":
-    main()
+    pedir_dados_raizes()

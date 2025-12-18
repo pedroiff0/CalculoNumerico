@@ -6,10 +6,8 @@
 
 <div align="center">
 
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![Platform](https://img.shields.io/badge/platform-reddit-orange.svg)](https://www.reddit.com/user/Wordbook_Bot)
-[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
+[![CI](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/CalculoNumerico/actions)
+[![Docs](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/CalculoNumerico/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
 </div>
@@ -20,7 +18,7 @@
     <br> 
 </p>
 
-## 📝 Table of Contents
+## 📝 Sumário
 
 - [Sobre](#sobre)
 - [Como rodar?](#como_rodar)
@@ -103,7 +101,7 @@ Bom Jesus do Itabapoana - RJ.
 ### Prerequisitos
 
 ```
-Python 3.13.7
+Python 3.14.0
 ```
 
 ### Instalando
@@ -121,3 +119,32 @@ pip install -r requirements.txt
 ## ✍️ Autores <a name = "autores"></a>
 
 - [@pedroiff0](https://github.com/pedroiff0) - Pedro Henrique Rocha de Andrade
+
+## 🧾 Documentação
+
+A documentação do projeto é gerada com **Sphinx** (em Português). Para gerar localmente:
+
+```bash
+cd docs
+pip install -r requirements.txt
+make html
+# abrir docs/_build/html/index.html
+```
+
+## ✅ Testes
+
+Utilizamos `pytest`. Execute:
+
+```bash
+pytest -q
+```
+
+para rodar a suíte de testes.
+
+## 🤝 Contribuindo
+
+Leia `CONTRIBUTING.md` para orientações sobre estilo, docstrings (NumPy style) e fluxo de contribuições.
+
+## 📜 Licença
+
+Este repositório inclui um arquivo `LICENSE`.

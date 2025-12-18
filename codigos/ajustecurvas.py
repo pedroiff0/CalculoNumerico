@@ -52,19 +52,18 @@ def dados():
         return np.array([]), np.array([])
     
 def tabela_minimos_quadrados(x, y):
-    """
-    Tabela para exibição dos cálculos pelo método dos mínimos quadrados:
+    """Imprime tabela de cálculo do ajuste por mínimos quadrados (formato para debug/educacional).
 
-    Entradas/Parâmetros: 
-    - x (vetor de pontos em x)
-    - y (vetor de pontos em y)
+    Parameters
+    ----------
+    x : array_like
+        Valores de x.
+    y : array_like
+        Valores de y.
 
-    Fórmulas
-    b1 = (sum_xi * sum_yi - n * sum_xiyi) / (sum_xi ** 2 - n * sum_xi**2)
-    b0 = (sum_yi - b1 * sum_xi) / n
-    
-    Saídas:     
-    - Tabela com i,xi,yi,xi**2,yi**2,xiyi,ui,di,di**2
+    Notes
+    -----
+    Calcula os coeficientes b0, b1 pela fórmula analítica da regressão linear e exibe tabela com valores intermediários.
     """
     import pandas as pd #opcional, apenas se quiser mostrar as tabelas formatadas
 
@@ -102,27 +101,25 @@ def tabela_minimos_quadrados(x, y):
     # log_output(msg)
 
 def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
-    """
-    Calcula chi-quadrado (ajustado), soma dos quadrados dos resíduos (desvio) e coeficiente de determinação R^2,
-    recebendo explicitamente os coeficientes da reta (b0, b1) e os pontos (x, y).
+    """Calcula estatísticas de ajuste linear: Chi², R² e somas de quadrados.
 
-    Parâmetros:
-    x (np.array): valores de x
-    y (np.array): valores observados
-    b0 (float): coeficiente linear da reta
-    b1 (float): coeficiente angular da reta
-    n_params (int): número de parâmetros do modelo (p), padrão 2 para regressão linear
+    Parameters
+    ----------
+    x : array_like
+        Valores de x.
+    y : array_like
+        Valores observados de y.
+    b0 : float
+        Intercepto do modelo linear.
+    b1 : float
+        Coeficiente angular do modelo linear.
+    n_params : int, optional
+        Número de parâmetros do modelo (padrão: 2 para regressão linear).
 
-    Fórmulas:
-    D(a0,a1) = sum((y_i - b0 - b1*x_i)^2)
-    SQT = sum((y_i - y_media)^2)
-    SQRes = sum((y_i - Ui)^2) onde Ui = b0 + b1 * x_i
-    SQReg = sum((Ui - y_media)^2)
-    R^2 = 1 - (SQRes / SQT)
-    Chi^2 = D(a0,a1) / (n - p) (n = número de pontos, p = número de parâmetros do modelo)
-    
-    Retorna:
-        chi2, r2, Desvio, SQT, SQRes, SQReg, Ui
+    Returns
+    -------
+    dict
+        Dicionário com chaves: 'Chi2', 'R2', 'Desvio', 'SQT', 'SQRes', 'SQReg', 'Ui'.
     """
     x = np.array(x)
     y = np.array(y)
@@ -178,25 +175,16 @@ def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
     }
 
 def minquadrados(x, y):
-    """
-    Método 3: Mínimos Quadrados
-    - É a derivada do desvio igualada a 0 com respeito a b0 e b1 (parciais)
+    """Ajuste por mínimos quadrados (regressão linear) e exibe resultados.
 
-    Entradas/Parâmetros: 
-    - x (vetor de pontos em x)
-    - y (vetor de pontos em y)
+    Parameters
+    ----------
+    x, y : array_like
+        Dados a serem ajustados.
 
-    Fórmulas:
-    b0 = (sum(yi) - b1*sum(xi)) / n
-    b1 = (sum(xi)*sum(yi) - n*sum(xiyi))/((sum(xi)**2) - n*sum(xi**2))
-    D(b0,b1) = sum((yi - (b0 + b1*xi))^2)
-    
-    Saídas:     
-    - Tabela com i,xi,yi,xi**2,yi**2,xiyi,ui,di,di**2
-    - Equação da reta
-    - Desvio D(b0,b1)
-    - Chi2, R2
-    - Gráfico ilustrativo
+    Notes
+    -----
+    Calcula os coeficientes analiticamente e imprime estatísticas e gráfico (opcionais).
     """
     n = len(x)
     sum_x = np.sum(x)

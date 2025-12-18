@@ -2,6 +2,14 @@ from math import factorial, isclose # isclose é só pro gregory newton
 import sympy as sp # pro erro e truncamento
 
 def dados_interpolacao():
+    """Lê interativamente pontos para interpolação.
+
+    Returns
+    -------
+    tuple
+        Tupla ``(x_vals, y_vals, x_interp)`` onde ``x_vals`` e ``y_vals`` são
+        listas de pontos e ``x_interp`` é o valor a ser interpolado.
+    """
     n = int(input("\nDigite o número de pontos (n): "))
     x_vals = []
     y_vals = []
@@ -11,9 +19,21 @@ def dados_interpolacao():
         x_vals.append(x)
         y_vals.append(y)
     x_interp = float(input("Digite o valor de x para interpolar: "))
-    return x_vals, y_vals, x_interp, n
+    return x_vals, y_vals, x_interp
 
 def obter_max_grau(n):
+    """Solicita ao usuário o grau máximo para interpolação.
+
+    Parameters
+    ----------
+    n : int
+        Número de pontos disponíveis.
+
+    Returns
+    -------
+    int or None
+        Grau máximo escolhido ou ``None`` para usar o máximo disponível.
+    """
     try:
         val = input(f"Digite o grau máximo desejado (máximo {n-1}), ou deixe vazio para usar o máximo: ")
         if val.strip() == '':
@@ -27,13 +47,37 @@ def obter_max_grau(n):
         print("Entrada inválida, usando o máximo possível.")
         return None
 
-# tolerencia muito alta (15 casa decimal)
 def verifica_espaçamento_uniforme(x, tol=1e-15):
+    """Verifica se os pontos x possuem espaçamento uniforme.
+
+    Parameters
+    ----------
+    x : sequence of float
+        Pontos x ordenados.
+    tol : float, optional
+        Tolerância absoluta para comparação (padrão 1e-15).
+
+    Returns
+    -------
+    (bool, float)
+        Tupla (eh_uniforme, h) onde h é o passo estimado entre pontos.
+    """
     h = x[1] - x[0]
     return all(isclose(x[i+1] - x[i], h, abs_tol=tol) for i in range(len(x)-1)), h
 
-# lagrange
 def tabela_diferencas_divididas(x, y):
+    """Calcula a tabela de diferenças divididas (Newton).
+
+    Parameters
+    ----------
+    x, y : sequence of float
+        Nós e valores correspondentes.
+
+    Returns
+    -------
+    list of lists
+        Tabela em que cada linha j contém as diferenças divididas de ordem j.
+    """
     n = len(x)
     tabela = [y.copy()]
     for j in range(1, n):
@@ -53,6 +97,18 @@ def imprimir_tabela_diferencas_divididas(tabela):
         print(" ".join(linha))
 
 def tabela_diferencas_finitas(y):
+    """Calcula tabela de diferenças finitas progressivas.
+
+    Parameters
+    ----------
+    y : sequence of float
+        Valores y nos nós igualmente espaçados.
+
+    Returns
+    -------
+    list of lists
+        Tabela de diferenças finitas progressivas.
+    """
     n = len(y)
     tabela = [y.copy()]
     for j in range(1, n):
@@ -79,6 +135,26 @@ def perguntar_erro(x_vals, x_interp, grau, valor_interpolado):
         return None, None
 
 def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
+    """Calcula estimativa do erro de truncamento do polinômio interpolador.
+
+    Parameters
+    ----------
+    func_str : str
+        Expressão simbólica de f(x).
+    x_vals : sequence
+        Nós usados na interpolação.
+    x_interp : float
+        Ponto em que a interpolação foi avaliada.
+    grau : int
+        Grau do polinômio usado.
+    valor_interpolado : float
+        Valor interpolado (não usado diretamente no cálculo aqui).
+
+    Returns
+    -------
+    (float, None)
+        Erro de truncamento máximo estimado e None (placeholder para erro real).
+    """
     x = sp.Symbol('x')
     f = sp.sympify(func_str)
     try:
@@ -109,8 +185,25 @@ def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
         print(f"Erro ao calcular erro truncamento máximo: {e}")
         return None, None
 
-#metodo de newton
 def newton_dif_divididas(x, tabela, xp, max_grau=None):
+    """Avalia o polinômio interpolador de Newton (diferenças divididas) em xp.
+
+    Parameters
+    ----------
+    x : sequence
+        Nós usados.
+    tabela : list of lists
+        Tabela de diferenças divididas (como retornada por ``tabela_diferencas_divididas``).
+    xp : float
+        Ponto onde avaliar o polinômio.
+    max_grau : int or None
+        Grau máximo a ser usado.
+
+    Returns
+    -------
+    float
+        Valor do polinômio interpolador em ``xp``.
+    """
     n = len(x)
     if max_grau is None or max_grau > n - 1:
         max_grau = n - 1
@@ -150,6 +243,22 @@ def gregory_newton_progressivo(x, y, xp, max_grau=None):
     return resultado
 
 def lagrange_interpol(x, y, xp, max_grau=None):
+    """Avalia o polinômio interpolador de Lagrange em xp.
+
+    Parameters
+    ----------
+    x, y : sequence
+        Nós e valores correspondentes.
+    xp : float
+        Ponto a ser interpolado.
+    max_grau : int or None
+        Grau máximo a ser usado.
+
+    Returns
+    -------
+    float
+        Valor interpolado em ``xp``.
+    """
     n = len(x)
     if max_grau is None or max_grau > n - 1:
         max_grau = n - 1
@@ -239,8 +348,9 @@ def menu():
             print("Encerrando o programa...")
             break
         
-        x_vals, y_vals, x_interp, n = dados_interpolacao()
+        x_vals, y_vals, x_interp = dados_interpolacao()
 
+        n = len(x_vals)
         max_grau = obter_max_grau(n)
 
         if opcao == '1':
