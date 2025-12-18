@@ -29,11 +29,15 @@
 Repositório de códigos da disciplina de Cálculo Numérico - 2025.2
 
 Professor: Rodrigo Lacerda da Silva
+
 Aluno: Pedro Henrique Rocha de Andrade
+
 Curso: Bacharelado em Engenharia de Computação
+
 Instituição: Instituto Federal Fluminense <i>Campus</i> Bom Jesus do Itabapoana.
 
 Setembro/2025 à Março/2026,
+
 Bom Jesus do Itabapoana - RJ.
 
 ### Ementa
