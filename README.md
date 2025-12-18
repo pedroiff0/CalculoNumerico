@@ -7,7 +7,7 @@
 <div align="center">
 
 [![CI](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/CalculoNumerico/actions)
-[![Docs](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/CalculoNumerico/actions)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://pedroiff0.github.io/CalculoNumerico/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
 </div>
