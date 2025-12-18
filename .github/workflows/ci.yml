@@ -30,6 +30,8 @@ jobs:
           PYTHONPATH=. pytest -q --maxfail=1 -q
       - name: Build docs (fail on warnings)
         run: |
+          # Create _static directory for Sphinx static files
+          mkdir -p docs/_static
           # Build Sphinx docs and treat warnings as errors
           PYTHONPATH=. sphinx-build -b html docs docs/_build/html -W
       - name: Upload docs artifact
