@@ -19,7 +19,7 @@ retornar objetos do tipo ``numpy.ndarray``.
 Exemplo de Uso
 --------------
 
-.. literalinclude:: ../tests/examples/solve_system.py
+.. literalinclude:: ../tests/exemplos/exemplo_resolver_sistema.py
     :language: python
     :linenos:
 

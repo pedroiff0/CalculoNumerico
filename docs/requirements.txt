@@ -1,5 +1,6 @@
 sphinx>=7.0
 sphinx-rtd-theme>=1.1
 pydata-sphinx-theme>=0.13
-sphinxcontrib-napoleon>=0.8
 sphinx-autodoc-typehints>=1.25
+# NOTE: use built-in extension 'sphinx.ext.napoleon' (shipped with Sphinx). Do not
+# require the unavailable package 'sphinxcontrib-napoleon>=0.8' which causes CI failures.

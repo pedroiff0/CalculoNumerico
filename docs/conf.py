@@ -29,6 +29,9 @@ language = 'pt_BR'
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
+# Suprimir aviso de documentos que existam mas não sejam incluídos no toctree
+suppress_warnings = ['toc.not_included']
+
 autosummary_generate = True
 
 # Let autodoc show the docstrings even if the object is not imported

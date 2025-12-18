@@ -10,6 +10,7 @@ Nesta documentação encontram-se páginas por tópico com exemplos e referênci
    :caption: Conteúdo:
 
    calcnum_matrix
+   tutorial_calcnum
    bases
    sistemas
    interpolacoes
@@ -18,7 +19,6 @@ Nesta documentação encontram-se páginas por tópico com exemplos e referênci
    EDOs
    raizes
    disclaimer
-   modules
 
 
 Matriz de Cobertura
