@@ -15,7 +15,7 @@ As funções listadas abaixo implementam conversões entre bases numéricas (bin
 Exemplo de Uso
 --------------
 
-.. literalinclude:: ../tests/examples/bases_example.py
+.. literalinclude:: ../tests/exemplos/exemplo_bases.py
     :language: python
     :linenos:
 

@@ -13,7 +13,7 @@ Documentação
 Exemplo de Uso
 --------------
 
-.. literalinclude:: ../tests/examples/simple_root_find.py
+.. literalinclude:: ../tests/exemplos/exemplo_busca_raiz.py
     :language: python
     :linenos:
 

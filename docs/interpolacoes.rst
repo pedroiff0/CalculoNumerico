@@ -13,7 +13,7 @@ Documentação da API
 Exemplo de Uso
 --------------
 
-.. literalinclude:: ../tests/examples/interpolacoes_example.py
+.. literalinclude:: ../tests/exemplos/exemplo_interpolacoes.py
     :language: python
     :linenos:
 

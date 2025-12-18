@@ -17,7 +17,7 @@ como entrada e retornam estruturas numpy para integração simples com outras ro
 Exemplo de Uso
 --------------
 
-.. literalinclude:: ../tests/examples/ajustecurvas_example.py
+.. literalinclude:: ../tests/exemplos/exemplo_ajuste_curvas.py
     :language: python
     :linenos:
 
@@ -35,11 +35,7 @@ Testes Unitários (visíveis)
 
 Abaixo estão os testes unitários para Ajustes de Curvas.
 
-.. literalinclude:: ../tests/test_ajustes.py
-    :language: python
-    :linenos:
-
-.. literalinclude:: ../tests/test_ajustecurvas_v2.py
+.. literalinclude:: ../tests/test_ajustecurvas.py
     :language: python
     :linenos:
 
@@ -47,4 +43,4 @@ Links rápidos
 -------------
 
 - Teste de integração relacionado: :file:`tests/test_inputs_calcnum.py::test_calcnum_inputs_basic`
-- Testes unitários: :file:`tests/test_ajustes.py`, :file:`tests/test_ajustecurvas_v2.py`
+- Testes unitários: :file:`tests/test_ajustecurvas.py`

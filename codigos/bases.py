@@ -22,11 +22,6 @@ def binario_para_decimal(bin_str):
     -------
     int
         Valor decimal correspondente.
-
-    Examples
-    --------
-    >>> binario_para_decimal('1011')
-    11
     """
     decimal = 0
     for i, digito in enumerate(reversed(bin_str)):
@@ -46,7 +41,7 @@ def decimal_para_binario(numDecimal):
     str
         Representação binária (ex.: ``'1011'``).
 
-    Examples
+    Exemplos
     --------
     >>> decimal_para_binario(11)
     '1011'
@@ -72,7 +67,7 @@ def decimal_para_hexadecimal(numDecimal):
     str
         Representação hexadecimal (ex.: ``'FE'``).
 
-    Examples
+    Exemplos
     --------
     >>> decimal_para_hexadecimal(254)
     'FE'
@@ -99,7 +94,7 @@ def hexadecimal_para_decimal(hex_str):
     int
         Valor decimal correspondente.
 
-    Examples
+    Exemplos
     --------
     >>> hexadecimal_para_decimal('FE')
     254
@@ -125,7 +120,7 @@ def binario_para_hexadecimal(bin_str):
     str
         Representação hexadecimal em maiúsculas.
 
-    Examples
+    Exemplos
     --------
     >>> binario_para_hexadecimal('1111')
     'F'
@@ -146,7 +141,7 @@ def hexadecimal_para_binario(hex_str):
     str
         Representação binária (ex.: ``'1111'``).
 
-    Examples
+    Exemplos
     --------
     >>> hexadecimal_para_binario('F')
     '1111'

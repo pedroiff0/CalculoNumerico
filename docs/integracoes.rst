@@ -13,7 +13,7 @@ Documentação
 Exemplo de Uso
 --------------
 
-.. literalinclude:: ../tests/examples/integracoes_example.py
+.. literalinclude:: ../tests/exemplos/exemplo_integracoes.py
     :language: python
     :linenos:
 
@@ -33,12 +33,8 @@ Testes Unitários (visíveis)
     :language: python
     :linenos:
 
-.. literalinclude:: ../tests/test_integracoes_extra.py
-    :language: python
-    :linenos:
-
 Links rápidos
 -------------
 
 - Teste de integração relacionado: :file:`tests/test_inputs_calcnum.py::test_calcnum_inputs_basic`
-- Testes unitários: :file:`tests/test_integracoes.py`, :file:`tests/test_integracoes_extra.py`
+- Testes unitários: :file:`tests/test_integracoes.py`

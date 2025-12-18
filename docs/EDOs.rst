@@ -19,7 +19,7 @@ Documentação da API
 Exemplo de Uso
 --------------
 
-.. literalinclude:: ../tests/examples/edo_example.py
+.. literalinclude:: ../tests/exemplos/exemplo_edos.py
     :language: python
     :linenos:
 
@@ -39,11 +39,7 @@ Testes Unitários (visíveis)
     :language: python
     :linenos:
 
-.. literalinclude:: ../tests/test_edos_extra.py
-    :language: python
-    :linenos:
-
 Links rápidos
 -------------
 
-- Testes relacionados: :file:`tests/test_edos.py`, :file:`tests/test_edos_extra.py`
+- Testes relacionados: :file:`tests/test_edos.py`
