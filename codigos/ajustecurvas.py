@@ -604,7 +604,14 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
     ATy = np.array(Sxy)
 
     # Resolver sistema pelo método manual
-    coef = eliminacao_gauss_com_pivotamento(ATA, ATy)
+    sol = eliminacao_gauss_com_pivotamento(ATA, ATy)
+    if sol is None:
+        raise RuntimeError("Falha ao resolver sistema normal para mínimos quadrados de ordem n")
+    # eliminacao_gauss_com_pivotamento retorna (x, A, b)
+    if isinstance(sol, tuple) or isinstance(sol, list):
+        coef = np.array(sol[0], dtype=float)
+    else:
+        coef = np.array(sol, dtype=float)
 
     # Calcular valores ajustados
     Ui = np.zeros(n)
@@ -731,6 +738,7 @@ def menu():
         print("1. Regressão Linear Simples (Polinômio de grau 1)")
         print("2. Regressão Linear No Intervalo (Polinômio de grau 1)")
         print("3. Método dos Quadrados Mínimos")
+        print("4. Mínimos Quadrados (ordem n)")
         print("0. Sair")
         opcao = input("Escolha uma opção: ").strip()
         if opcao == '0':
@@ -748,6 +756,17 @@ def menu():
             x, y = dados()
             minquadrados(x, y)
             # minquadrados(x_val, y_val) # para usar essa função, utilize os dados prontos, e comente as linhas de obtenção de dados
+        elif opcao == "4":
+            x, y = dados()
+            if x.size == 0:
+                print("Nenhum dado fornecido.")
+                continue
+            try:
+                ordem = int(input("Digite a ordem do polinômio (inteiro >=0): ").strip())
+            except ValueError:
+                print("Ordem inválida. Usando ordem 1.")
+                ordem = 1
+            minquadrados_ordem_n_manual(x, y, ordem=ordem)
         else:
             print("Opção inválida. Tente novamente.")
 
