@@ -691,7 +691,8 @@ def executar_edo_2ordem():
         
         # Exibir resultados
         print(f"\nSolução da EDO de 2ª ordem:")
-        print(f"{'x':>10} {'y':>15} {'y\'':>15}")
+        # Use double-quoted string literal inside f-string expression to avoid backslash in expressions
+        print(f"{'x':>10} {'y':>15} {"y'":>15}")
         print("-" * 40)
         
         for i, (x, u) in enumerate(zip(t_vals, u_vals)):
