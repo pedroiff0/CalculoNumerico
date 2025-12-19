@@ -17,6 +17,7 @@
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/translations.js?v=71a39b36"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="genindex.html" />
     <link rel="search" title="Buscar" href="search.html" /> 
@@ -434,14 +435,25 @@ Passos manuais:
 <dl class="py function" id="module-codigos.interpolacoes">
 <dt class="sig sig-object py" id="codigos.interpolacoes.dados_interpolacao">
 <span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">dados_interpolacao</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#dados_interpolacao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.dados_interpolacao" title="Link para esta definição"></a></dt>
-<dd><p>Lê interativamente pontos para interpolação.</p>
+<dd><p>Lê interativamente pontos para interpolação com validação robusta.</p>
+<p>Esta função solicita ao usuário os dados necessários para interpolação:
+número de pontos, coordenadas x e y, e ponto de interpolação.
+Inclui validações para garantir que os dados sejam adequados.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Retorna<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tupla <code class="docutils literal notranslate"><span class="pre">(x_vals,</span> <span class="pre">y_vals,</span> <span class="pre">x_interp)</span></code> onde <code class="docutils literal notranslate"><span class="pre">x_vals</span></code> e <code class="docutils literal notranslate"><span class="pre">y_vals</span></code> são
-listas de pontos e <code class="docutils literal notranslate"><span class="pre">x_interp</span></code> é o valor a ser interpolado.</p>
+<dd class="field-odd"><p>Tupla (x_vals, y_vals, x_interp) onde:
+- x_vals: list of float, coordenadas x dos pontos
+- y_vals: list of float, coordenadas y dos pontos
+- x_interp: float, ponto onde avaliar a interpolação</p>
 </dd>
 <dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple</p>
+</dd>
+<dt class="field-odd">Levanta<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – Se os dados inseridos forem inválidos.</p></li>
+<li><p><strong>KeyboardInterrupt</strong> – Se o usuário interromper a entrada (Ctrl+C).</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -560,58 +572,203 @@ listas de pontos e <code class="docutils literal notranslate"><span class="pre">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.interpolacoes.newton_dif_divididas">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">newton_dif_divididas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#newton_dif_divididas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.newton_dif_divididas" title="Link para esta definição"></a></dt>
-<dd><p>Avalia o polinômio interpolador de Newton (diferenças divididas) em xp.</p>
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">newton_dif_divididas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela_diferencas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#newton_dif_divididas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.newton_dif_divididas" title="Link para esta definição"></a></dt>
+<dd><p>Avalia o polinômio interpolador de Newton usando diferenças divididas.</p>
+<p>Esta função implementa o método de interpolação polinomial de Newton baseado
+em diferenças divididas, que é numericamente mais estável que o método de
+Lagrange para avaliação em múltiplos pontos.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>sequence</em>) – Nós usados.</p></li>
-<li><p><strong>tabela</strong> (<em>list</em><em> of </em><em>lists</em>) – Tabela de diferenças divididas (como retornada por <code class="docutils literal notranslate"><span class="pre">tabela_diferencas_divididas</span></code>).</p></li>
-<li><p><strong>xp</strong> (<em>float</em>) – Ponto onde avaliar o polinômio.</p></li>
-<li><p><strong>max_grau</strong> (<em>int</em><em> or </em><em>None</em>) – Grau máximo a ser usado.</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime os passos do cálculo; se False, executa silenciosamente (default: False).</p></li>
+<li><p><strong>x</strong> (<em>array_like</em>) – Nós (pontos x) onde os valores são conhecidos. Devem ser números reais
+únicos e finitos.</p></li>
+<li><p><strong>tabela_diferencas</strong> (<em>list</em><em> of </em><em>lists</em>) – Tabela de diferenças divididas calculada previamente (como retornada
+por tabela_diferencas_divididas). Cada linha j contém as diferenças
+divididas de ordem j.</p></li>
+<li><p><strong>xp</strong> (<em>float</em>) – Ponto onde avaliar o polinômio interpolador. Deve ser um número finito.</p></li>
+<li><p><strong>max_grau</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Grau máximo do polinômio interpolador. Se None (padrão), usa o grau
+máximo possível (n-1, onde n é o número de pontos). Deve estar no
+intervalo [1, n-1].</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime os cálculos detalhados do processo de interpolação.
+Se False (padrão), executa silenciosamente.</p></li>
+<li><p><strong>tabela</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Se True, mostra a tabela de diferenças divididas utilizada.
+Se None (padrão), usa o valor da variável global ‘tabela’ ou False.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Se True, gera um gráfico mostrando os pontos originais, a curva
+interpolada e o ponto de interpolação. Se None (padrão), usa o valor
+da variável global ‘grafico’ ou False. Requer matplotlib instalado.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
-<dd class="field-even"><p>Valor do polinômio interpolador em <code class="docutils literal notranslate"><span class="pre">xp</span></code>.</p>
+<dd class="field-even"><p>Valor interpolado do polinômio de Newton no ponto xp.</p>
 </dd>
 <dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
+<dt class="field-even">Levanta<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – Se as entradas não forem válidas ou se a tabela de diferenças não
+    for consistente com os pontos x.</p></li>
+<li><p><strong>TypeError</strong> – Se os tipos de entrada não forem adequados.</p></li>
+<li><p><strong>RuntimeError</strong> – Se ocorrer erro na avaliação do polinômio.</p></li>
+</ul>
+</dd>
 </dl>
+<p class="rubric">Notas</p>
+<p>O método de Newton com diferenças divididas é definido pela fórmula:</p>
+<div class="math notranslate nohighlight">
+\[P_n(x) = f[x_0] + f[x_0,x_1](x-x_0) + f[x_0,x_1,x_2](x-x_0)(x-x_1) + \cdots\]</div>
+<p>onde <span class="math notranslate nohighlight">\(f[x_0,x_1,\dots,x_k]\)</span> são as diferenças divididas de ordem k.</p>
+<p>A complexidade computacional é O(n) para avaliação em um ponto, após
+a pré-computação da tabela de diferenças divididas O(n²).</p>
+<p class="rubric">Exemplos</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tabela</span> <span class="o">=</span> <span class="n">tabela_diferencas_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="go">2.25</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Interpolação quadrática</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">2.25</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.interpolacoes.gregory_newton_progressivo">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">gregory_newton_progressivo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#gregory_newton_progressivo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.gregory_newton_progressivo" title="Link para esta definição"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="codigos.interpolacoes.lagrange_interpol">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">lagrange_interpol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#lagrange_interpol"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.lagrange_interpol" title="Link para esta definição"></a></dt>
-<dd><p>Avalia o polinômio interpolador de Lagrange em xp.</p>
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">gregory_newton_progressivo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#gregory_newton_progressivo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.gregory_newton_progressivo" title="Link para esta definição"></a></dt>
+<dd><p>Avalia o polinômio interpolador de Gregory-Newton progressivo.</p>
+<p>Esta função implementa o método de interpolação polinomial de Gregory-Newton
+progressivo, que utiliza diferenças finitas para interpolação em pontos
+igualmente espaçados. É uma variante do método de Newton otimizada para
+nós com espaçamento uniforme.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>sequence</em>) – Nós e valores correspondentes.</p></li>
-<li><p><strong>y</strong> (<em>sequence</em>) – Nós e valores correspondentes.</p></li>
-<li><p><strong>xp</strong> (<em>float</em>) – Ponto a ser interpolado.</p></li>
-<li><p><strong>max_grau</strong> (<em>int</em><em> or </em><em>None</em>) – Grau máximo a ser usado.</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime os cálculos detalhados; se False, executa silenciosamente (default: False).</p></li>
+<li><p><strong>x</strong> (<em>array_like</em>) – Nós (pontos x) e valores correspondentes (pontos y). Os pontos x devem
+estar igualmente espaçados e ser únicos. Ambos devem ser sequências
+de números reais finitos.</p></li>
+<li><p><strong>y</strong> (<em>array_like</em>) – Nós (pontos x) e valores correspondentes (pontos y). Os pontos x devem
+estar igualmente espaçados e ser únicos. Ambos devem ser sequências
+de números reais finitos.</p></li>
+<li><p><strong>xp</strong> (<em>float</em>) – Ponto onde avaliar o polinômio interpolador. Deve ser um número finito.</p></li>
+<li><p><strong>max_grau</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Grau máximo do polinômio interpolador. Se None (padrão), usa o grau
+máximo possível (n-1, onde n é o número de pontos). Deve estar no
+intervalo [1, n-1].</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime os cálculos detalhados do processo de interpolação.
+Se False (padrão), executa silenciosamente.</p></li>
+<li><p><strong>tabela</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Se True, mostra a tabela de diferenças finitas utilizada.
+Se None (padrão), usa o valor da variável global ‘tabela’ ou False.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Se True, gera um gráfico mostrando os pontos originais, a curva
+interpolada e o ponto de interpolação. Se None (padrão), usa o valor
+da variável global ‘grafico’ ou False. Requer matplotlib instalado.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
-<dd class="field-even"><p>Valor interpolado em <code class="docutils literal notranslate"><span class="pre">xp</span></code>.</p>
+<dd class="field-even"><p>Valor interpolado do polinômio de Gregory-Newton no ponto xp.</p>
 </dd>
 <dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
+<dt class="field-even">Levanta<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – Se as entradas não forem válidas ou se os pontos x não estiverem
+    igualmente espaçados.</p></li>
+<li><p><strong>TypeError</strong> – Se os tipos de entrada não forem adequados.</p></li>
+</ul>
+</dd>
 </dl>
+<p class="rubric">Notas</p>
+<p>O método de Gregory-Newton progressivo é definido pela fórmula:</p>
+<div class="math notranslate nohighlight">
+\[P_n(x) = y_0 + \binom{s}{1} \Delta y_0 + \binom{s}{2} \Delta^2 y_0 + \cdots + \binom{s}{n} \Delta^n y_0\]</div>
+<p>onde <span class="math notranslate nohighlight">\(s = (x - x_0)/h\)</span> é a variável reduzida, <span class="math notranslate nohighlight">\(h\)</span> é o passo
+entre pontos, e <span class="math notranslate nohighlight">\(\Delta^k y_0\)</span> são as diferenças finitas progressivas.</p>
+<p>Este método requer que os pontos x estejam igualmente espaçados. Para
+pontos não-uniformemente espaçados, use newton_dif_divididas.</p>
+<p>A complexidade computacional é O(n) para avaliação em um ponto, após
+a pré-computação da tabela de diferenças finitas O(n²).</p>
+<p class="rubric">Exemplos</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span>  <span class="c1"># y = x² + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gregory_newton_progressivo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="go">3.25</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Interpolação cúbica</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gregory_newton_progressivo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">3.25</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.interpolacoes.lagrange_interpol">
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">lagrange_interpol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#lagrange_interpol"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.lagrange_interpol" title="Link para esta definição"></a></dt>
+<dd><p>Avalia o polinômio interpolador de Lagrange em um ponto específico.</p>
+<p>Esta função implementa o método de interpolação polinomial de Lagrange,
+que constrói um polinômio que passa exatamente pelos pontos dados.
+O método é numericamente estável e não requer ordenação prévia dos pontos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array_like</em>) – Nós (pontos x) e valores correspondentes (pontos y). Devem ser sequências
+de números reais com o mesmo comprimento. Os pontos x devem ser únicos.</p></li>
+<li><p><strong>y</strong> (<em>array_like</em>) – Nós (pontos x) e valores correspondentes (pontos y). Devem ser sequências
+de números reais com o mesmo comprimento. Os pontos x devem ser únicos.</p></li>
+<li><p><strong>xp</strong> (<em>float</em>) – Ponto onde avaliar o polinômio interpolador. Deve ser um número finito.</p></li>
+<li><p><strong>max_grau</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Grau máximo do polinômio interpolador. Se None (padrão), usa o grau
+máximo possível (n-1, onde n é o número de pontos). Deve estar no
+intervalo [1, n-1].</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime os cálculos detalhados do processo de interpolação.
+Se False (padrão), executa silenciosamente.</p></li>
+<li><p><strong>tabela</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Se True, mostra tabela com os pontos de interpolação utilizados.
+Se None (padrão), usa o valor da variável global ‘tabela’ ou False.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Se True, gera um gráfico mostrando os pontos originais, a curva
+interpolada e o ponto de interpolação. Se None (padrão), usa o valor
+da variável global ‘grafico’ ou False. Requer matplotlib instalado.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Valor interpolado do polinômio de Lagrange no ponto xp.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Levanta<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – Se as entradas não forem válidas (ver _validate_interpolation_inputs).</p></li>
+<li><p><strong>TypeError</strong> – Se os tipos de entrada não forem adequados.</p></li>
+<li><p><strong>RuntimeError</strong> – Se ocorrer divisão por zero durante o cálculo (pontos x duplicados).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notas</p>
+<p>O método de Lagrange é definido pela fórmula:</p>
+<div class="math notranslate nohighlight">
+\[P(x) = \sum_{i=0}^{n-1} y_i \cdot L_i(x)\]</div>
+<p>onde <span class="math notranslate nohighlight">\(L_i(x)\)</span> são os polinômios base de Lagrange:</p>
+<div class="math notranslate nohighlight">
+\[L_i(x) = \prod_{j=0, j\neq i}^{n-1} \frac{x - x_j}{x_i - x_j}\]</div>
+<p>A complexidade computacional é O(n²) para avaliação em um ponto.</p>
+<p class="rubric">Exemplos</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="go">2.25</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Interpolação quadrática</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">2.25</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.interpolacoes.dispositivo_pratico_lagrange">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">dispositivo_pratico_lagrange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#dispositivo_pratico_lagrange"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.dispositivo_pratico_lagrange" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">dispositivo_pratico_lagrange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#dispositivo_pratico_lagrange"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.dispositivo_pratico_lagrange" title="Link para esta definição"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
