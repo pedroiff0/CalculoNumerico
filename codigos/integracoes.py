@@ -1,17 +1,19 @@
+"""
+Módulo para métodos de integração numérica.
+
+Este módulo implementa algoritmos de integração numérica:
+Regra dos trapézios, Simpson 1/3 e suas versões repetidas.
+
+Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025
+"""
+
 import math
 import numpy as np
 from sympy import symbols, integrate, sympify, diff, lambdify
 from sympy import sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, exp, sqrt, log, Abs, pi, E
 import matplotlib.pyplot as plt
-
-# Mapeamento padrão para uso com sympify (padroniza nomes de funções/constantes)
-SYMPY_LOCALS = {
-    'sin': sin, 'cos': cos, 'tan': tan,
-    'asin': asin, 'acos': acos, 'atan': atan,
-    'sinh': sinh, 'cosh': cosh, 'tanh': tanh,
-    'exp': exp, 'sqrt': sqrt, 'log': log, 'abs': Abs,
-    'pi': pi, 'e': E, 'E': E
-}
+from .constants import SYMPY_LOCALS
 
 
 def plotar_funcoes(funcs, a, b, pontos=400):
@@ -846,6 +848,18 @@ def simpson_3_8_composta(func, a, b, verbose=False, grafico=None):
 
     print()
     return float(resultado)
+
+
+def dados():
+    """Menu interativo para métodos de integração numérica."""
+    print("\n=== Métodos de Integração Numérica ===")
+    print("1 - Regra do Trapézio")
+    print("2 - Regra de Simpson 1/3")
+    print("3 - Regra de Simpson 3/8")
+    print("0 - Sair")
+    opcao = input("Escolha o método desejado: ")
+    return opcao
+
 
 def menu():
     while True:
