@@ -37,4 +37,5 @@ Links rápidos
 -------------
 
 - Teste de integração relacionado: :file:`tests/test_inputs_calcnum.py::test_calcnum_inputs_basic`
-- Testes unitários: :file:`tests/test_integracoes.py`
+- Testes unitários (arquivo): :file:`tests/test_integracoes.py`
+- Página de testes (docs): :doc:`tests/test_integracoes`

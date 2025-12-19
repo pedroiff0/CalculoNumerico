@@ -426,102 +426,171 @@ def calcular_integral_analitica():
         print("\nErro ao calcular a integral simbolicamente:", e)
         return None
 
-def newton_cotes(func, a, b, ordem):
-    '''
-    Newton-Cotes para integração numérica.
-    
-    Suporta ordens 1 (Trapézio), 2 (Simpson 1/3), 3 (Simpson 3/8) e 4.
-    Fórmulas:
-    Ordem 1 (Trapézio): int_a^b f(x) dx ≈ (h/2) * [f(x0) + f(x1)]
-    Ordem 2 (Simpson 1/3): int_a^b f(x) dx ≈ (h/3) * [f(x0) + 4f(x1) + f(x2)]
-    Ordem 3 (Simpson 3/8): int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + f(x3)]
-    
-    Quando usar? Para integrais simples com poucos pontos (>= ordem)
-    '''
+def newton_cotes(func, a, b, ordem, verbose=False, grafico=None):
+    """Newton-Cotes para integração numérica (ordens 1,2,3).
+
+    Otimizações
+    -----------
+    - Tenta usar `sympy.lambdify` para avaliar a função de forma vetorizada quando possível.
+
+    Verbose & Gráficos
+    ------------------
+    - `verbose=False` (padrão): execução silenciosa (comportamento compatível com testes automatizados).
+    - `verbose=True`: imprime detalhes auxiliares e, por padrão, habilita `grafico=True`.
+
+    Parâmetros
+    ----------
+    func : str
+        Expressão da função em termos de ``x``.
+    a, b : float
+        Limites do intervalo de integração (números finitos, distintos).
+    ordem : int
+        Ordem da regra (1, 2 ou 3).
+    verbose : bool, optional
+        Habilita saídas detalhadas e gráficos (padrão: False).
+    grafico : bool or None, optional
+        Controla plotagem: se None e ``verbose`` for True, é habilitado; caso contrário, respeitado.
+
+    Retorno
+    -------
+    float
+        Aproximação da integral.
+
+    Notas de teste
+    --------------
+    Os testes unitários que cobrem Newton-Cotes e regras compostas estão em ``tests/test_integracoes.py``.
+    """
+    # Validações básicas de entrada
+    try:
+        a = float(a); b = float(b)
+    except Exception:
+        raise TypeError("Os limites a e b devem ser numéricos e conversíveis para float.")
+    if not np.isfinite(a) or not np.isfinite(b):
+        raise ValueError("Os limites a e b devem ser finitos (não NaN ou infinito).")
+    if a == b:
+        raise ValueError("Os limites a e b não podem ser iguais.")
+    if ordem not in (1, 2, 3):
+        raise ValueError("Ordem inválida para Newton-Cotes. Deve ser 1, 2 ou 3.")
+
+    if grafico is None:
+        grafico = bool(verbose)
+
     h = (b - a) / ordem
-    x = [a + i * h for i in range(ordem + 1)]
-    y = []
-    safe_math = {k: getattr(math, k) for k in dir(math) if not k.startswith("_")}
-    for xi in x:
-        global_vars = {"x": xi, "math": math, **safe_math}
-        try:
-            yi = eval(func, {"__builtins__": None}, global_vars)
-        except Exception as e:
-            print(f"Erro na avaliação da função: {e}")
-            return None
-        y.append(yi)
+
+    # Tentar avaliação vetorizada com SymPy/lambdify
+    x_sym = symbols('x')
+    func_clean = func.replace('math.', '')
+    try:
+        fexpr = sympify(func_clean, locals=SYMPY_LOCALS)
+        fvec = lambdify(x_sym, fexpr, modules=['numpy'])
+        x = np.linspace(a, b, ordem + 1)
+        y = np.asarray(fvec(x), dtype=float)
+    except Exception:
+        # Fallback ponto a ponto
+        x = [a + i * h for i in range(ordem + 1)]
+        y = []
+        safe_math = {k: getattr(math, k) for k in dir(math) if not k.startswith("_")}
+        for xi in x:
+            try:
+                yi = eval(func, {"__builtins__": None}, {"x": xi, "math": math, **safe_math})
+            except Exception as e:
+                if verbose:
+                    print(f"Erro na avaliação da função em x={xi}: {e}")
+                return None
+            y.append(yi)
+        y = np.asarray(y, dtype=float)
 
     if ordem == 1:
         resultado = h * (y[0] + y[1]) / 2
         metodo_nome = "Regra do Trapézio"
     elif ordem == 2:
-        resultado = (h/3) * (y[0] + 4*y[1] + y[2])
+        resultado = (h / 3) * (y[0] + 4 * y[1] + y[2])
         metodo_nome = "Regra de Simpson 1/3"
-    elif ordem == 3:
-        resultado = (3*h/8) * (y[0] + 3*y[1] + 3*y[2] + y[3])
-        metodo_nome = "Regra de Simpson 3/8"
     else:
-        print("Ordem inválida para Newton-Cotes.")
-        return None
+        resultado = (3 * h / 8) * (y[0] + 3 * y[1] + 3 * y[2] + y[3])
+        metodo_nome = "Regra de Simpson 3/8"
 
-    print(f"\nResultado pela {metodo_nome}: {resultado}\n")
-    # Pergunta ao usuário se deseja plotar a função e a aproximação (para Newton-Cotes simples)
-    if input("Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): ").strip().lower() == 's':
+    if verbose:
+        print(f"\nResultado pela {metodo_nome}: {float(resultado)}\n")
+
+    if grafico:
         try:
-            # `ordem` é o número de subintervalos para a regra simples
             plotar_funcao_e_aproximacao(func, a, b, ordem, metodo=metodo_nome)
         except Exception as e:
-            print(f"Não foi possível gerar o gráfico: {e}")
+            if verbose:
+                print(f"Não foi possível gerar o gráfico: {e}")
 
-    return resultado
+    return float(resultado)
 
-def trapezio_composta(func, a, b):
+def trapezio_composta(func, a, b, verbose=False, grafico=None):
     """Regra do Trapézio composta para integração numérica.
 
     Parameters
     ----------
     func : str
-        Expressão da função em termos de ``x`` (usada via ``eval`` no contexto seguro).
+        Expressão da função em termos de ``x``.
     a, b : float
         Limites do intervalo de integração.
+    verbose : bool, optional
+        Se True, imprime detalhes e habilita (por padrão) a plotagem e estimativa de erro.
+    grafico : bool or None, optional
+        Controla plotagem: se None e verbose for True, habilita-a.
 
     Returns
     -------
     float or None
         Aproximação da integral ou ``None`` em caso de erro/entrada inválida.
+
+    Notes
+    -----
+    Testes para regras compostas estão em ``tests/test_integracoes.py``.
     """
     m, h = pedir_m_ou_h(a, b, 'trapezio')
     if m is None:
         return None
-    soma = 0.0
-    safe_math = {k: getattr(math, k) for k in dir(math) if not k.startswith("_")}
-    
-    for i in range(1, m):
-        x_i = a + i * h
-        global_vars = {"x": x_i, "math": math, **safe_math}
-        try:
-            f_x = eval(func, {"__builtins__": None}, global_vars)
-        except Exception as e:
-            print(f"Erro na avaliação da função: {e}")
-            return None
-        soma += f_x
+    if grafico is None:
+        grafico = bool(verbose)
 
-    f_a = eval(func, {"__builtins__": None}, {"x": a, "math": math, **safe_math})
-    f_b = eval(func, {"__builtins__": None}, {"x": b, "math": math, **safe_math})
+    # Tentar vetorizar avaliação via sympy
+    x_sym = symbols('x')
+    func_clean = func.replace('math.', '')
+    try:
+        fexpr = sympify(func_clean, locals=SYMPY_LOCALS)
+        fvec = lambdify(x_sym, fexpr, modules=['numpy'])
+        xi = np.linspace(a, b, m + 1)
+        yi = np.asarray(fvec(xi), dtype=float)
+    except Exception:
+        xi = np.array([a + i * h for i in range(m + 1)], dtype=float)
+        yi = []
+        safe_math = {k: getattr(math, k) for k in dir(math) if not k.startswith("_")}
+        for xv in xi:
+            try:
+                yv = eval(func, {"__builtins__": None}, {"x": xv, "math": math, **safe_math})
+            except Exception as e:
+                if verbose:
+                    print(f"Erro na avaliação da função em x={xv}: {e}")
+                return None
+            yi.append(yv)
+        yi = np.asarray(yi, dtype=float)
 
-    resultado = (h / 2) * (f_a + 2 * soma + f_b)
-    print(f"\nResultado pela Regra do Trapézio composta: {resultado}")
-    print(f"m (subintervalos): {m}, h (passo): {h}")
-    # Pergunta ao usuário se deseja plotar a função antes de estimar o erro
-    if input("Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): ").strip().lower() == 's':
+    # Regra composta
+    resultado = (h / 2) * (yi[0] + 2 * np.sum(yi[1:-1]) + yi[-1])
+
+    if verbose:
+        print(f"\nResultado pela Regra do Trapézio composta: {float(resultado)}")
+        print(f"m (subintervalos): {m}, h (passo): {h}")
+
+    if grafico:
         try:
             plotar_funcao_e_aproximacao(func, a, b, m, metodo='Trapézio composta')
         except Exception as e:
-            print(f"Não foi possível gerar o gráfico: {e}")
-    if input("Deseja estimar o erro de truncamento? (s/n): ").strip().lower() == 's':
+            if verbose:
+                print(f"Não foi possível gerar o gráfico: {e}")
+
+    # Se verbose, estima erro automaticamente; caso contrário, mantém prompts interativos
+    if verbose:
         try:
             x = symbols('x')
-            func_clean = func.replace('math.', '')
             func_expr = sympify(func_clean, locals=SYMPY_LOCALS)
             deriv2 = diff(func_expr, x, 2)
             deriv2_func = lambdify(x, deriv2, modules=["numpy"])  # vetoriza com numpy
@@ -531,52 +600,103 @@ def trapezio_composta(func, a, b):
             erro = erro_truncamento_composta(a, b, m, derivada_max, 'trapezio')
             print(f"Erro de truncamento estimado (Trapézio composta): {erro}")
         except Exception as e:
-            print(f"Não foi possível calcular o erro automaticamente: {e}")
+            if verbose:
+                print(f"Não foi possível calcular o erro automaticamente: {e}")
+    else:
+        # modo interativo: perguntar ao usuário se deseja plotar e estimar erro (compatibilidade)
+        try:
+            if input("Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): ").strip().lower() == 's':
+                try:
+                    plotar_funcao_e_aproximacao(func, a, b, m, metodo='Trapézio composta')
+                except Exception as e:
+                    print(f"Não foi possível gerar o gráfico: {e}")
+        except EOFError:
+            # Em ambiente não interativo, ignora
+            pass
+
+        try:
+            if input("Deseja estimar o erro de truncamento? (s/n): ").strip().lower() == 's':
+                try:
+                    x = symbols('x')
+                    func_expr = sympify(func_clean, locals=SYMPY_LOCALS)
+                    deriv2 = diff(func_expr, x, 2)
+                    deriv2_func = lambdify(x, deriv2, modules=["numpy"])
+                    xs = np.linspace(a, b, 1000)
+                    vals = np.abs(deriv2_func(xs))
+                    derivada_max = float(np.nanmax(vals))
+                    erro = erro_truncamento_composta(a, b, m, derivada_max, 'trapezio')
+                    print(f"Erro de truncamento estimado (Trapézio composta): {erro}")
+                except Exception as e:
+                    print(f"Não foi possível calcular o erro automaticamente: {e}")
+        except EOFError:
+            pass
+
     print()
-    return resultado
+    return float(resultado)
 
-def simpson_1_3_composta(func, a, b):
-    '''
-    Regra de Simpson 1/3 composta para integração numérica.
-    
-    Quando usar: m deve ser par, pois cada aplicação usa 2 subintervalos.
-    '''
+def simpson_1_3_composta(func, a, b, verbose=False, grafico=None):
+    """Regra de Simpson 1/3 composta para integração numérica.
 
+    Parameters
+    ----------
+    func : str
+        Expressão da função em termos de ``x``.
+    a, b : float
+        Limites do intervalo de integração.
+    verbose : bool, optional
+        Se True, imprime detalhes, habilita plot e estimativa de erro.
+    grafico : bool or None, optional
+        Controla plotagem: se None e verbose for True, habilita-a.
+
+    Returns
+    -------
+    float or None
+        Aproximação da integral ou ``None`` em caso de erro/entrada inválida.
+    """
     m, h = pedir_m_ou_h(a, b, 'simpson13')
     if m is None:
         return None
-    soma = 0.0
-    safe_math = {k: getattr(math, k) for k in dir(math) if not k.startswith("_")}
-    for i in range(1, m):
-        x_i = a + i * h
-        global_vars = {"x": x_i, "math": math, **safe_math}
-        try:
-            f_x = eval(func, {"__builtins__": None}, global_vars)
-        except Exception as e:
-            print(f"Erro na avaliação da função: {e}")
-            return None
+    if grafico is None:
+        grafico = bool(verbose)
 
-        if i % 2 == 0:
-            soma += 2 * f_x
-        else:
-            soma += 4 * f_x
+    # Tentar vetorizar avaliação
+    x_sym = symbols('x')
+    func_clean = func.replace('math.', '')
+    try:
+        fexpr = sympify(func_clean, locals=SYMPY_LOCALS)
+        fvec = lambdify(x_sym, fexpr, modules=['numpy'])
+        xi = np.linspace(a, b, m + 1)
+        yi = np.asarray(fvec(xi), dtype=float)
+    except Exception:
+        xi = np.array([a + i * h for i in range(m + 1)], dtype=float)
+        yi = []
+        safe_math = {k: getattr(math, k) for k in dir(math) if not k.startswith("_")}
+        for xv in xi:
+            try:
+                yv = eval(func, {"__builtins__": None}, {"x": xv, "math": math, **safe_math})
+            except Exception as e:
+                if verbose:
+                    print(f"Erro na avaliação da função em x={xv}: {e}")
+                return None
+            yi.append(yv)
+        yi = np.asarray(yi, dtype=float)
 
-    f_a = eval(func, {"__builtins__": None}, {"x": a, "math": math, **safe_math})
-    f_b = eval(func, {"__builtins__": None}, {"x": b, "math": math, **safe_math})
+    # Aplica a regra composta (Simpson 1/3 exige m par)
+    resultado = (h / 3) * (yi[0] + yi[-1] + 2 * np.sum(yi[2:-1:2]) + 4 * np.sum(yi[1::2]))
 
-    resultado = (h / 3) * (f_a + soma + f_b)
-    print(f"\nResultado pela Regra de Simpson 1/3 composta: {resultado}")
-    # print(f"m (subintervalos): {m}, h (passo): {h}")
-    # Pergunta ao usuário se deseja plotar a função antes de estimar o erro
-    if input("Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): ").strip().lower() == 's':
+    if verbose:
+        print(f"\nResultado pela Regra de Simpson 1/3 composta: {float(resultado)}")
+
+    if grafico:
         try:
             plotar_funcao_e_aproximacao(func, a, b, m, metodo='Simpson 1/3 composta')
         except Exception as e:
-            print(f"Não foi possível gerar o gráfico: {e}")
-    if input("Deseja estimar o erro de truncamento? (s/n): ").strip().lower() == 's':
+            if verbose:
+                print(f"Não foi possível gerar o gráfico: {e}")
+
+    if verbose:
         try:
             x = symbols('x')
-            func_clean = func.replace('math.', '')
             func_expr = sympify(func_clean, locals=SYMPY_LOCALS)
             deriv4 = diff(func_expr, x, 4)
             deriv4_func = lambdify(x, deriv4, modules=["numpy"])
@@ -586,61 +706,106 @@ def simpson_1_3_composta(func, a, b):
             erro = erro_truncamento_composta(a, b, m, derivada_max, 'simpson13')
             print(f"Erro de truncamento estimado (Simpson 1/3 composta): {erro}")
         except Exception as e:
-            print(f"Não foi possível calcular o erro automaticamente: {e}")
+            if verbose:
+                print(f"Não foi possível calcular o erro automaticamente: {e}")
+    else:
+        try:
+            if input("Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): ").strip().lower() == 's':
+                try:
+                    plotar_funcao_e_aproximacao(func, a, b, m, metodo='Simpson 1/3 composta')
+                except Exception as e:
+                    print(f"Não foi possível gerar o gráfico: {e}")
+        except EOFError:
+            pass
+
+        try:
+            if input("Deseja estimar o erro de truncamento? (s/n): ").strip().lower() == 's':
+                try:
+                    x = symbols('x')
+                    func_expr = sympify(func_clean, locals=SYMPY_LOCALS)
+                    deriv4 = diff(func_expr, x, 4)
+                    deriv4_func = lambdify(x, deriv4, modules=["numpy"])
+                    xs = np.linspace(a, b, 1000)
+                    vals = np.abs(deriv4_func(xs))
+                    derivada_max = float(np.nanmax(vals))
+                    erro = erro_truncamento_composta(a, b, m, derivada_max, 'simpson13')
+                    print(f"Erro de truncamento estimado (Simpson 1/3 composta): {erro}")
+                except Exception as e:
+                    print(f"Não foi possível calcular o erro automaticamente: {e}")
+        except EOFError:
+            pass
+
     print()
-    return resultado
+    return float(resultado)
 
 
-def simpson_3_8_composta(func, a, b):
+def simpson_3_8_composta(func, a, b, verbose=False, grafico=None):
     '''
     Regra de Simpson 3/8 composta para integração numérica.
-    
-    Quando usar: n deve ser múltiplo de 3
-    Passos manuais:
-    1. Calcular h = (b - a) / n
-    2. Calcular os pontos x_i = a + i*h para i = 0, 1, ..., n
-    3. Avaliar f(x_i) para cada ponto
-    4. Aplicar a fórmula composta   
-     
-    Fórmula: int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + 2f(x3) + ... + 3f(xn-1) + f(xn)]
+
+    Parameters
+    ----------
+    func : str
+        Expressão da função em termos de ``x``.
+    a, b : float
+        Limites do intervalo de integração.
+    verbose : bool, optional
+        Se True, imprime detalhes e habilita plot/estimativa de erro.
+    grafico : bool or None, optional
+        Controla plotagem: se None e verbose for True, habilita-a.
     '''
-    
     m, h = pedir_m_ou_h(a, b, 'simpson38')
     if m is None:
         return None
+    if grafico is None:
+        grafico = bool(verbose)
+
+    # Tentar vetorizar avaliação
+    x_sym = symbols('x')
+    func_clean = func.replace('math.', '')
+    try:
+        fexpr = sympify(func_clean, locals=SYMPY_LOCALS)
+        fvec = lambdify(x_sym, fexpr, modules=['numpy'])
+        xi = np.linspace(a, b, m + 1)
+        yi = np.asarray(fvec(xi), dtype=float)
+    except Exception:
+        xi = np.array([a + i * h for i in range(m + 1)], dtype=float)
+        yi = []
+        safe_math = {k: getattr(math, k) for k in dir(math) if not k.startswith("_")}
+        for xv in xi:
+            try:
+                yv = eval(func, {"__builtins__": None}, {"x": xv, "math": math, **safe_math})
+            except Exception as e:
+                if verbose:
+                    print(f"Erro na avaliação da função em x={xv}: {e}")
+                return None
+            yi.append(yv)
+        yi = np.asarray(yi, dtype=float)
+
+    # composição para Simpson 3/8
     soma = 0.0
-
-    safe_math = {k: getattr(math, k) for k in dir(math) if not k.startswith("_")}
     for i in range(1, m):
-        x_i = a + i * h
-        global_vars = {"x": x_i, "math": math, **safe_math}
-        try:
-            f_x = eval(func, {"__builtins__": None}, global_vars)
-        except Exception as e:
-            print(f"Erro na avaliação da função: {e}")
-            return None
-
         if i % 3 == 0:
-            soma += 2 * f_x
+            soma += 2 * yi[i]
         else:
-            soma += 3 * f_x
+            soma += 3 * yi[i]
 
-    f_a = eval(func, {"__builtins__": None}, {"x": a, "math": math, **safe_math})
-    f_b = eval(func, {"__builtins__": None}, {"x": b, "math": math, **safe_math})
+    resultado = (3 * h / 8) * (yi[0] + soma + yi[-1])
 
-    resultado = (3 * h / 8) * (f_a + soma + f_b)
-    print(f"\nResultado pela Regra de Simpson 3/8 composta: {resultado}")
-    print(f"m (subintervalos): {m}, h (passo): {h}")
-    # Pergunta ao usuário se deseja plotar a função antes de estimar o erro
-    if input("Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): ").strip().lower() == 's':
+    if verbose:
+        print(f"\nResultado pela Regra de Simpson 3/8 composta: {float(resultado)}")
+        print(f"m (subintervalos): {m}, h (passo): {h}")
+
+    if grafico:
         try:
             plotar_funcao_e_aproximacao(func, a, b, m, metodo='Simpson 3/8 composta')
         except Exception as e:
-            print(f"Não foi possível gerar o gráfico: {e}")
-    if input("Deseja estimar o erro de truncamento? (s/n): ").strip().lower() == 's':
+            if verbose:
+                print(f"Não foi possível gerar o gráfico: {e}")
+
+    if verbose:
         try:
             x = symbols('x')
-            func_clean = func.replace('math.', '')
             func_expr = sympify(func_clean, locals=SYMPY_LOCALS)
             deriv4 = diff(func_expr, x, 4)
             deriv4_func = lambdify(x, deriv4, modules=["numpy"])
@@ -650,9 +815,37 @@ def simpson_3_8_composta(func, a, b):
             erro = erro_truncamento_composta(a, b, m, derivada_max, 'simpson38')
             print(f"Erro de truncamento estimado (Simpson 3/8 composta): {erro}")
         except Exception as e:
-            print(f"Não foi possível calcular o erro automaticamente: {e}")
+            if verbose:
+                print(f"Não foi possível calcular o erro automaticamente: {e}")
+    else:
+        try:
+            if input("Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): ").strip().lower() == 's':
+                try:
+                    plotar_funcao_e_aproximacao(func, a, b, m, metodo='Simpson 3/8 composta')
+                except Exception as e:
+                    print(f"Não foi possível gerar o gráfico: {e}")
+        except EOFError:
+            pass
+
+        try:
+            if input("Deseja estimar o erro de truncamento? (s/n): ").strip().lower() == 's':
+                try:
+                    x = symbols('x')
+                    func_expr = sympify(func_clean, locals=SYMPY_LOCALS)
+                    deriv4 = diff(func_expr, x, 4)
+                    deriv4_func = lambdify(x, deriv4, modules=["numpy"])
+                    xs = np.linspace(a, b, 1000)
+                    vals = np.abs(deriv4_func(xs))
+                    derivada_max = float(np.nanmax(vals))
+                    erro = erro_truncamento_composta(a, b, m, derivada_max, 'simpson38')
+                    print(f"Erro de truncamento estimado (Simpson 3/8 composta): {erro}")
+                except Exception as e:
+                    print(f"Não foi possível calcular o erro automaticamente: {e}")
+        except EOFError:
+            pass
+
     print()
-    return resultado
+    return float(resultado)
 
 def menu():
     while True:
@@ -704,6 +897,8 @@ def menu():
             continue
 
         if resultado is not None:
+            # Mostrar o resultado numérico no menu (útil em execução não-verbose/input-driven)
+            print(f"\nResultado: {resultado}\n")
             valor_exato = None
             calc_exata = input("Deseja calcular a integral exata (simbólica)? (s/n): ").strip().lower() == 's'
             if calc_exata:
