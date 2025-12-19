@@ -36,4 +36,5 @@ Testes Unitários (visíveis)
 Links rápidos
 -------------
 
-- Testes unitários: :file:`tests/test_raizes.py`
+- Testes unitários (arquivo): :file:`tests/test_raizes.py`
+- Página de testes (docs): :doc:`tests/test_raizes`
