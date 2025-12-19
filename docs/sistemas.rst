@@ -26,21 +26,18 @@ Exemplo de Uso
 Testes de Integração
 --------------------
 
-O teste de integração que valida a opção de sistemas no menu principal é::
+Coberto pelos seguintes testes:
 
-    pytest tests/test_inputs_calcnum.py::test_calcnum_inputs_basic -q
+- **Teste global**: ``pytest -q`` (roda todos os testes do projeto)
+- **Teste de calcnum**: ``pytest tests/test_inputs_calcnum.py::test_calcnum_inputs_basic -q`` (valida integração via menu principal)
+- **Teste individual**: ``pytest tests/test_sistemaslineares.py -v`` (testes específicos do módulo)
 
 Teste correspondente: :file:`tests/inputs/inputSistemas.txt`
 
 Testes Unitários (visíveis)
 ---------------------------
 
-Abaixo estão os testes unitários para as funções de sistemas. Eles são incluídos
-para referência e para facilitar revisão rápida do comportamento implementado.
-
-.. literalinclude:: ../tests/test_sistemaslineares.py
-    :language: python
-    :linenos:
+:doc:`tests/test_sistemaslineares`
 
 Links rápidos
 -------------

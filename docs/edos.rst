@@ -22,20 +22,18 @@ Exemplo de Uso
 Testes de Integração
 --------------------
 
-O teste de integração que valida a opção de resolução de EDOs está em::
+Coberto pelos seguintes testes:
 
-    pytest tests/test_inputs_calcnum.py::test_calcnum_inputs_basic -q
+- **Teste global**: ``pytest -q`` (roda todos os testes do projeto)
+- **Teste de calcnum**: ``pytest tests/test_inputs_calcnum.py::test_calcnum_inputs_basic -q`` (valida integração via menu principal)
+- **Teste individual**: ``pytest tests/test_edos.py -v`` (testes específicos do módulo)
 
 Teste correspondente: :file:`tests/inputs/inputEDOS.txt`
 
 Testes Unitários (visíveis)
 ---------------------------
 
-Abaixo está o arquivo de testes unitários para a funcionalidade de EDOs. Ele é incluído para fácil visualização e referência.
-
-.. literalinclude:: ../tests/test_edos.py
-    :language: python
-    :linenos:
+:doc:`tests/test_edos`
 
 Links rápidos
 -------------

@@ -45,20 +45,18 @@ Exemplo de Uso
 Testes de Integração
 --------------------
 
-Coberto pelo caso de integração em::
+Coberto pelos seguintes testes:
 
-    pytest tests/test_inputs_calcnum.py::test_calcnum_inputs_basic -q
+- **Teste global**: ``pytest -q`` (roda todos os testes do projeto)
+- **Teste de calcnum**: ``pytest tests/test_inputs_calcnum.py::test_calcnum_inputs_basic -q`` (valida integração via menu principal)
+- **Teste individual**: ``pytest tests/test_ajustecurvas.py -v`` (testes específicos do módulo)
 
 Teste correspondente: :file:`tests/inputs/inputAjustes.txt`
 
 Testes Unitários (visíveis)
 ---------------------------
 
-Abaixo estão os testes unitários para Ajustes de Curvas.
-
-.. literalinclude:: ../tests/test_ajustecurvas.py
-    :language: python
-    :linenos:
+:doc:`tests/test_ajustecurvas`
 
 Links rápidos
 -------------

@@ -20,20 +20,18 @@ Exemplo de Uso
 Testes de Integração
 --------------------
 
-Coberto pelo caso de integração em::
+Coberto pelos seguintes testes:
 
-    pytest tests/test_inputs_calcnum.py::test_calcnum_inputs_basic -q
+- **Teste global**: ``pytest -q`` (roda todos os testes do projeto)
+- **Teste de calcnum**: ``pytest tests/test_inputs_calcnum.py::test_calcnum_inputs_basic -q`` (valida integração via menu principal)
+- **Teste individual**: ``pytest tests/test_interpolacoes.py -v`` (testes específicos do módulo)
 
 Teste correspondente: :file:`tests/inputs/inputInterpolacoes.txt`
 
 Testes Unitários (visíveis)
 ---------------------------
 
-Abaixo estão os testes unitários para as funções de interpolação, incluídos para referência rápida.
-
-.. literalinclude:: ../tests/test_interpolacoes.py
-    :language: python
-    :linenos:
+:doc:`tests/test_interpolacoes`
 
 Links rápidos
 -------------
