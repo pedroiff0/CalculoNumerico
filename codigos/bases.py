@@ -1,4 +1,15 @@
+"""
+Módulo para conversões entre sistemas de numeração.
+
+Este módulo implementa funções para conversão entre diferentes bases
+numéricas: binário, decimal e hexadecimal.
+
+Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025
+"""
+
 def dados():
+    """Menu interativo para operações de conversão de bases."""
     print("\n=== Conversor de Bases ===")
     print("1 - Binário para Decimal")
     print("2 - Decimal para Binário")
@@ -10,12 +21,12 @@ def dados():
     opcao = input("Escolha a conversão desejada: ")
     return opcao
 
-def binario_para_decimal(bin_str):
+def binario_para_decimal(string_binaria):
     """Converte uma string binária para inteiro decimal.
 
     Parameters
     ----------
-    bin_str : str
+    string_binaria : str
         Representação binária (ex.: ``'1011'``).
 
     Returns
@@ -24,16 +35,16 @@ def binario_para_decimal(bin_str):
         Valor decimal correspondente.
     """
     decimal = 0
-    for i, digito in enumerate(reversed(bin_str)):
+    for i, digito in enumerate(reversed(string_binaria)):
         decimal += int(digito) * (2 ** i)
     return decimal
 
-def decimal_para_binario(numDecimal):
+def decimal_para_binario(numero_decimal):
     """Converte um inteiro decimal para sua representação binária em string.
 
     Parameters
     ----------
-    numDecimal : int
+    numero_decimal : int
         Número decimal não-negativo.
 
     Returns
@@ -46,20 +57,20 @@ def decimal_para_binario(numDecimal):
     >>> decimal_para_binario(11)
     '1011'
     """
-    if numDecimal == 0:
+    if numero_decimal == 0:
         return "0"
     binario = ""
-    while numDecimal > 0:
-        binario = str(numDecimal % 2) + binario
-        numDecimal = numDecimal // 2
+    while numero_decimal > 0:
+        binario = str(numero_decimal % 2) + binario
+        numero_decimal = numero_decimal // 2
     return binario
 
-def decimal_para_hexadecimal(numDecimal):
+def decimal_para_hexadecimal(numero_decimal):
     """Converte um inteiro decimal para representação hexadecimal (maiúscula).
 
     Parameters
     ----------
-    numDecimal : int
+    numero_decimal : int
         Número decimal não-negativo.
 
     Returns
@@ -72,21 +83,21 @@ def decimal_para_hexadecimal(numDecimal):
     >>> decimal_para_hexadecimal(254)
     'FE'
     """
-    if numDecimal == 0:
+    if numero_decimal == 0:
         return "0"
     digitos = "0123456789ABCDEF"
     hexa = ""
-    while numDecimal > 0:
-        hexa = digitos[numDecimal % 16] + hexa
-        numDecimal = numDecimal // 16
+    while numero_decimal > 0:
+        hexa = digitos[numero_decimal % 16] + hexa
+        numero_decimal = numero_decimal // 16
     return hexa
 
-def hexadecimal_para_decimal(hex_str):
+def hexadecimal_para_decimal(string_hexadecimal):
     """Converte uma string hexadecimal (base 16) para inteiro decimal.
 
     Parameters
     ----------
-    hex_str : str
+    string_hexadecimal : str
         Representação hexadecimal (ex.: ``'FE'``).
 
     Returns
@@ -99,20 +110,20 @@ def hexadecimal_para_decimal(hex_str):
     >>> hexadecimal_para_decimal('FE')
     254
     """
-    hex_str = hex_str.upper()
+    string_hexadecimal = string_hexadecimal.upper()
     digitos = "0123456789ABCDEF"
     decimal = 0
-    for i, digito in enumerate(reversed(hex_str)):
+    for i, digito in enumerate(reversed(string_hexadecimal)):
         valor = digitos.index(digito)
         decimal += valor * (16 ** i)
     return decimal
 
-def binario_para_hexadecimal(bin_str):
+def binario_para_hexadecimal(string_binaria):
     """Converte uma string binária para representação hexadecimal.
 
     Parameters
     ----------
-    bin_str : str
+    string_binaria : str
         Representação binária.
 
     Returns
@@ -125,15 +136,15 @@ def binario_para_hexadecimal(bin_str):
     >>> binario_para_hexadecimal('1111')
     'F'
     """
-    decimal = binario_para_decimal(bin_str)
+    decimal = binario_para_decimal(string_binaria)
     return decimal_para_hexadecimal(decimal)
 
-def hexadecimal_para_binario(hex_str):
+def hexadecimal_para_binario(string_hexadecimal):
     """Converte uma string hexadecimal para representação binária.
 
     Parameters
     ----------
-    hex_str : str
+    string_hexadecimal : str
         Representação hexadecimal (ex.: ``'F'``).
 
     Returns
@@ -146,7 +157,7 @@ def hexadecimal_para_binario(hex_str):
     >>> hexadecimal_para_binario('F')
     '1111'
     """
-    decimal = hexadecimal_para_decimal(hex_str)
+    decimal = hexadecimal_para_decimal(string_hexadecimal)
     return decimal_para_binario(decimal)
 
 def main():
