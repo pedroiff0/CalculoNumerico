@@ -107,24 +107,36 @@ def montar_sistema_valores():
     vars : list
         Lista de nomes das variáveis (ex.: ['x1','x2', ...]).
 
+    Notes
+    -----
+    - Em ambientes não interativos (por exemplo, testes), se houver um EOF na
+      leitura, a função retorna ``None`` para indicar que a leitura não foi
+      completada, evitando a interrupção do programa.
+
     Raises
     ------
     ValueError
         Se o número de elementos fornecidos por linha não corresponder a ``n``.
     """
-    n = int(input("Digite o número de variáveis (sistema quadrado): "))
-    print(f"Insira os coeficientes da matriz A ({n} linhas), cada linha com {n} valores separados por espaço:")
-    A = []
-    for i in range(n):
-        linha = list(map(float, input(f"Linha {i+1}: ").split()))
-        if len(linha) != n:
-            raise ValueError("Número de coeficientes deve ser igual ao número de variáveis!")
-        A.append(linha)
-    print(f"Insira os termos independentes do vetor b em uma única linha, {n} valores separados por espaço:")
-    b = list(map(float, input("b: ").split()))
-    if len(b) != n:
-        raise ValueError("Número de termos independentes deve ser igual ao número de variáveis!")
-    return np.array(A, dtype=float), np.array(b, dtype=float), [f"x{i+1}" for i in range(n)]
+    try:
+        n = int(input("Digite o número de variáveis (sistema quadrado): "))
+        print(f"Insira os coeficientes da matriz A ({n} linhas), cada linha com {n} valores separados por espaço:")
+        A = []
+        for i in range(n):
+            linha = list(map(float, input(f"Linha {i+1}: ").split()))
+            if len(linha) != n:
+                raise ValueError("Número de coeficientes deve ser igual ao número de variáveis!")
+            A.append(linha)
+        print(f"Insira os termos independentes do vetor b em uma única linha, {n} valores separados por espaço:")
+        b = list(map(float, input("b: ").split()))
+        if len(b) != n:
+            raise ValueError("Número de termos independentes deve ser igual ao número de variáveis!")
+        return np.array(A, dtype=float), np.array(b, dtype=float), [f"x{i+1}" for i in range(n)]
+    except EOFError:
+        # Em ambiente não interativo (tests/CI), simplesmente indique que a
+        # leitura não foi realizada, sem levantar exceção.
+        return None
+
 
 def eliminacao_gauss_sem_pivotamento(A, b, verbose=False):
     """Executa a eliminação de Gauss sem pivotamento parcial.
@@ -455,7 +467,12 @@ def menu():
             break
 
         try:
-            A, b, vars = montar_sistema_valores()
+            result = montar_sistema_valores()
+            if result is None:
+                # leitura não completada (possivelmente EOF em ambiente não interativo)
+                print("Leitura de dados não completada. Retornando ao menu principal.")
+                continue
+            A, b, vars = result
             if opcao == '1':
                 x, Atri, bmod, _ = eliminacao_gauss_sem_pivotamento(A, b) 
                 if x is None:
