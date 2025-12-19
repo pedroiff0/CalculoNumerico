@@ -141,8 +141,10 @@ calculoNumerico/
 │   ├── scripts/              # Scripts para geração de docs
 │   ├── tests/                # Páginas de testes individuais
 │   └── *.rst                 # Arquivos reStructuredText
-├── referencias/               # Código C++ de referência
-├── T_PlanDeTrabajo/          # Plano de trabalho em LaTeX
+├── guia/          # Livro Guia em LaTeX
+│   ├── referencias/               # Documentação compilada
+│   ├── atividades/               # Documentação compilada
+│   ├── solucoes/               # Documentação compilada
 └── README.md                 # Este arquivo
 ```
 
