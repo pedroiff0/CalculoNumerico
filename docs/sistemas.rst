@@ -46,4 +46,4 @@ Links rápidos
 -------------
 
 - Teste de integração relacionado: :file:`tests/test_inputs_calcnum.py::test_calcnum_inputs_basic`
-- Testes unitários: :file:`tests/test_sistemaslineares.py`, :file:`tests/test_calcnum_linear_solve.py`
+- Testes unitários: :file:`tests/test_sistemaslineares.py`
