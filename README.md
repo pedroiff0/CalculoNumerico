@@ -1,14 +1,15 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="image.png" alt="Bot logo"></a>
+ <img width=200px height=200px src="https://img.shields.io/badge/🔢-Cálculo%20Numérico-blue?style=for-the-badge&logo=python&logoColor=white" alt="Cálculo Numérico"></a>
 </p>
 <h3 align="center">Cálculo Numérico</h3>
 
 <div align="center">
 
-[![CI](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/CalculoNumerico/actions)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://pedroiff0.github.io/CalculoNumerico/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+[![CI](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml)
+[![Documentation](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/docs.yml/badge.svg)](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/docs.yml)
+[![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](/LICENSE)
 
 </div>
 
@@ -142,9 +143,8 @@ calculoNumerico/
 │   ├── tests/                # Páginas de testes individuais
 │   └── *.rst                 # Arquivos reStructuredText
 ├── guia/          # Livro Guia em LaTeX
-│   ├── referencias/               # Documentação compilada
-│   ├── atividades/               # Documentação compilada
-│   ├── solucoes/               # Documentação compilada
+│   ├── tarefas/               # Tarefas da disciplina
+│   ├── solucoes/               # Soluções das tarefas
 └── README.md                 # Este arquivo
 ```
 
@@ -192,7 +192,7 @@ from codigos import bases, sistemaslineares, edos
 
 ## 📚 Documentação
 
-A documentação completa está disponível em [GitHub Pages](https://pedrohcgs.github.io/calculoNumerico/) e é gerada automaticamente usando Sphinx.
+A documentação completa está disponível em [GitHub Pages](https://pedroiff0.github.io/CalculoNumerico/) e é gerada automaticamente usando Sphinx.
 
 ### Funcionalidades da Documentação
 
@@ -358,9 +358,9 @@ O projeto utiliza GitHub Actions para integração contínua:
 
 <div align="center">
 
-[![CI](https://github.com/pedrohcgs/calculoNumerico/actions/workflows/ci.yml/badge.svg)](https://github.com/pedrohcgs/calculoNumerico/actions/workflows/ci.yml)
-[![Documentation](https://github.com/pedrohcgs/calculoNumerico/actions/workflows/docs.yml/badge.svg)](https://github.com/pedrohcgs/calculoNumerico/actions/workflows/docs.yml)
-[![Coverage](https://img.shields.io/badge/coverage-96%25-brightgreen.svg)](https://github.com/pedrohcgs/calculoNumerico/actions/workflows/ci.yml)
+[![CI](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml/badge.svg)](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml)
+[![Documentation](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/docs.yml/badge.svg)](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/docs.yml)
+[![Coverage](https://img.shields.io/badge/coverage-96%25-brightgreen.svg)](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](/LICENSE)
 
@@ -377,8 +377,8 @@ O projeto utiliza GitHub Actions para integração contínua:
 
 | Workflow | Status | Descrição |
 |----------|--------|-----------|
-| **CI Pipeline** | ![CI](https://github.com/pedrohcgs/calculoNumerico/actions/workflows/ci.yml/badge.svg) | Testes, linting e validação |
-| **Docs Deploy** | ![Docs](https://github.com/pedrohcgs/calculoNumerico/actions/workflows/docs.yml/badge.svg) | Build e deploy da documentação |
+| **CI Pipeline** | ![CI](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml/badge.svg) | Testes, linting e validação |
+| **Docs Deploy** | ![Docs](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/docs.yml/badge.svg) | Build e deploy da documentação |
 
 #### 🚀 Funcionalidades do CI
 
@@ -393,9 +393,9 @@ O projeto utiliza GitHub Actions para integração contínua:
 
 Para visualizar o histórico completo de builds e detalhes dos testes:
 
-- [📊 CI Pipeline](https://github.com/pedrohcgs/calculoNumerico/actions/workflows/ci.yml)
-- [📚 Documentação](https://github.com/pedrohcgs/calculoNumerico/actions/workflows/docs.yml)
-- [📖 Documentação Online](https://pedrohcgs.github.io/calculoNumerico/)
+- [📊 CI Pipeline](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/ci.yml)
+- [📚 Documentação](https://github.com/pedroiff0/CalculoNumerico/actions/workflows/docs.yml)
+- [📖 Documentação Online](https://pedroiff0.github.io/CalculoNumerico/)
 
 ## 📜 Licença
 
