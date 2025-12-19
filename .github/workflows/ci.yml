@@ -31,6 +31,10 @@ jobs:
         run: |
           # Execute tests with project PYTHONPATH so imports like `from codigos import ...` work
           PYTHONPATH=. pytest -q --maxfail=1 -q
+      - name: Generate test documentation
+        run: |
+          # Generate per-test documentation pages for Sphinx
+          PYTHONPATH=. python docs/scripts/generate_tests_docs.py
       - name: Build docs (fail on warnings)
         run: |
           # Create _static directory for Sphinx static files

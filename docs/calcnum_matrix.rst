@@ -13,48 +13,64 @@ funcionalidades principais expostas pelo `menu_principal` em :mod:`codigos.calcn
      - Testes (calcnum)
      - Sphinx/Tutorial
      - Exemplos (tests/exemplos/)
+     - Documentação Individual
+     - Testes Individuais
    * - 1 - Conversão de Bases
      - :mod:`codigos.bases`
      - Yes
      - Yes
      - Yes
-     - Yes (``tests/exemplos/exemplo_bases.py``)
+     - :file:`tests/exemplos/exemplo_bases.py`
+     - :doc:`bases`
+     - :doc:`tests/test_bases`
    * - 2 - Sistemas Lineares
      - :mod:`codigos.sistemaslineares`
      - Yes
      - Yes
      - Yes
-     - Yes (``tests/exemplos/exemplo_resolver_sistema.py``)
+     - :file:`tests/exemplos/exemplo_resolver_sistema.py`
+     - :doc:`sistemas`
+     - :doc:`tests/test_sistemaslineares`
    * - 3 - Interpolações
      - :mod:`codigos.interpolacoes`
      - Yes
      - Yes
      - Yes
-     - Yes (``tests/exemplos/exemplo_interpolacoes.py``)
+     - :file:`tests/exemplos/exemplo_interpolacoes.py`
+     - :doc:`interpolacoes`
+     - :doc:`tests/test_interpolacoes`
    * - 4 - Ajustes de Curvas
      - :mod:`codigos.ajustecurvas`
      - Yes
      - Yes
      - Yes
-     - Yes (``tests/exemplos/exemplo_ajuste_curvas.py``)
+     - :file:`tests/exemplos/exemplo_ajuste_curvas.py`
+     - :doc:`ajustes`
+     - :doc:`tests/test_ajustecurvas`
    * - 5 - Equações Diferenciais
      - :mod:`codigos.edos`
      - Yes
      - Yes
      - Yes
-     - Yes (``tests/exemplos/exemplo_edos.py``)
+     - :file:`tests/exemplos/exemplo_edos.py`
+     - :doc:`edos`
+     - :doc:`tests/test_edos`
    * - 6 - Integração Numérica
      - :mod:`codigos.integracoes`
      - Yes
      - Yes
      - Yes
-     - Yes (``tests/exemplos/exemplo_integracoes.py``)
+     - :file:`tests/exemplos/exemplo_integracoes.py`
+     - :doc:`integracoes`
+     - :doc:`tests/test_integracoes`
    * - 7 - Métodos de Raízes
      - :mod:`codigos.raizes`
      - Yes
      - Yes
      - Yes
-     - Yes (``tests/exemplos/exemplo_busca_raiz.py``)
+     - :file:`tests/exemplos/exemplo_busca_raiz.py`
+     - :doc:`raizes`
+     - :doc:`tests/test_raizes`
 
 
 Legenda: "Partial" indica que há testes/documentação mas nem todas as funções

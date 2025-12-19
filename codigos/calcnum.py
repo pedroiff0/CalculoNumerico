@@ -401,6 +401,8 @@ def menu_integracoes():
             continue
 
         if resultado is not None:
+            # Mostrar resultado numérico em execução não-verbose/input-driven
+            print(f"\nResultado: {resultado}\n")
             valor_exato = None
             calc_exata = input("Deseja calcular a integral exata (simbólica)? (s/n): ").strip().lower() == 's'
             if calc_exata:
