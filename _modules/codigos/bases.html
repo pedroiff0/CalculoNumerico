@@ -80,9 +80,20 @@
            <div itemprop="articleBody">
              
   <h1>Código-fonte para codigos.bases</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Módulo para conversões entre sistemas de numeração.</span>
+
+<span class="sd">Este módulo implementa funções para conversão entre diferentes bases</span>
+<span class="sd">numéricas: binário, decimal e hexadecimal.</span>
+
+<span class="sd">Author: Pedro Henrique Rocha de Andrade</span>
+<span class="sd">Date: Dezembro 2025</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="dados">
 <a class="viewcode-back" href="../../modules.html#codigos.bases.dados">[documentos]</a>
-<span></span><span class="k">def</span><span class="w"> </span><span class="nf">dados</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dados</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Menu interativo para operações de conversão de bases.&quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Conversor de Bases ===&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Binário para Decimal&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Decimal para Binário&quot;</span><span class="p">)</span>
@@ -97,12 +108,12 @@
 
 <div class="viewcode-block" id="binario_para_decimal">
 <a class="viewcode-back" href="../../modules.html#codigos.bases.binario_para_decimal">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">binario_para_decimal</span><span class="p">(</span><span class="n">bin_str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">binario_para_decimal</span><span class="p">(</span><span class="n">string_binaria</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte uma string binária para inteiro decimal.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    bin_str : str</span>
+<span class="sd">    string_binaria : str</span>
 <span class="sd">        Representação binária (ex.: ``&#39;1011&#39;``).</span>
 
 <span class="sd">    Returns</span>
@@ -111,19 +122,19 @@
 <span class="sd">        Valor decimal correspondente.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">decimal</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">digito</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">bin_str</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">digito</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">string_binaria</span><span class="p">)):</span>
         <span class="n">decimal</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">digito</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">i</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">decimal</span></div>
 
 
 <div class="viewcode-block" id="decimal_para_binario">
 <a class="viewcode-back" href="../../modules.html#codigos.bases.decimal_para_binario">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">decimal_para_binario</span><span class="p">(</span><span class="n">numDecimal</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decimal_para_binario</span><span class="p">(</span><span class="n">numero_decimal</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte um inteiro decimal para sua representação binária em string.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    numDecimal : int</span>
+<span class="sd">    numero_decimal : int</span>
 <span class="sd">        Número decimal não-negativo.</span>
 
 <span class="sd">    Returns</span>
@@ -136,23 +147,23 @@
 <span class="sd">    &gt;&gt;&gt; decimal_para_binario(11)</span>
 <span class="sd">    &#39;1011&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">numDecimal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">numero_decimal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;0&quot;</span>
     <span class="n">binario</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">while</span> <span class="n">numDecimal</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">binario</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">numDecimal</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">binario</span>
-        <span class="n">numDecimal</span> <span class="o">=</span> <span class="n">numDecimal</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="k">while</span> <span class="n">numero_decimal</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">binario</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">numero_decimal</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">binario</span>
+        <span class="n">numero_decimal</span> <span class="o">=</span> <span class="n">numero_decimal</span> <span class="o">//</span> <span class="mi">2</span>
     <span class="k">return</span> <span class="n">binario</span></div>
 
 
 <div class="viewcode-block" id="decimal_para_hexadecimal">
 <a class="viewcode-back" href="../../modules.html#codigos.bases.decimal_para_hexadecimal">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">decimal_para_hexadecimal</span><span class="p">(</span><span class="n">numDecimal</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decimal_para_hexadecimal</span><span class="p">(</span><span class="n">numero_decimal</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte um inteiro decimal para representação hexadecimal (maiúscula).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    numDecimal : int</span>
+<span class="sd">    numero_decimal : int</span>
 <span class="sd">        Número decimal não-negativo.</span>
 
 <span class="sd">    Returns</span>
@@ -165,24 +176,24 @@
 <span class="sd">    &gt;&gt;&gt; decimal_para_hexadecimal(254)</span>
 <span class="sd">    &#39;FE&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">numDecimal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">numero_decimal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;0&quot;</span>
     <span class="n">digitos</span> <span class="o">=</span> <span class="s2">&quot;0123456789ABCDEF&quot;</span>
     <span class="n">hexa</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">while</span> <span class="n">numDecimal</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">hexa</span> <span class="o">=</span> <span class="n">digitos</span><span class="p">[</span><span class="n">numDecimal</span> <span class="o">%</span> <span class="mi">16</span><span class="p">]</span> <span class="o">+</span> <span class="n">hexa</span>
-        <span class="n">numDecimal</span> <span class="o">=</span> <span class="n">numDecimal</span> <span class="o">//</span> <span class="mi">16</span>
+    <span class="k">while</span> <span class="n">numero_decimal</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">hexa</span> <span class="o">=</span> <span class="n">digitos</span><span class="p">[</span><span class="n">numero_decimal</span> <span class="o">%</span> <span class="mi">16</span><span class="p">]</span> <span class="o">+</span> <span class="n">hexa</span>
+        <span class="n">numero_decimal</span> <span class="o">=</span> <span class="n">numero_decimal</span> <span class="o">//</span> <span class="mi">16</span>
     <span class="k">return</span> <span class="n">hexa</span></div>
 
 
 <div class="viewcode-block" id="hexadecimal_para_decimal">
 <a class="viewcode-back" href="../../modules.html#codigos.bases.hexadecimal_para_decimal">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">hexadecimal_para_decimal</span><span class="p">(</span><span class="n">hex_str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hexadecimal_para_decimal</span><span class="p">(</span><span class="n">string_hexadecimal</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte uma string hexadecimal (base 16) para inteiro decimal.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    hex_str : str</span>
+<span class="sd">    string_hexadecimal : str</span>
 <span class="sd">        Representação hexadecimal (ex.: ``&#39;FE&#39;``).</span>
 
 <span class="sd">    Returns</span>
@@ -195,10 +206,10 @@
 <span class="sd">    &gt;&gt;&gt; hexadecimal_para_decimal(&#39;FE&#39;)</span>
 <span class="sd">    254</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">hex_str</span> <span class="o">=</span> <span class="n">hex_str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">string_hexadecimal</span> <span class="o">=</span> <span class="n">string_hexadecimal</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
     <span class="n">digitos</span> <span class="o">=</span> <span class="s2">&quot;0123456789ABCDEF&quot;</span>
     <span class="n">decimal</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">digito</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">hex_str</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">digito</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">string_hexadecimal</span><span class="p">)):</span>
         <span class="n">valor</span> <span class="o">=</span> <span class="n">digitos</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">digito</span><span class="p">)</span>
         <span class="n">decimal</span> <span class="o">+=</span> <span class="n">valor</span> <span class="o">*</span> <span class="p">(</span><span class="mi">16</span> <span class="o">**</span> <span class="n">i</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">decimal</span></div>
@@ -206,12 +217,12 @@
 
 <div class="viewcode-block" id="binario_para_hexadecimal">
 <a class="viewcode-back" href="../../modules.html#codigos.bases.binario_para_hexadecimal">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">binario_para_hexadecimal</span><span class="p">(</span><span class="n">bin_str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">binario_para_hexadecimal</span><span class="p">(</span><span class="n">string_binaria</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte uma string binária para representação hexadecimal.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    bin_str : str</span>
+<span class="sd">    string_binaria : str</span>
 <span class="sd">        Representação binária.</span>
 
 <span class="sd">    Returns</span>
@@ -224,18 +235,18 @@
 <span class="sd">    &gt;&gt;&gt; binario_para_hexadecimal(&#39;1111&#39;)</span>
 <span class="sd">    &#39;F&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">decimal</span> <span class="o">=</span> <span class="n">binario_para_decimal</span><span class="p">(</span><span class="n">bin_str</span><span class="p">)</span>
+    <span class="n">decimal</span> <span class="o">=</span> <span class="n">binario_para_decimal</span><span class="p">(</span><span class="n">string_binaria</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">decimal_para_hexadecimal</span><span class="p">(</span><span class="n">decimal</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="hexadecimal_para_binario">
 <a class="viewcode-back" href="../../modules.html#codigos.bases.hexadecimal_para_binario">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">hexadecimal_para_binario</span><span class="p">(</span><span class="n">hex_str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hexadecimal_para_binario</span><span class="p">(</span><span class="n">string_hexadecimal</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converte uma string hexadecimal para representação binária.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    hex_str : str</span>
+<span class="sd">    string_hexadecimal : str</span>
 <span class="sd">        Representação hexadecimal (ex.: ``&#39;F&#39;``).</span>
 
 <span class="sd">    Returns</span>
@@ -248,7 +259,7 @@
 <span class="sd">    &gt;&gt;&gt; hexadecimal_para_binario(&#39;F&#39;)</span>
 <span class="sd">    &#39;1111&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">decimal</span> <span class="o">=</span> <span class="n">hexadecimal_para_decimal</span><span class="p">(</span><span class="n">hex_str</span><span class="p">)</span>
+    <span class="n">decimal</span> <span class="o">=</span> <span class="n">hexadecimal_para_decimal</span><span class="p">(</span><span class="n">string_hexadecimal</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">decimal_para_binario</span><span class="p">(</span><span class="n">decimal</span><span class="p">)</span></div>
 
 

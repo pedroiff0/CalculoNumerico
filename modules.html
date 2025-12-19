@@ -86,28 +86,12 @@
 <p>Módulos visíveis do pacote <cite>codigos</cite>.</p>
 <div class="toctree-wrapper compound">
 </div>
-<p id="module-codigos.calcnum">Requirements do projeto:</p>
-<p>matplotlib==3.10.7
-numpy==2.3.4
-sympy==1.14.0
-pandas==2.3.3
-mpmath==1.3.0</p>
-<dl class="py data">
-<dt class="sig sig-object py" id="codigos.calcnum.SYMPY_LOCALS">
-<span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">SYMPY_LOCALS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'E':</span> <span class="pre">E,</span> <span class="pre">'abs':</span> <span class="pre">Abs,</span> <span class="pre">'acos':</span> <span class="pre">acos,</span> <span class="pre">'asin':</span> <span class="pre">asin,</span> <span class="pre">'atan':</span> <span class="pre">atan,</span> <span class="pre">'cos':</span> <span class="pre">cos,</span> <span class="pre">'cosh':</span> <span class="pre">cosh,</span> <span class="pre">'e':</span> <span class="pre">E,</span> <span class="pre">'exp':</span> <span class="pre">exp,</span> <span class="pre">'log':</span> <span class="pre">log,</span> <span class="pre">'pi':</span> <span class="pre">pi,</span> <span class="pre">'sin':</span> <span class="pre">sin,</span> <span class="pre">'sinh':</span> <span class="pre">sinh,</span> <span class="pre">'sqrt':</span> <span class="pre">&lt;function</span> <span class="pre">sqrt&gt;,</span> <span class="pre">'tan':</span> <span class="pre">tan,</span> <span class="pre">'tanh':</span> <span class="pre">tanh}</span></em><a class="headerlink" href="#codigos.calcnum.SYMPY_LOCALS" title="Link para esta definição"></a></dt>
-<dd><p>Projeto de Cálculo Numérico:
-Autor: Pedro Henrique Rocha de Andrade
-Orientador: Rodrigo Lacerda da Silva
-Ano Início: 2025.2</p>
-<p>Ideia: Reunir os códigos em um pacote, tornar público para o instituto e auxiliar os alunos a melhor compreender a lógica de programação resolvendo problemas de cálculo, álgebra e computação.
-Apresentar ao instituto futuramente.</p>
-<p>Github: <a class="reference external" href="https://github.com/pedroiff0/CalculoNumerico">https://github.com/pedroiff0/CalculoNumerico</a>
-Paper:
-Documentação:
-Tutoriais:</p>
-<p>% pip3 install calculonumiff</p>
-</dd></dl>
-
+<p id="module-codigos.calcnum">Módulo principal do projeto de Cálculo Numérico.</p>
+<p>Este módulo fornece uma interface interativa unificada para todos os
+algoritmos implementados: conversões de bases, sistemas lineares,
+interpolação, ajuste de curvas, integração e EDOs.</p>
+<p>Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.calcnum.menu_bases">
 <span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">menu_bases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#menu_bases"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.menu_bases" title="Link para esta definição"></a></dt>
@@ -158,7 +142,12 @@ Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</p>
 <span class="sig-prename descclassname"><span class="pre">codigos.calcnum.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/calcnum.html#main"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.calcnum.main" title="Link para esta definição"></a></dt>
 <dd></dd></dl>
 
-<dl class="py function" id="module-codigos.raizes">
+<p id="module-codigos.raizes">Módulo para métodos de busca de raízes de equações.</p>
+<p>Este módulo implementa algoritmos numéricos para encontrar raízes de
+funções: bisseção, ponto fixo, Newton-Raphson e secante.</p>
+<p>Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025</p>
+<dl class="py function">
 <dt class="sig sig-object py" id="codigos.raizes.f">
 <span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#f"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.f" title="Link para esta definição"></a></dt>
 <dd><p>Avalia <cite>func_str</cite> em <cite>x</cite> com ambiente seguro (sem builtins).</p>
@@ -284,7 +273,18 @@ menus externos (compatibilidade com <cite>menu_raizes</cite>).</p>
 ambientes não interativos (scripts/tests).</p>
 </dd></dl>
 
-<dl class="py function" id="module-codigos.integracoes">
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.raizes.dados">
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#dados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.dados" title="Link para esta definição"></a></dt>
+<dd><p>Menu interativo para métodos de busca de raízes.</p>
+</dd></dl>
+
+<p id="module-codigos.integracoes">Módulo para métodos de integração numérica.</p>
+<p>Este módulo implementa algoritmos de integração numérica:
+Regra dos trapézios, Simpson 1/3 e suas versões repetidas.</p>
+<p>Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025</p>
+<dl class="py function">
 <dt class="sig sig-object py" id="codigos.integracoes.plotar_funcoes">
 <span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">plotar_funcoes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pontos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#plotar_funcoes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.plotar_funcoes" title="Link para esta definição"></a></dt>
 <dd><p>Plota uma ou várias funções simbólicas no intervalo [a, b].</p>
@@ -520,6 +520,12 @@ Fórmula: int_a^b f(x) dx</p>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.dados">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#dados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.dados" title="Link para esta definição"></a></dt>
+<dd><p>Menu interativo para métodos de integração numérica.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -871,9 +877,14 @@ da variável global ‘grafico’ ou False. Requer matplotlib instalado.</p></li
 <span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#menu"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.menu" title="Link para esta definição"></a></dt>
 <dd></dd></dl>
 
-<dl class="py function" id="module-codigos.edos">
-<dt class="sig sig-object py" id="codigos.edos.pedir_dados_edo">
-<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">pedir_dados_edo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#pedir_dados_edo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.pedir_dados_edo" title="Link para esta definição"></a></dt>
+<p id="module-codigos.edos">Módulo para solução numérica de equações diferenciais ordinárias.</p>
+<p>Este módulo implementa métodos numéricos para EDOs:
+Euler, Runge-Kutta (1ª a 4ª ordem) e diferenças finitas.</p>
+<p>Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.coletar_dados_edo">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">coletar_dados_edo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#coletar_dados_edo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.coletar_dados_edo" title="Link para esta definição"></a></dt>
 <dd><p>Obtém entradas do usuário para resolução de EDOs com validação robusta.</p>
 <p>Esta função solicita interativamente ao usuário os dados necessários para
 resolver uma equação diferencial ordinária: a função f(x,y), o intervalo
@@ -1064,18 +1075,30 @@ a combinação final segue a soma ponderada usual: <code class="docutils literal
 <span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">menu_principal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#menu_principal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.menu_principal" title="Link para esta definição"></a></dt>
 <dd></dd></dl>
 
-<dl class="py function" id="module-codigos.bases">
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.edos.dados">
+<span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#dados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.dados" title="Link para esta definição"></a></dt>
+<dd><p>Menu interativo para métodos de resolução de EDOs.</p>
+</dd></dl>
+
+<p id="module-codigos.bases">Módulo para conversões entre sistemas de numeração.</p>
+<p>Este módulo implementa funções para conversão entre diferentes bases
+numéricas: binário, decimal e hexadecimal.</p>
+<p>Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025</p>
+<dl class="py function">
 <dt class="sig sig-object py" id="codigos.bases.dados">
 <span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#dados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.dados" title="Link para esta definição"></a></dt>
-<dd></dd></dl>
+<dd><p>Menu interativo para operações de conversão de bases.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.bases.binario_para_decimal">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.binario_para_decimal" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_binaria</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.binario_para_decimal" title="Link para esta definição"></a></dt>
 <dd><p>Converte uma string binária para inteiro decimal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bin_str</strong> (<em>str</em>) – Representação binária (ex.: <code class="docutils literal notranslate"><span class="pre">'1011'</span></code>).</p>
+<dd class="field-odd"><p><strong>string_binaria</strong> (<em>str</em>) – Representação binária (ex.: <code class="docutils literal notranslate"><span class="pre">'1011'</span></code>).</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p>Valor decimal correspondente.</p>
@@ -1088,11 +1111,11 @@ a combinação final segue a soma ponderada usual: <code class="docutils literal
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.bases.decimal_para_binario">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numDecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.decimal_para_binario" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numero_decimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.decimal_para_binario" title="Link para esta definição"></a></dt>
 <dd><p>Converte um inteiro decimal para sua representação binária em string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>numDecimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
+<dd class="field-odd"><p><strong>numero_decimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -1109,11 +1132,11 @@ a combinação final segue a soma ponderada usual: <code class="docutils literal
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.bases.decimal_para_hexadecimal">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numDecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.decimal_para_hexadecimal" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numero_decimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.decimal_para_hexadecimal" title="Link para esta definição"></a></dt>
 <dd><p>Converte um inteiro decimal para representação hexadecimal (maiúscula).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>numDecimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
+<dd class="field-odd"><p><strong>numero_decimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -1130,11 +1153,11 @@ a combinação final segue a soma ponderada usual: <code class="docutils literal
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.bases.hexadecimal_para_decimal">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.hexadecimal_para_decimal" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_hexadecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.hexadecimal_para_decimal" title="Link para esta definição"></a></dt>
 <dd><p>Converte uma string hexadecimal (base 16) para inteiro decimal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>hex_str</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'FE'</span></code>).</p>
+<dd class="field-odd"><p><strong>string_hexadecimal</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'FE'</span></code>).</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -1151,11 +1174,11 @@ a combinação final segue a soma ponderada usual: <code class="docutils literal
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.bases.binario_para_hexadecimal">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.binario_para_hexadecimal" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_binaria</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.binario_para_hexadecimal" title="Link para esta definição"></a></dt>
 <dd><p>Converte uma string binária para representação hexadecimal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bin_str</strong> (<em>str</em>) – Representação binária.</p>
+<dd class="field-odd"><p><strong>string_binaria</strong> (<em>str</em>) – Representação binária.</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -1172,11 +1195,11 @@ a combinação final segue a soma ponderada usual: <code class="docutils literal
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.bases.hexadecimal_para_binario">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.hexadecimal_para_binario" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_hexadecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.bases.hexadecimal_para_binario" title="Link para esta definição"></a></dt>
 <dd><p>Converte uma string hexadecimal para representação binária.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>hex_str</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'F'</span></code>).</p>
+<dd class="field-odd"><p><strong>string_hexadecimal</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'F'</span></code>).</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">

@@ -80,7 +80,17 @@
            <div itemprop="articleBody">
              
   <h1>Código-fonte para codigos.raizes</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Módulo para métodos de busca de raízes de equações.</span>
+
+<span class="sd">Este módulo implementa algoritmos numéricos para encontrar raízes de</span>
+<span class="sd">funções: bisseção, ponto fixo, Newton-Raphson e secante.</span>
+
+<span class="sd">Author: Pedro Henrique Rocha de Andrade</span>
+<span class="sd">Date: Dezembro 2025</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
@@ -437,6 +447,21 @@
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro ao ler parâmetros: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="dados">
+<a class="viewcode-back" href="../../modules.html#codigos.raizes.dados">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dados</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Menu interativo para métodos de busca de raízes.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Métodos de Busca de Raízes ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Método da Bissecção&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Método do Ponto Fixo&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Método de Newton-Raphson&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Método da Secante&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Sair&quot;</span><span class="p">)</span>
+    <span class="n">opcao</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha o método desejado: &quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">opcao</span></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">pedir_dados_raizes</span><span class="p">()</span>

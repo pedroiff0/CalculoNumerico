@@ -80,20 +80,22 @@
            <div itemprop="articleBody">
              
   <h1>Código-fonte para codigos.integracoes</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Módulo para métodos de integração numérica.</span>
+
+<span class="sd">Este módulo implementa algoritmos de integração numérica:</span>
+<span class="sd">Regra dos trapézios, Simpson 1/3 e suas versões repetidas.</span>
+
+<span class="sd">Author: Pedro Henrique Rocha de Andrade</span>
+<span class="sd">Date: Dezembro 2025</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="kn">import</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">integrate</span><span class="p">,</span> <span class="n">sympify</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">lambdify</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">tan</span><span class="p">,</span> <span class="n">asin</span><span class="p">,</span> <span class="n">acos</span><span class="p">,</span> <span class="n">atan</span><span class="p">,</span> <span class="n">sinh</span><span class="p">,</span> <span class="n">cosh</span><span class="p">,</span> <span class="n">tanh</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">Abs</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">E</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-
-<span class="c1"># Mapeamento padrão para uso com sympify (padroniza nomes de funções/constantes)</span>
-<span class="n">SYMPY_LOCALS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;sin&#39;</span><span class="p">:</span> <span class="n">sin</span><span class="p">,</span> <span class="s1">&#39;cos&#39;</span><span class="p">:</span> <span class="n">cos</span><span class="p">,</span> <span class="s1">&#39;tan&#39;</span><span class="p">:</span> <span class="n">tan</span><span class="p">,</span>
-    <span class="s1">&#39;asin&#39;</span><span class="p">:</span> <span class="n">asin</span><span class="p">,</span> <span class="s1">&#39;acos&#39;</span><span class="p">:</span> <span class="n">acos</span><span class="p">,</span> <span class="s1">&#39;atan&#39;</span><span class="p">:</span> <span class="n">atan</span><span class="p">,</span>
-    <span class="s1">&#39;sinh&#39;</span><span class="p">:</span> <span class="n">sinh</span><span class="p">,</span> <span class="s1">&#39;cosh&#39;</span><span class="p">:</span> <span class="n">cosh</span><span class="p">,</span> <span class="s1">&#39;tanh&#39;</span><span class="p">:</span> <span class="n">tanh</span><span class="p">,</span>
-    <span class="s1">&#39;exp&#39;</span><span class="p">:</span> <span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">:</span> <span class="n">sqrt</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span> <span class="n">log</span><span class="p">,</span> <span class="s1">&#39;abs&#39;</span><span class="p">:</span> <span class="n">Abs</span><span class="p">,</span>
-    <span class="s1">&#39;pi&#39;</span><span class="p">:</span> <span class="n">pi</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">E</span>
-<span class="p">}</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">SYMPY_LOCALS</span>
 
 
 <div class="viewcode-block" id="plotar_funcoes">
@@ -966,6 +968,21 @@
 
     <span class="nb">print</span><span class="p">()</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="dados">
+<a class="viewcode-back" href="../../modules.html#codigos.integracoes.dados">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dados</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Menu interativo para métodos de integração numérica.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Métodos de Integração Numérica ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Regra do Trapézio&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Regra de Simpson 1/3&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Regra de Simpson 3/8&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Sair&quot;</span><span class="p">)</span>
+    <span class="n">opcao</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha o método desejado: &quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">opcao</span></div>
+
 
 
 <div class="viewcode-block" id="menu">

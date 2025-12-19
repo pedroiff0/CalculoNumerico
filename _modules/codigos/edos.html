@@ -80,24 +80,23 @@
            <div itemprop="articleBody">
              
   <h1>Código-fonte para codigos.edos</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Módulo para solução numérica de equações diferenciais ordinárias.</span>
+
+<span class="sd">Este módulo implementa métodos numéricos para EDOs:</span>
+<span class="sd">Euler, Runge-Kutta (1ª a 4ª ordem) e diferenças finitas.</span>
+
+<span class="sd">Author: Pedro Henrique Rocha de Andrade</span>
+<span class="sd">Date: Dezembro 2025</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">tan</span><span class="p">,</span> <span class="n">asin</span><span class="p">,</span> <span class="n">acos</span><span class="p">,</span> <span class="n">atan</span><span class="p">,</span> <span class="n">sinh</span><span class="p">,</span> <span class="n">cosh</span><span class="p">,</span> <span class="n">tanh</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">Abs</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">E</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-
-<span class="c1"># mapa seguro com funções do math (para uso em fallbacks com eval)</span>
-<span class="n">safe_math</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
-
-<span class="c1"># Mapeamento padrão para uso com sympify (padroniza nomes de funções/constantes)</span>
-<span class="n">SYMPY_LOCALS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;sin&#39;</span><span class="p">:</span> <span class="n">sin</span><span class="p">,</span> <span class="s1">&#39;cos&#39;</span><span class="p">:</span> <span class="n">cos</span><span class="p">,</span> <span class="s1">&#39;tan&#39;</span><span class="p">:</span> <span class="n">tan</span><span class="p">,</span>
-    <span class="s1">&#39;asin&#39;</span><span class="p">:</span> <span class="n">asin</span><span class="p">,</span> <span class="s1">&#39;acos&#39;</span><span class="p">:</span> <span class="n">acos</span><span class="p">,</span> <span class="s1">&#39;atan&#39;</span><span class="p">:</span> <span class="n">atan</span><span class="p">,</span>
-    <span class="s1">&#39;sinh&#39;</span><span class="p">:</span> <span class="n">sinh</span><span class="p">,</span> <span class="s1">&#39;cosh&#39;</span><span class="p">:</span> <span class="n">cosh</span><span class="p">,</span> <span class="s1">&#39;tanh&#39;</span><span class="p">:</span> <span class="n">tanh</span><span class="p">,</span>
-    <span class="s1">&#39;exp&#39;</span><span class="p">:</span> <span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">:</span> <span class="n">sqrt</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span> <span class="n">log</span><span class="p">,</span> <span class="s1">&#39;abs&#39;</span><span class="p">:</span> <span class="n">Abs</span><span class="p">,</span>
-    <span class="s1">&#39;pi&#39;</span><span class="p">:</span> <span class="n">pi</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">E</span>
-<span class="p">}</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">SYMPY_LOCALS</span><span class="p">,</span> <span class="n">SAFE_MATH</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_validate_edo_inputs</span><span class="p">(</span><span class="n">func_input</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xn</span><span class="p">,</span> <span class="n">ordem</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Valida entradas para funções de resolução de EDOs.</span>
@@ -337,7 +336,7 @@
                                    <span class="sa">f</span><span class="s2">&quot;recebido: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
                 <span class="n">local_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
-                <span class="n">local_vars</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
+                <span class="n">local_vars</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">SAFE_MATH</span><span class="p">})</span>
 
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">local_vars</span><span class="p">)</span>
@@ -359,9 +358,9 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível criar função a partir de &#39;</span><span class="si">{</span><span class="n">func_str</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
                            <span class="sa">f</span><span class="s2">&quot;Erro SymPy: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Erro fallback: </span><span class="si">{</span><span class="n">fallback_error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="pedir_dados_edo">
-<a class="viewcode-back" href="../../modules.html#codigos.edos.pedir_dados_edo">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">pedir_dados_edo</span><span class="p">():</span>
+<div class="viewcode-block" id="coletar_dados_edo">
+<a class="viewcode-back" href="../../modules.html#codigos.edos.coletar_dados_edo">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">coletar_dados_edo</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtém entradas do usuário para resolução de EDOs com validação robusta.</span>
 
 <span class="sd">    Esta função solicita interativamente ao usuário os dados necessários para</span>
@@ -689,7 +688,7 @@
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="c1"># fallback: usar eval em namespace restrito</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">f2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-            <span class="n">local</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;yp&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;np&quot;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
+            <span class="n">local</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;yp&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;np&quot;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">SAFE_MATH</span><span class="p">}</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">f_input</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">local</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -720,7 +719,7 @@
                     <span class="k">return</span> <span class="n">lam0</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;tolist&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">def</span><span class="w"> </span><span class="nf">func0_callable</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-                    <span class="n">local</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
+                    <span class="n">local</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">SAFE_MATH</span><span class="p">}</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">expr0</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">local</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -958,7 +957,7 @@
     <span class="p">}</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">--- </span><span class="si">{</span><span class="n">nomes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ordem</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Runge-Kutta&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">dados</span> <span class="o">=</span> <span class="n">pedir_dados_edo</span><span class="p">()</span>
+        <span class="n">dados</span> <span class="o">=</span> <span class="n">coletar_dados_edo</span><span class="p">()</span>
         <span class="n">func_input</span> <span class="o">=</span> <span class="n">dados</span><span class="p">[</span><span class="s1">&#39;func_input&#39;</span><span class="p">]</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">dados</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">dados</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
@@ -1096,7 +1095,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">expr_str</span><span class="o">=</span><span class="n">expr_named</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">):</span>
                     <span class="c1"># Criar dicionário local com x e componentes de y</span>
-                    <span class="n">local_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
+                    <span class="n">local_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">SAFE_MATH</span><span class="p">}</span>
                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_equacoes</span><span class="p">):</span>
                         <span class="n">local_vars</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;y</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
 
@@ -1381,6 +1380,22 @@
             <span class="n">resolver_edo_2ordem</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="dados">
+<a class="viewcode-back" href="../../modules.html#codigos.edos.dados">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dados</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Menu interativo para métodos de resolução de EDOs.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">===== MENU DE EQUAÇÕES DIFERENCIAIS =====&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1 - Método de Euler (Runge-Kutta 1ª ordem)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2 - Método de Runge-Kutta (2ª, 3ª ou 4ª ordem)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3 - Sistemas de EDOs&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4 - Equações Diferenciais de 2ª Ordem&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;0 - Voltar ao menu principal&quot;</span><span class="p">)</span>
+    <span class="n">opcao</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Escolha uma opção: &quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">opcao</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

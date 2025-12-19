@@ -95,13 +95,18 @@
 <section id="documentacao">
 <h2>Documentação<a class="headerlink" href="#documentacao" title="Link para este cabeçalho"></a></h2>
 <p>As funções listadas abaixo implementam conversões entre bases numéricas (binário/decimal/hexadecimal). Todas seguem a convenção de entradas simples (strings para representações binárias/hexadecimais e inteiros para conversões de decimal) e levantam exceções quando aplicável.</p>
+<p>Módulo para conversões entre sistemas de numeração.</p>
+<p>Este módulo implementa funções para conversão entre diferentes bases
+numéricas: binário, decimal e hexadecimal.</p>
+<p>Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_binaria</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
 <dd><p>Converte uma string binária para inteiro decimal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bin_str</strong> (<em>str</em>) – Representação binária (ex.: <code class="docutils literal notranslate"><span class="pre">'1011'</span></code>).</p>
+<dd class="field-odd"><p><strong>string_binaria</strong> (<em>str</em>) – Representação binária (ex.: <code class="docutils literal notranslate"><span class="pre">'1011'</span></code>).</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p>Valor decimal correspondente.</p>
@@ -114,11 +119,11 @@
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numDecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numero_decimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
 <dd><p>Converte um inteiro decimal para sua representação binária em string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>numDecimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
+<dd class="field-odd"><p><strong>numero_decimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -135,11 +140,11 @@
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numDecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">decimal_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numero_decimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#decimal_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
 <dd><p>Converte um inteiro decimal para representação hexadecimal (maiúscula).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>numDecimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
+<dd class="field-odd"><p><strong>numero_decimal</strong> (<em>int</em>) – Número decimal não-negativo.</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -156,11 +161,11 @@
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_hexadecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_decimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
 <dd><p>Converte uma string hexadecimal (base 16) para inteiro decimal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>hex_str</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'FE'</span></code>).</p>
+<dd class="field-odd"><p><strong>string_hexadecimal</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'FE'</span></code>).</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -177,11 +182,11 @@
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">binario_para_hexadecimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_binaria</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#binario_para_hexadecimal"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
 <dd><p>Converte uma string binária para representação hexadecimal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bin_str</strong> (<em>str</em>) – Representação binária.</p>
+<dd class="field-odd"><p><strong>string_binaria</strong> (<em>str</em>) – Representação binária.</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -198,11 +203,11 @@
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.bases.</span></span><span class="sig-name descname"><span class="pre">hexadecimal_para_binario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_hexadecimal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/bases.html#hexadecimal_para_binario"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
 <dd><p>Converte uma string hexadecimal para representação binária.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>hex_str</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'F'</span></code>).</p>
+<dd class="field-odd"><p><strong>string_hexadecimal</strong> (<em>str</em>) – Representação hexadecimal (ex.: <code class="docutils literal notranslate"><span class="pre">'F'</span></code>).</p>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
