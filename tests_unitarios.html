@@ -1,0 +1,143 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentação dos Testes Unitários &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=71a39b36"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Testes: test_ajustecurvas" href="tests/test_ajustecurvas.html" />
+    <link rel="prev" title="Métodos de Raízes" href="raizes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="calcnum_matrix.html">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sistemas.html">Sistemas Lineares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integracoes.html">Integrações Numéricas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Documentação dos Testes Unitários</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tests/test_ajustecurvas.html">Testes: test_ajustecurvas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests/test_bases.html">Testes: test_bases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests/test_edos.html">Testes: test_edos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests/test_inputs_calcnum.html">Testes: test_inputs_calcnum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests/test_integracoes.html">Testes: test_integracoes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests/test_interpolacoes.html">Testes: test_interpolacoes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests/test_raizes.html">Testes: test_raizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests/test_sistemaslineares.html">Testes: test_sistemaslineares</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Documentação dos Testes Unitários</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tests_unitarios.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="documentacao-dos-testes-unitarios">
+<h1>Documentação dos Testes Unitários<a class="headerlink" href="#documentacao-dos-testes-unitarios" title="Link para este cabeçalho"></a></h1>
+<p>Este documento lista os testes por módulo com suas docstrings.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_ajustecurvas.html">Testes: test_ajustecurvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_bases.html">Testes: test_bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_edos.html">Testes: test_edos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_inputs_calcnum.html">Testes: test_inputs_calcnum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_integracoes.html">Testes: test_integracoes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_interpolacoes.html">Testes: test_interpolacoes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_raizes.html">Testes: test_raizes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_sistemaslineares.html">Testes: test_sistemaslineares</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="raizes.html" class="btn btn-neutral float-left" title="Métodos de Raízes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="tests/test_ajustecurvas.html" class="btn btn-neutral float-right" title="Testes: test_ajustecurvas" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

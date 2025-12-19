@@ -1,0 +1,174 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testes: test_inputs_calcnum &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=71a39b36"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Buscar" href="../search.html" />
+    <link rel="next" title="Testes: test_integracoes" href="test_integracoes.html" />
+    <link rel="prev" title="Testes: test_edos" href="test_edos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../calcnum_matrix.html">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sistemas.html">Sistemas Lineares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integracoes.html">Integrações Numéricas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tests_unitarios.html">Documentação dos Testes Unitários</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="test_ajustecurvas.html">Testes: test_ajustecurvas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_bases.html">Testes: test_bases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_edos.html">Testes: test_edos</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Testes: test_inputs_calcnum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_integracoes.html">Testes: test_integracoes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_interpolacoes.html">Testes: test_interpolacoes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_raizes.html">Testes: test_raizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_sistemaslineares.html">Testes: test_sistemaslineares</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tests_unitarios.html">Documentação dos Testes Unitários</a></li>
+      <li class="breadcrumb-item active">Testes: test_inputs_calcnum</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tests/test_inputs_calcnum.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="testes-test-inputs-calcnum">
+<h1>Testes: test_inputs_calcnum<a class="headerlink" href="#testes-test-inputs-calcnum" title="Link para este cabeçalho"></a></h1>
+<p>_Sem docstring de módulo._</p>
+<p>Conteúdo dos testes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos"> 3</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="n">ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span>
+<span class="linenos"> 7</span><span class="n">INPUT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;inputs&#39;</span><span class="p">)</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="k">def</span><span class="w"> </span><span class="nf">run_input_file_calc</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+<span class="linenos">11</span>    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">INPUT_DIR</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+<span class="linenos">12</span>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+<span class="linenos">13</span>        <span class="n">data</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="linenos">14</span>    <span class="n">env</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">)</span>
+<span class="linenos">15</span>    <span class="n">env</span><span class="p">[</span><span class="s1">&#39;MPLBACKEND&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MPLBACKEND&#39;</span><span class="p">,</span> <span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="linenos">16</span>    <span class="c1"># Execute the package entry to call menu_principal() so imports work</span>
+<span class="linenos">17</span>    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s2">&quot;import codigos.calcnum as m; m.menu_principal()&quot;</span><span class="p">]</span>
+<span class="linenos">18</span>    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">ROOT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
+<span class="linenos">19</span>    <span class="k">return</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;fname,expected&#39;</span><span class="p">,</span> <span class="p">[</span>
+<span class="linenos">23</span>    <span class="p">(</span><span class="s1">&#39;inputBases.txt&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Binário&#39;</span><span class="p">,</span> <span class="s1">&#39;1011&#39;</span><span class="p">)),</span>
+<span class="linenos">24</span>    <span class="p">(</span><span class="s1">&#39;inputSistemas.txt&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Solução&#39;</span><span class="p">,)),</span>
+<span class="linenos">25</span>    <span class="p">(</span><span class="s1">&#39;inputInterpolacoes.txt&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Resultado (Newton)&#39;</span><span class="p">,)),</span>
+<span class="linenos">26</span>    <span class="p">(</span><span class="s1">&#39;inputAjustes.txt&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Polinômio interpolador&#39;</span><span class="p">,)),</span>
+<span class="linenos">27</span>    <span class="p">(</span><span class="s1">&#39;inputEDOS_calcnum.txt&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Tabela de resultados&#39;</span><span class="p">,</span> <span class="s1">&#39;Aproximação&#39;</span><span class="p">,</span> <span class="s1">&#39;y(1)&#39;</span><span class="p">)),</span>
+<span class="linenos">28</span>    <span class="p">(</span><span class="s1">&#39;inputIntegracoes_calcnum.txt&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Resultado&#39;</span><span class="p">,)),</span>
+<span class="linenos">29</span>    <span class="p">(</span><span class="s1">&#39;inputRaizes.txt&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;A raiz encontrada&#39;</span><span class="p">,)),</span>
+<span class="linenos">30</span><span class="p">])</span>
+<span class="linenos">31</span><span class="k">def</span><span class="w"> </span><span class="nf">test_calcnum_inputs_basic</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+<span class="linenos">32</span>    <span class="n">rc</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">run_input_file_calc</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+<span class="linenos">33</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">--- output for&#39;</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;---&#39;</span><span class="p">)</span>
+<span class="linenos">34</span>    <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<span class="linenos">35</span>    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">s</span> <span class="ow">in</span> <span class="n">out</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">expected</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Resumo das funções de teste:</p>
+<ul class="simple">
+<li><p><strong>test_calcnum_inputs_basic</strong>: _Sem docstring._</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="test_edos.html" class="btn btn-neutral float-left" title="Testes: test_edos" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="test_integracoes.html" class="btn btn-neutral float-right" title="Testes: test_integracoes" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

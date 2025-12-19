@@ -62,6 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="integracoes.html">Integrações Numéricas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests_unitarios.html">Documentação dos Testes Unitários</a></li>
 <li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
 </ul>
 
@@ -430,204 +431,24 @@ da variável global ‘grafico’ ou False. Requer matplotlib instalado.</p></li
 </section>
 <section id="testes-de-integracao">
 <h2>Testes de Integração<a class="headerlink" href="#testes-de-integracao" title="Link para este cabeçalho"></a></h2>
-<p>Coberto pelo caso de integração em:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_inputs_calcnum</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">test_calcnum_inputs_basic</span> <span class="o">-</span><span class="n">q</span>
-</pre></div>
-</div>
+<p>Coberto pelos seguintes testes:</p>
+<ul class="simple">
+<li><p><strong>Teste global</strong>: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-q</span></code> (roda todos os testes do projeto)</p></li>
+<li><p><strong>Teste de calcnum</strong>: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">tests/test_inputs_calcnum.py::test_calcnum_inputs_basic</span> <span class="pre">-q</span></code> (valida integração via menu principal)</p></li>
+<li><p><strong>Teste individual</strong>: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">tests/test_interpolacoes.py</span> <span class="pre">-v</span></code> (testes específicos do módulo)</p></li>
+</ul>
 <p>Teste correspondente: <code class="file docutils literal notranslate"><span class="pre">tests/inputs/inputInterpolacoes.txt</span></code></p>
 </section>
 <section id="testes-unitarios-visiveis">
 <h2>Testes Unitários (visíveis)<a class="headerlink" href="#testes-unitarios-visiveis" title="Link para este cabeçalho"></a></h2>
-<p>Abaixo estão os testes unitários para as funções de interpolação, incluídos para referência rápida.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">interpolacoes</span>
-<span class="linenos">  2</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="linenos">  3</span>
-<span class="linenos">  4</span><span class="k">def</span><span class="w"> </span><span class="nf">test_tabela_diferencas_divididas_and_newton</span><span class="p">():</span>
-<span class="linenos">  5</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="linenos">  6</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>
-<span class="linenos">  7</span>    <span class="n">tabela</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">tabela_diferencas_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="linenos">  8</span>    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">tabela</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
-<span class="linenos">  9</span>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tabela</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
-<span class="linenos"> 10</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-<span class="linenos"> 11</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">2.25</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos"> 12</span>
-<span class="linenos"> 13</span>
-<span class="linenos"> 14</span><span class="k">def</span><span class="w"> </span><span class="nf">test_lagrange_interpol</span><span class="p">():</span>
-<span class="linenos"> 15</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="linenos"> 16</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>
-<span class="linenos"> 17</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-<span class="linenos"> 18</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">2.25</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos"> 19</span>
-<span class="linenos"> 20</span>
-<span class="linenos"> 21</span><span class="k">def</span><span class="w"> </span><span class="nf">test_tabela_diferencas_finitas_and_gregory</span><span class="p">():</span>
-<span class="linenos"> 22</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="linenos"> 23</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>
-<span class="linenos"> 24</span>    <span class="n">tabela</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">tabela_diferencas_finitas</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="linenos"> 25</span>    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">tabela</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
-<span class="linenos"> 26</span>    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">tabela</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
-<span class="linenos"> 27</span>    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">tabela</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">])</span>
-<span class="linenos"> 28</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">gregory_newton_progressivo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-<span class="linenos"> 29</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">2.25</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos"> 30</span>
-<span class="linenos"> 31</span>
-<span class="linenos"> 32</span><span class="k">def</span><span class="w"> </span><span class="nf">test_dispositivo_pratico_lagrange</span><span class="p">():</span>
-<span class="linenos"> 33</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="linenos"> 34</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>
-<span class="linenos"> 35</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">dispositivo_pratico_lagrange</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-<span class="linenos"> 36</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">2.25</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos"> 37</span>
-<span class="linenos"> 38</span>
-<span class="linenos"> 39</span><span class="k">def</span><span class="w"> </span><span class="nf">test_verifica_espaçamento_uniforme_and_calcular_erro</span><span class="p">():</span>
-<span class="linenos"> 40</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="linenos"> 41</span>    <span class="n">ok</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">verifica_espaçamento_uniforme</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos"> 42</span>    <span class="k">assert</span> <span class="n">ok</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos"> 43</span>    <span class="n">erro_trunc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">calcular_erro</span><span class="p">(</span><span class="s1">&#39;x**2&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">2.25</span><span class="p">)</span>
-<span class="linenos"> 44</span>    <span class="k">assert</span> <span class="n">erro_trunc</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span><span class="n">erro_trunc</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-14</span>
-<span class="linenos"> 45</span>
-<span class="linenos"> 46</span>
-<span class="linenos"> 47</span><span class="k">def</span><span class="w"> </span><span class="nf">test_lagrange_real_data_1</span><span class="p">():</span>
-<span class="linenos"> 48</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Lagrange interpolation with real data from menu example&quot;&quot;&quot;</span>
-<span class="linenos"> 49</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">]</span>
-<span class="linenos"> 50</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.262</span><span class="p">,</span> <span class="mf">0.588</span><span class="p">]</span>
-<span class="linenos"> 51</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">)</span>
-<span class="linenos"> 52</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">0.3382666666666666</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-<span class="linenos"> 53</span>
-<span class="linenos"> 54</span>
-<span class="linenos"> 55</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_real_data_1</span><span class="p">():</span>
-<span class="linenos"> 56</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Newton interpolation with real data from menu example&quot;&quot;&quot;</span>
-<span class="linenos"> 57</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">]</span>
-<span class="linenos"> 58</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.262</span><span class="p">,</span> <span class="mf">0.588</span><span class="p">]</span>
-<span class="linenos"> 59</span>    <span class="n">tabela</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">tabela_diferencas_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="linenos"> 60</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">)</span>
-<span class="linenos"> 61</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">0.33826666666666655</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-<span class="linenos"> 62</span>
-<span class="linenos"> 63</span>
-<span class="linenos"> 64</span><span class="k">def</span><span class="w"> </span><span class="nf">test_dispositivo_pratico_lagrange_real_data</span><span class="p">():</span>
-<span class="linenos"> 65</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test dispositivo prático Lagrange with temperature data&quot;&quot;&quot;</span>
-<span class="linenos"> 66</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
-<span class="linenos"> 67</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">85.0</span><span class="p">,</span> <span class="mf">88.0</span><span class="p">,</span> <span class="mf">92.0</span><span class="p">]</span>
-<span class="linenos"> 68</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">dispositivo_pratico_lagrange</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
-<span class="linenos"> 69</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">90.33333333333334</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-<span class="linenos"> 70</span>
-<span class="linenos"> 71</span>
-<span class="linenos"> 72</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_real_data_2</span><span class="p">():</span>
-<span class="linenos"> 73</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Newton with 4 points&quot;&quot;&quot;</span>
-<span class="linenos"> 74</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="linenos"> 75</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.482</span><span class="p">,</span> <span class="mf">9.488</span><span class="p">,</span> <span class="mf">20.086</span><span class="p">]</span>
-<span class="linenos"> 76</span>    <span class="n">tabela</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">tabela_diferencas_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="linenos"> 77</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">)</span>
-<span class="linenos"> 78</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">6.958004</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
-<span class="linenos"> 79</span>
-<span class="linenos"> 80</span>
-<span class="linenos"> 81</span><span class="k">def</span><span class="w"> </span><span class="nf">test_lagrange_real_data_2</span><span class="p">():</span>
-<span class="linenos"> 82</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Lagrange with pressure data&quot;&quot;&quot;</span>
-<span class="linenos"> 83</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">55.0</span><span class="p">,</span> <span class="mf">70.0</span><span class="p">,</span> <span class="mf">85.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
-<span class="linenos"> 84</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">14.08</span><span class="p">,</span> <span class="mf">13.56</span><span class="p">,</span> <span class="mf">13.28</span><span class="p">,</span> <span class="mf">12.27</span><span class="p">]</span>
-<span class="linenos"> 85</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">)</span>
-<span class="linenos"> 86</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">13.40654320987654</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-<span class="linenos"> 87</span>
-<span class="linenos"> 88</span>
-<span class="linenos"> 89</span><span class="k">def</span><span class="w"> </span><span class="nf">test_lagrange_real_data_3</span><span class="p">():</span>
-<span class="linenos"> 90</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Lagrange with another pressure dataset&quot;&quot;&quot;</span>
-<span class="linenos"> 91</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">85.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">115.0</span><span class="p">,</span> <span class="mf">130.0</span><span class="p">]</span>
-<span class="linenos"> 92</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">13.28</span><span class="p">,</span> <span class="mf">12.27</span><span class="p">,</span> <span class="mf">11.30</span><span class="p">,</span> <span class="mf">10.40</span><span class="p">]</span>
-<span class="linenos"> 93</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">110.0</span><span class="p">)</span>
-<span class="linenos"> 94</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">11.617037037037036</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-<span class="linenos"> 95</span>
-<span class="linenos"> 96</span>
-<span class="linenos"> 97</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_real_data_3</span><span class="p">():</span>
-<span class="linenos"> 98</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Newton with decreasing x values&quot;&quot;&quot;</span>
-<span class="linenos"> 99</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">750.0</span><span class="p">,</span> <span class="mf">500.0</span><span class="p">]</span>
-<span class="linenos">100</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">15.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">]</span>
-<span class="linenos">101</span>    <span class="n">tabela</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">tabela_diferencas_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="linenos">102</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="mf">850.0</span><span class="p">)</span>
-<span class="linenos">103</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">11.76</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-<span class="linenos">104</span>
-<span class="linenos">105</span>
-<span class="linenos">106</span><span class="k">def</span><span class="w"> </span><span class="nf">test_max_grau_limitation</span><span class="p">():</span>
-<span class="linenos">107</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that max_grau parameter limits the polynomial degree&quot;&quot;&quot;</span>
-<span class="linenos">108</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]</span>
-<span class="linenos">109</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">]</span>
-<span class="linenos">110</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="linenos">111</span>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">))</span>
-<span class="linenos">112</span>
-<span class="linenos">113</span>
-<span class="linenos">114</span><span class="k">def</span><span class="w"> </span><span class="nf">test_gregory_newton_real_data</span><span class="p">():</span>
-<span class="linenos">115</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Gregory-Newton with equally spaced data&quot;&quot;&quot;</span>
-<span class="linenos">116</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>
-<span class="linenos">117</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.648721</span><span class="p">,</span> <span class="mf">2.718282</span><span class="p">,</span> <span class="mf">4.481689</span><span class="p">]</span>
-<span class="linenos">118</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">gregory_newton_progressivo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">)</span>
-<span class="linenos">119</span>    <span class="n">expected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
-<span class="linenos">120</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="n">expected</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">5e-3</span>  
-<span class="linenos">121</span>
-<span class="linenos">122</span>
-<span class="linenos">123</span><span class="k">def</span><span class="w"> </span><span class="nf">test_input_validation_errors</span><span class="p">():</span>
-<span class="linenos">124</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that input validation raises appropriate errors&quot;&quot;&quot;</span>
-<span class="linenos">125</span>    <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="linenos">126</span>    
-<span class="linenos">127</span>    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;x e y devem ter o mesmo comprimento&quot;</span><span class="p">):</span>
-<span class="linenos">128</span>        <span class="n">interpolacoes</span><span class="o">.</span><span class="n">_validate_interpolation_inputs</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-<span class="linenos">129</span>    
-<span class="linenos">130</span>    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;Os pontos x devem ser únicos&quot;</span><span class="p">):</span>
-<span class="linenos">131</span>        <span class="n">interpolacoes</span><span class="o">.</span><span class="n">_validate_interpolation_inputs</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-<span class="linenos">132</span>    
-<span class="linenos">133</span>    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;São necessários pelo menos 2 pontos para interpolação&quot;</span><span class="p">):</span>
-<span class="linenos">134</span>        <span class="n">interpolacoes</span><span class="o">.</span><span class="n">_validate_interpolation_inputs</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="linenos">135</span>
-<span class="linenos">136</span>
-<span class="linenos">137</span><span class="k">def</span><span class="w"> </span><span class="nf">test_verbose_output</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
-<span class="linenos">138</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that verbose=False produces no output and verbose=True produces output&quot;&quot;&quot;</span>
-<span class="linenos">139</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
-<span class="linenos">140</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>
-<span class="linenos">141</span>    
-<span class="linenos">142</span>    <span class="n">val_silent</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="linenos">143</span>    <span class="n">captured</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
-<span class="linenos">144</span>    <span class="k">assert</span> <span class="n">captured</span><span class="o">.</span><span class="n">out</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span>
-<span class="linenos">145</span>    
-<span class="linenos">146</span>    <span class="n">val_verbose</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">147</span>    <span class="n">captured</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
-<span class="linenos">148</span>    <span class="k">assert</span> <span class="s2">&quot;Lagrange&quot;</span> <span class="ow">in</span> <span class="n">captured</span><span class="o">.</span><span class="n">out</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">captured</span><span class="o">.</span><span class="n">out</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-<span class="linenos">149</span>    
-<span class="linenos">150</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val_silent</span> <span class="o">-</span> <span class="n">val_verbose</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos">151</span>
-<span class="linenos">152</span>
-<span class="linenos">153</span><span class="k">def</span><span class="w"> </span><span class="nf">test_lagrange_verbose_detailed_output</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
-<span class="linenos">154</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test detailed verbose output for Lagrange interpolation&quot;&quot;&quot;</span>
-<span class="linenos">155</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">]</span>
-<span class="linenos">156</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.262</span><span class="p">,</span> <span class="mf">0.588</span><span class="p">]</span>
-<span class="linenos">157</span>    
-<span class="linenos">158</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="linenos">159</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">0.3382666666666666</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-<span class="linenos">160</span>
-<span class="linenos">161</span>
-<span class="linenos">162</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_verbose_detailed_output</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
-<span class="linenos">163</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test detailed verbose output for Newton interpolation&quot;&quot;&quot;</span>
-<span class="linenos">164</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">]</span>
-<span class="linenos">165</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.262</span><span class="p">,</span> <span class="mf">0.588</span><span class="p">]</span>
-<span class="linenos">166</span>    <span class="n">tabela</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">tabela_diferencas_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="linenos">167</span>    
-<span class="linenos">168</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="linenos">169</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">0.33826666666666655</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
-<span class="linenos">170</span>
-<span class="linenos">171</span><span class="k">def</span><span class="w"> </span><span class="nf">test_numpy_array_inputs</span><span class="p">():</span>
-<span class="linenos">172</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that functions work with numpy arrays as input&quot;&quot;&quot;</span>
-<span class="linenos">173</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>
-<span class="linenos">174</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span>
-<span class="linenos">175</span>    
-<span class="linenos">176</span>    <span class="n">val</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-<span class="linenos">177</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mf">2.25</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos">178</span>    
-<span class="linenos">179</span>    <span class="n">tabela</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">tabela_diferencas_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="linenos">180</span>    <span class="n">val_newton</span> <span class="o">=</span> <span class="n">interpolacoes</span><span class="o">.</span><span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
-<span class="linenos">181</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">val_newton</span> <span class="o">-</span> <span class="mf">2.25</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-</pre></div>
-</div>
+<p><a class="reference internal" href="tests/test_interpolacoes.html"><span class="doc">Testes: test_interpolacoes</span></a></p>
 </section>
 <section id="links-rapidos">
 <h2>Links rápidos<a class="headerlink" href="#links-rapidos" title="Link para este cabeçalho"></a></h2>
 <ul class="simple">
 <li><p>Teste de integração relacionado: <code class="file docutils literal notranslate"><span class="pre">tests/test_inputs_calcnum.py::test_calcnum_inputs_basic</span></code></p></li>
-<li><p>Testes unitários: <code class="file docutils literal notranslate"><span class="pre">tests/test_interpolacoes.py</span></code></p></li>
+<li><p>Testes unitários (arquivo): <code class="file docutils literal notranslate"><span class="pre">tests/test_interpolacoes.py</span></code></p></li>
+<li><p>Página de testes (docs): <a class="reference internal" href="tests/test_interpolacoes.html"><span class="doc">Testes: test_interpolacoes</span></a></p></li>
 </ul>
 </section>
 </section>

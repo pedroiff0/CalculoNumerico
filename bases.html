@@ -51,7 +51,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#documentacao">Documentação</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#exemplo-de-uso">Exemplo de Uso</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testes-de-integracao">Testes de Integração</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testes-unitarios-visiveis">Testes Unitários (visíveis)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testes-unitarios">Testes Unitários</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#links-rapidos">Links rápidos</a></li>
 </ul>
 </li>
@@ -61,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="integracoes.html">Integrações Numéricas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests_unitarios.html">Documentação dos Testes Unitários</a></li>
 <li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
 </ul>
 
@@ -232,39 +233,24 @@
 </section>
 <section id="testes-de-integracao">
 <h2>Testes de Integração<a class="headerlink" href="#testes-de-integracao" title="Link para este cabeçalho"></a></h2>
-<p>O teste de integração que valida a opção de conversão de bases está em:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_inputs_calcnum</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">test_calcnum_inputs_basic</span> <span class="o">-</span><span class="n">q</span>
-</pre></div>
-</div>
+<p>Coberto pelos seguintes testes:</p>
+<ul class="simple">
+<li><p><strong>Teste global</strong>: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-q</span></code> (roda todos os testes do projeto)</p></li>
+<li><p><strong>Teste de calcnum</strong>: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">tests/test_inputs_calcnum.py::test_calcnum_inputs_basic</span> <span class="pre">-q</span></code> (valida integração via menu principal)</p></li>
+<li><p><strong>Teste individual</strong>: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">tests/test_bases.py</span> <span class="pre">-v</span></code> (testes específicos do módulo)</p></li>
+</ul>
 <p>Teste correspondente: <code class="file docutils literal notranslate"><span class="pre">tests/inputs/inputBases.txt</span></code></p>
 </section>
-<section id="testes-unitarios-visiveis">
-<h2>Testes Unitários (visíveis)<a class="headerlink" href="#testes-unitarios-visiveis" title="Link para este cabeçalho"></a></h2>
-<p>Abaixo está o arquivo de testes unitários para a funcionalidade de bases. Ele é incluído para fácil visualização e referência.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">bases</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="k">def</span><span class="w"> </span><span class="nf">test_binario_decimal_roundtrip</span><span class="p">():</span>
-<span class="linenos"> 5</span>    <span class="k">assert</span> <span class="n">bases</span><span class="o">.</span><span class="n">binario_para_decimal</span><span class="p">(</span><span class="s1">&#39;1011&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">11</span>
-<span class="linenos"> 6</span>    <span class="k">assert</span> <span class="n">bases</span><span class="o">.</span><span class="n">decimal_para_binario</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;1011&#39;</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="k">def</span><span class="w"> </span><span class="nf">test_hexadecimal_roundtrip</span><span class="p">():</span>
-<span class="linenos">10</span>    <span class="k">assert</span> <span class="n">bases</span><span class="o">.</span><span class="n">decimal_para_hexadecimal</span><span class="p">(</span><span class="mi">254</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;FE&#39;</span>
-<span class="linenos">11</span>    <span class="k">assert</span> <span class="n">bases</span><span class="o">.</span><span class="n">hexadecimal_para_decimal</span><span class="p">(</span><span class="s1">&#39;FE&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">254</span>
-<span class="linenos">12</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span><span class="k">def</span><span class="w"> </span><span class="nf">test_binario_hexadecimal</span><span class="p">():</span>
-<span class="linenos">15</span>    <span class="k">assert</span> <span class="n">bases</span><span class="o">.</span><span class="n">binario_para_hexadecimal</span><span class="p">(</span><span class="s1">&#39;1111&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;F&#39;</span>
-<span class="linenos">16</span>    <span class="k">assert</span> <span class="n">bases</span><span class="o">.</span><span class="n">hexadecimal_para_binario</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;1111&#39;</span>
-</pre></div>
-</div>
+<section id="testes-unitarios">
+<h2>Testes Unitários<a class="headerlink" href="#testes-unitarios" title="Link para este cabeçalho"></a></h2>
+<p><a class="reference internal" href="tests/test_bases.html"><span class="doc">Testes: test_bases</span></a></p>
 </section>
 <section id="links-rapidos">
 <h2>Links rápidos<a class="headerlink" href="#links-rapidos" title="Link para este cabeçalho"></a></h2>
 <ul class="simple">
 <li><p>Teste de integração relacionado: <code class="file docutils literal notranslate"><span class="pre">tests/test_inputs_calcnum.py::test_calcnum_inputs_basic</span></code></p></li>
-<li><p>Testes unitários: <code class="file docutils literal notranslate"><span class="pre">tests/test_bases.py</span></code></p></li>
+<li><p>Testes unitários (arquivo): <code class="file docutils literal notranslate"><span class="pre">tests/test_bases.py</span></code></p></li>
+<li><p>Página de testes (docs): <a class="reference internal" href="tests/test_bases.html"><span class="doc">Testes: test_bases</span></a></p></li>
 </ul>
 </section>
 </section>

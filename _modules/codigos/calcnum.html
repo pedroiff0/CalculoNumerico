@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../integracoes.html">Integrações Numéricas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tests_unitarios.html">Documentação dos Testes Unitários</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../disclaimer.html">Aviso — Passos futuros</a></li>
 </ul>
 
@@ -496,6 +497,8 @@
             <span class="k">continue</span>
 
         <span class="k">if</span> <span class="n">resultado</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Mostrar resultado numérico em execução não-verbose/input-driven</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">valor_exato</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">calc_exata</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja calcular a integral exata (simbólica)? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span>
             <span class="k">if</span> <span class="n">calc_exata</span><span class="p">:</span>

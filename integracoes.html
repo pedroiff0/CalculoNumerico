@@ -61,6 +61,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests_unitarios.html">Documentação dos Testes Unitários</a></li>
 <li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
 </ul>
 
@@ -156,26 +157,86 @@ Retorna (None, None, None, None) em caso de erro de parsing.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">newton_cotes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#newton_cotes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
-<dd><p>Newton-Cotes para integração numérica.</p>
-<p>Suporta ordens 1 (Trapézio), 2 (Simpson 1/3), 3 (Simpson 3/8) e 4.
-Fórmulas:
-Ordem 1 (Trapézio): int_a^b f(x) dx ≈ (h/2) * [f(x0) + f(x1)]
-Ordem 2 (Simpson 1/3): int_a^b f(x) dx ≈ (h/3) * [f(x0) + 4f(x1) + f(x2)]
-Ordem 3 (Simpson 3/8): int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + f(x3)]</p>
-<p>Quando usar? Para integrais simples com poucos pontos (&gt;= ordem)</p>
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">newton_cotes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#newton_cotes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Newton-Cotes para integração numérica (ordens 1,2,3).</p>
+<section id="otimizacoes">
+<h3>Otimizações<a class="headerlink" href="#otimizacoes" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p>Tenta usar <cite>sympy.lambdify</cite> para avaliar a função de forma vetorizada quando possível.</p></li>
+</ul>
+</section>
+<section id="verbose-graficos">
+<h3>Verbose &amp; Gráficos<a class="headerlink" href="#verbose-graficos" title="Link para este cabeçalho"></a></h3>
+<ul class="simple">
+<li><p><cite>verbose=False</cite> (padrão): execução silenciosa (comportamento compatível com testes automatizados).</p></li>
+<li><p><cite>verbose=True</cite>: imprime detalhes auxiliares e, por padrão, habilita <cite>grafico=True</cite>.</p></li>
+</ul>
+</section>
+<section id="parametros">
+<h3>Parâmetros<a class="headerlink" href="#parametros" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>func<span class="classifier">str</span></dt><dd><p>Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+</dd>
+<dt>a, b<span class="classifier">float</span></dt><dd><p>Limites do intervalo de integração (números finitos, distintos).</p>
+</dd>
+<dt>ordem<span class="classifier">int</span></dt><dd><p>Ordem da regra (1, 2 ou 3).</p>
+</dd>
+<dt>verbose<span class="classifier">bool, optional</span></dt><dd><p>Habilita saídas detalhadas e gráficos (padrão: False).</p>
+</dd>
+<dt>grafico<span class="classifier">bool or None, optional</span></dt><dd><p>Controla plotagem: se None e <code class="docutils literal notranslate"><span class="pre">verbose</span></code> for True, é habilitado; caso contrário, respeitado.</p>
+</dd>
+</dl>
+</section>
+<section id="retorno">
+<h3>Retorno<a class="headerlink" href="#retorno" title="Link para este cabeçalho"></a></h3>
+<dl class="simple">
+<dt>float</dt><dd><p>Aproximação da integral.</p>
+</dd>
+</dl>
+</section>
+<section id="notas-de-teste">
+<h3>Notas de teste<a class="headerlink" href="#notas-de-teste" title="Link para este cabeçalho"></a></h3>
+<p>Os testes unitários que cobrem Newton-Cotes e regras compostas estão em <code class="docutils literal notranslate"><span class="pre">tests/test_integracoes.py</span></code>.</p>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">trapezio_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#trapezio_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">trapezio_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#trapezio_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
 <dd><p>Regra do Trapézio composta para integração numérica.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code> (usada via <code class="docutils literal notranslate"><span class="pre">eval</span></code> no contexto seguro).</p></li>
+<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
 <li><p><strong>a</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
 <li><p><strong>b</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime detalhes e habilita (por padrão) a plotagem e estimativa de erro.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Controla plotagem: se None e verbose for True, habilita-a.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aproximação da integral ou <code class="docutils literal notranslate"><span class="pre">None</span></code> em caso de erro/entrada inválida.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or None</p>
+</dd>
+</dl>
+<p class="rubric">Notas</p>
+<p>Testes para regras compostas estão em <code class="docutils literal notranslate"><span class="pre">tests/test_integracoes.py</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_1_3_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_1_3_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<dd><p>Regra de Simpson 1/3 composta para integração numérica.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime detalhes, habilita plot e estimativa de erro.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Controla plotagem: se None e verbose for True, habilita-a.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
@@ -189,22 +250,19 @@ Ordem 3 (Simpson 3/8): int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + f
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_1_3_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_1_3_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
-<dd><p>Regra de Simpson 1/3 composta para integração numérica.</p>
-<p>Quando usar: m deve ser par, pois cada aplicação usa 2 subintervalos.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_3_8_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_3_8_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_3_8_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_3_8_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a></dt>
 <dd><p>Regra de Simpson 3/8 composta para integração numérica.</p>
-<p>Quando usar: n deve ser múltiplo de 3
-Passos manuais:
-1. Calcular h = (b - a) / n
-2. Calcular os pontos x_i = a + i*h para i = 0, 1, …, n
-3. Avaliar f(x_i) para cada ponto
-4. Aplicar a fórmula composta</p>
-<p>Fórmula: int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + 2f(x3) + … + 3f(xn-1) + f(xn)]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime detalhes e habilita plot/estimativa de erro.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Controla plotagem: se None e verbose for True, habilita-a.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -224,95 +282,24 @@ Passos manuais:
 </section>
 <section id="testes-de-integracao">
 <h2>Testes de Integração<a class="headerlink" href="#testes-de-integracao" title="Link para este cabeçalho"></a></h2>
-<p>Coberto pelo caso de integração em:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_inputs_calcnum</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">test_calcnum_inputs_basic</span> <span class="o">-</span><span class="n">q</span>
-</pre></div>
-</div>
+<p>Coberto pelos seguintes testes:</p>
+<ul class="simple">
+<li><p><strong>Teste global</strong>: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-q</span></code> (roda todos os testes do projeto)</p></li>
+<li><p><strong>Teste de calcnum</strong>: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">tests/test_inputs_calcnum.py::test_calcnum_inputs_basic</span> <span class="pre">-q</span></code> (valida integração via menu principal)</p></li>
+<li><p><strong>Teste individual</strong>: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">tests/test_integracoes.py</span> <span class="pre">-v</span></code> (testes específicos do módulo)</p></li>
+</ul>
 <p>Teste correspondente: <code class="file docutils literal notranslate"><span class="pre">tests/inputs/inputIntegracoes_calcnum.txt</span></code></p>
 </section>
 <section id="testes-unitarios-visiveis">
 <h2>Testes Unitários (visíveis)<a class="headerlink" href="#testes-unitarios-visiveis" title="Link para este cabeçalho"></a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">integracoes</span> <span class="k">as</span> <span class="n">ig</span>
-<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="k">def</span><span class="w"> </span><span class="nf">test_erro_truncamento_composta</span><span class="p">():</span>
-<span class="linenos"> 6</span>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
-<span class="linenos"> 7</span>    <span class="c1"># derivada_max = 1 for testing</span>
-<span class="linenos"> 8</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;trapezio&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos"> 9</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;simpson13&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span><span class="o">/</span><span class="mi">180</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos">10</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;simpson38&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span><span class="o">/</span><span class="mi">80</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
-<span class="linenos">11</span>
-<span class="linenos">12</span>
-<span class="linenos">13</span><span class="k">def</span><span class="w"> </span><span class="nf">test_trapezio_composta_simple</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
-<span class="linenos">14</span>    <span class="c1"># Integral of f(x)=x from 0 to 1 is 0.5</span>
-<span class="linenos">15</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">ig</span><span class="p">,</span> <span class="s1">&#39;pedir_m_ou_h&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">regra</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span>
-<span class="linenos">16</span>    <span class="c1"># avoid interactive plotting and error estimation: patch input to always &#39;n&#39;</span>
-<span class="linenos">17</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
-<span class="linenos">18</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">trapezio_composta</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-<span class="linenos">19</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">res</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-3</span>
-<span class="linenos">20</span>
-<span class="linenos">21</span>
-<span class="linenos">22</span><span class="k">def</span><span class="w"> </span><span class="nf">test_erro_truncamento_composta_values</span><span class="p">():</span>
-<span class="linenos">23</span>    <span class="c1"># For trapezio with derivada_max = 1 on [0,1], m=10 -&gt; formula: -((b-a)^3)/(12*m^2)*derivada_max</span>
-<span class="linenos">24</span>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">1.0</span>
-<span class="linenos">25</span>    <span class="n">expected</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">derivada_max</span>
-<span class="linenos">26</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;trapezio&#39;</span><span class="p">))</span> <span class="o">==</span> <span class="n">expected</span>
-<span class="linenos">27</span>    <span class="c1"># Simpson 1/3</span>
-<span class="linenos">28</span>    <span class="n">expected_s13</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">180</span> <span class="o">*</span> <span class="n">m</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">derivada_max</span>
-<span class="linenos">29</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;simpson13&#39;</span><span class="p">))</span> <span class="o">==</span> <span class="n">expected_s13</span>
-<span class="linenos">30</span>    <span class="c1"># Simpson 3/8</span>
-<span class="linenos">31</span>    <span class="n">expected_s38</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">80</span> <span class="o">*</span> <span class="n">m</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">derivada_max</span>
-<span class="linenos">32</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">ig</span><span class="o">.</span><span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;simpson38&#39;</span><span class="p">))</span> <span class="o">==</span> <span class="n">expected_s38</span>
-<span class="linenos">33</span>
-<span class="linenos">34</span>
-<span class="linenos">35</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_cotes_trapezio_linear</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
-<span class="linenos">36</span>    <span class="c1"># Prevent interactive plotting prompt</span>
-<span class="linenos">37</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
-<span class="linenos">38</span>    <span class="c1"># integral of x from 0 to 1 = 0.5</span>
-<span class="linenos">39</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">newton_cotes</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="linenos">40</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.5</span>
-<span class="linenos">41</span>
-<span class="linenos">42</span>
-<span class="linenos">43</span><span class="k">def</span><span class="w"> </span><span class="nf">test_newton_cotes_simpson_on_quadratic</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
-<span class="linenos">44</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
-<span class="linenos">45</span>    <span class="c1"># integral of x**2 from 0 to 1 = 1/3</span>
-<span class="linenos">46</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">newton_cotes</span><span class="p">(</span><span class="s1">&#39;x**2&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="linenos">47</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span>
-<span class="linenos">48</span>
-<span class="linenos">49</span>
-<span class="linenos">50</span><span class="k">def</span><span class="w"> </span><span class="nf">test_trapezio_composta_monkeypatch</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
-<span class="linenos">51</span>    <span class="c1"># Make pedir_m_ou_h return m=4, h=0.25 for interval 0..1</span>
-<span class="linenos">52</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">ig</span><span class="p">,</span> <span class="s1">&#39;pedir_m_ou_h&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">regra</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
-<span class="linenos">53</span>    <span class="c1"># Prevent interactive plotting/error prompts (always &#39;n&#39;)</span>
-<span class="linenos">54</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
-<span class="linenos">55</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">trapezio_composta</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-<span class="linenos">56</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.5</span>
-<span class="linenos">57</span>
-<span class="linenos">58</span>
-<span class="linenos">59</span><span class="k">def</span><span class="w"> </span><span class="nf">test_simpson_1_3_composta_monkeypatch</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
-<span class="linenos">60</span>    <span class="c1"># m must be even; choose m=4</span>
-<span class="linenos">61</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">ig</span><span class="p">,</span> <span class="s1">&#39;pedir_m_ou_h&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">regra</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
-<span class="linenos">62</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
-<span class="linenos">63</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">simpson_1_3_composta</span><span class="p">(</span><span class="s1">&#39;x**2&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-<span class="linenos">64</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span>
-<span class="linenos">65</span>
-<span class="linenos">66</span>
-<span class="linenos">67</span><span class="k">def</span><span class="w"> </span><span class="nf">test_simpson_3_8_composta_monkeypatch</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">):</span>
-<span class="linenos">68</span>    <span class="c1"># m must be multiple of 3; choose m=3</span>
-<span class="linenos">69</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">ig</span><span class="p">,</span> <span class="s1">&#39;pedir_m_ou_h&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">regra</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)))</span>
-<span class="linenos">70</span>    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;builtins.input&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
-<span class="linenos">71</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">ig</span><span class="o">.</span><span class="n">simpson_3_8_composta</span><span class="p">(</span><span class="s1">&#39;x**3&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-<span class="linenos">72</span>    <span class="c1"># integral of x^3 from 0 to1 = 1/4</span>
-<span class="linenos">73</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.25</span>
-</pre></div>
-</div>
+<p><a class="reference internal" href="tests/test_integracoes.html"><span class="doc">Testes: test_integracoes</span></a></p>
 </section>
 <section id="links-rapidos">
 <h2>Links rápidos<a class="headerlink" href="#links-rapidos" title="Link para este cabeçalho"></a></h2>
 <ul class="simple">
 <li><p>Teste de integração relacionado: <code class="file docutils literal notranslate"><span class="pre">tests/test_inputs_calcnum.py::test_calcnum_inputs_basic</span></code></p></li>
-<li><p>Testes unitários: <code class="file docutils literal notranslate"><span class="pre">tests/test_integracoes.py</span></code></p></li>
+<li><p>Testes unitários (arquivo): <code class="file docutils literal notranslate"><span class="pre">tests/test_integracoes.py</span></code></p></li>
+<li><p>Página de testes (docs): <a class="reference internal" href="tests/test_integracoes.html"><span class="doc">Testes: test_integracoes</span></a></p></li>
 </ul>
 </section>
 </section>

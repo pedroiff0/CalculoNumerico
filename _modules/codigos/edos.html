@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../integracoes.html">Integrações Numéricas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tests_unitarios.html">Documentação dos Testes Unitários</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../disclaimer.html">Aviso — Passos futuros</a></li>
 </ul>
 
@@ -98,99 +99,474 @@
     <span class="s1">&#39;pi&#39;</span><span class="p">:</span> <span class="n">pi</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">E</span>
 <span class="p">}</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_edo_inputs</span><span class="p">(</span><span class="n">func_input</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xn</span><span class="p">,</span> <span class="n">ordem</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Valida entradas para funções de resolução de EDOs.</span>
+
+<span class="sd">    Esta função realiza validações abrangentes dos dados de entrada para garantir</span>
+<span class="sd">    que a resolução de EDO possa ser realizada corretamente.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func_input : str</span>
+<span class="sd">        Expressão da função f(x, y) como string.</span>
+<span class="sd">    x0, y0 : float</span>
+<span class="sd">        Condições iniciais: ponto inicial x0 e valor y(x0).</span>
+<span class="sd">    h : float</span>
+<span class="sd">        Tamanho do passo de integração. Deve ser positivo.</span>
+<span class="sd">    xn : float</span>
+<span class="sd">        Ponto final de integração. Deve ser diferente de x0.</span>
+<span class="sd">    ordem : int or None, optional</span>
+<span class="sd">        Ordem do método Runge-Kutta (1, 2, 3, 4). Se None, não valida.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    func_input_valid, x0_valid, y0_valid, h_valid, xn_valid : str, float, float, float, float</span>
+<span class="sd">        Entradas validadas e convertidas para tipos apropriados.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        Se os tipos de entrada não forem adequados.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se os valores não forem válidos (passo negativo, pontos iguais, etc.).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validação da função de entrada</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_input</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;func_input deve ser uma string. Recebido: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">func_input</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">func_input</span> <span class="o">=</span> <span class="n">func_input</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">func_input</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A expressão da função f(x,y) não pode estar vazia&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validação e conversão dos valores numéricos</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">xn</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">xn</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Todos os parâmetros numéricos devem ser números. Erro: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validação de valores finitos</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;O ponto inicial x0 deve ser finito (não NaN ou infinito)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;O valor inicial y0 deve ser finito (não NaN ou infinito)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;O passo h deve ser finito (não NaN ou infinito)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">xn</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;O ponto final xn deve ser finito (não NaN ou infinito)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validação do passo</span>
+    <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;O passo h deve ser positivo. Recebido: </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validação do intervalo</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xn</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Os pontos inicial e final devem ser diferentes. x0=</span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2">, xn=</span><span class="si">{</span><span class="n">xn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validação da ordem (se fornecida)</span>
+    <span class="k">if</span> <span class="n">ordem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ordem</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ordem</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A ordem deve ser um inteiro. Recebido: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">ordem</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ordem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A ordem deve ser 1, 2, 3 ou 4. Recebido: </span><span class="si">{</span><span class="n">ordem</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">func_input</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xn</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_sistema_edo_inputs</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">ordem</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Valida entradas para resolução de sistemas de EDOs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    funcs_input : list of str</span>
+<span class="sd">        Lista de expressões das funções f_i(t, y) como strings.</span>
+<span class="sd">    y0 : array_like</span>
+<span class="sd">        Condições iniciais y(t0) como array ou lista.</span>
+<span class="sd">    t0, tf : float</span>
+<span class="sd">        Pontos inicial e final de integração.</span>
+<span class="sd">    h : float</span>
+<span class="sd">        Tamanho do passo de integração. Deve ser positivo.</span>
+<span class="sd">    ordem : int or None, optional</span>
+<span class="sd">        Ordem do método Runge-Kutta (1, 2, 3, 4). Se None, não valida.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    funcs_valid, y0_valid, t0_valid, tf_valid, h_valid : list, np.ndarray, float, float, float</span>
+<span class="sd">        Entradas validadas e convertidas.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        Se os tipos de entrada não forem adequados.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se os valores não forem válidos.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validação das funções</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;funcs_input deve ser uma lista ou tupla. Recebido: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Deve haver pelo menos uma função no sistema&quot;</span><span class="p">)</span>
+
+    <span class="n">funcs_valid</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Todas as funções devem ser strings. Função </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">func</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A função </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> não pode estar vazia&quot;</span><span class="p">)</span>
+        <span class="n">funcs_valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+    <span class="c1"># Validação das condições iniciais</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y0 deve ser conversível para array numérico. Erro: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">y0</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y0 deve ser um array 1D. Recebido: </span><span class="si">{</span><span class="n">y0</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">D com shape </span><span class="si">{</span><span class="n">y0</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número de condições iniciais (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span><span class="si">}</span><span class="s2">) deve corresponder ao &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;número de funções (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y0</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Todas as condições iniciais em y0 devem ser finitas&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validação dos pontos temporais e passo</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t0</span><span class="p">)</span>
+        <span class="n">tf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tf</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;t0, tf e h devem ser números. Erro: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">t0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;O ponto inicial t0 deve ser finito&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">tf</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;O ponto final tf deve ser finito&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;O passo h deve ser finito&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;O passo h deve ser positivo. Recebido: </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tf</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Os pontos inicial e final devem ser diferentes. t0=</span><span class="si">{</span><span class="n">t0</span><span class="si">}</span><span class="s2">, tf=</span><span class="si">{</span><span class="n">tf</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Validação da ordem (se fornecida)</span>
+    <span class="k">if</span> <span class="n">ordem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ordem</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ordem</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A ordem deve ser um inteiro. Recebido: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">ordem</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ordem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A ordem deve ser 1, 2, 3 ou 4. Recebido: </span><span class="si">{</span><span class="n">ordem</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">funcs_valid</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="n">h</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_function_from_string</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cria uma função callable a partir de uma string matemática.</span>
+
+<span class="sd">    Esta função tenta múltiplas abordagens para converter uma expressão</span>
+<span class="sd">    matemática em string para uma função Python callable, com fallbacks</span>
+<span class="sd">    para máxima compatibilidade.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func_str : str</span>
+<span class="sd">        Expressão matemática como string (ex.: &#39;y - x**2&#39;).</span>
+<span class="sd">    variables : list of str</span>
+<span class="sd">        Nomes das variáveis na expressão (ex.: [&#39;x&#39;, &#39;y&#39;]).</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Se True, imprime informações sobre o processo de criação.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    callable</span>
+<span class="sd">        Função que pode ser chamada com os argumentos correspondentes.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se não for possível criar uma função válida da string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Criando função a partir de: </span><span class="si">{</span><span class="n">func_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Preparar a string: remover espaços, corrigir notação</span>
+    <span class="n">func_str</span> <span class="o">=</span> <span class="n">func_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="s1">&#39;**&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Corrigir multiplicação implícita (ex.: 2x -&gt; 2*x)</span>
+    <span class="n">func_str</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d)([a-zA-Z])&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1*\2&#39;</span><span class="p">,</span> <span class="n">func_str</span><span class="p">)</span>
+
+    <span class="c1"># Criar símbolos do SymPy</span>
+    <span class="n">symbols</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span>
+    <span class="n">symbols_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">symbols</span><span class="p">))</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Tentar primeiro com SymPy (mais robusto)</span>
+        <span class="n">expr</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sympify</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="o">**</span><span class="n">SYMPY_LOCALS</span><span class="p">,</span> <span class="o">**</span><span class="n">symbols_dict</span><span class="p">})</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">symbols</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Teste rápido da função</span>
+        <span class="n">test_args</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span>
+        <span class="n">test_result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">test_args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">test_result</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Função produz resultado não-finito no teste&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Função criada com sucesso usando SymPy&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Falhou com SymPy: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Tentando fallback com eval...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Fallback: usar eval com ambiente restrito</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número incorreto de argumentos. Esperado: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                   <span class="sa">f</span><span class="s2">&quot;recebido: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="n">local_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+                <span class="n">local_vars</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">local_vars</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">eval_error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na avaliação da função: </span><span class="si">{</span><span class="n">eval_error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Teste da função</span>
+            <span class="n">test_args</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span>
+            <span class="n">test_result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">test_args</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">test_result</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Função produz resultado não-finito no teste&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Função criada com sucesso usando eval&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">func</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">fallback_error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível criar função a partir de &#39;</span><span class="si">{</span><span class="n">func_str</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
+                           <span class="sa">f</span><span class="s2">&quot;Erro SymPy: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Erro fallback: </span><span class="si">{</span><span class="n">fallback_error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
 <div class="viewcode-block" id="pedir_dados_edo">
 <a class="viewcode-back" href="../../modules.html#codigos.edos.pedir_dados_edo">[documentos]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pedir_dados_edo</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtém entradas do usuário para resolução de EDOs (RK/Euler).</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtém entradas do usuário para resolução de EDOs com validação robusta.</span>
 
-<span class="sd">    A função solicita interativamente a função ``f(x, y)``, intervalo de integração,</span>
-<span class="sd">    condições iniciais e passo (``h``) ou número de subintervalos (``m``). Também</span>
-<span class="sd">    permite informar uma solução exata opcional.</span>
+<span class="sd">    Esta função solicita interativamente ao usuário os dados necessários para</span>
+<span class="sd">    resolver uma equação diferencial ordinária: a função f(x,y), o intervalo</span>
+<span class="sd">    de integração [a,b], as condições iniciais (x0,y0), e o passo de integração.</span>
+<span class="sd">    Também permite especificar uma solução exata opcional para comparação.</span>
+
+<span class="sd">    A função inclui validações abrangentes para garantir que os dados sejam</span>
+<span class="sd">    adequados para a resolução numérica da EDO.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict</span>
-<span class="sd">        Dicionário com chaves: &#39;func_input&#39;, &#39;a&#39;, &#39;b&#39;, &#39;x0&#39;, &#39;y0&#39;, &#39;h&#39;, &#39;m&#39;, &#39;xn&#39;,</span>
-<span class="sd">        &#39;solucao_exata&#39; (callable ou None) e &#39;sol_exata_expr&#39; (string).</span>
+<span class="sd">        Dicionário contendo todos os dados validados com as seguintes chaves:</span>
+<span class="sd">        - &#39;func_input&#39;: str, expressão da função f(x,y)</span>
+<span class="sd">        - &#39;a&#39;: float, limite inferior do intervalo</span>
+<span class="sd">        - &#39;b&#39;: float, limite superior do intervalo</span>
+<span class="sd">        - &#39;x0&#39;: float, ponto inicial das condições iniciais</span>
+<span class="sd">        - &#39;y0&#39;: float, valor inicial y(x0)</span>
+<span class="sd">        - &#39;h&#39;: float, tamanho do passo de integração</span>
+<span class="sd">        - &#39;m&#39;: int or None, número de subintervalos (se especificado)</span>
+<span class="sd">        - &#39;xn&#39;: float, ponto final (sempre igual a b)</span>
+<span class="sd">        - &#39;solucao_exata&#39;: callable or None, função da solução exata</span>
+<span class="sd">        - &#39;sol_exata_expr&#39;: str, expressão da solução exata</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se os dados inseridos forem inválidos ou inconsistentes.</span>
+<span class="sd">    KeyboardInterrupt</span>
+<span class="sd">        Se o usuário interromper a entrada (Ctrl+C).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Digite a função f(x,y) em notação matemática simples:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exemplo: y - x  (será interpretado como y - x)&quot;</span><span class="p">)</span>
-    <span class="n">func_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;f(x,y) = &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Entrada da função f(x,y) com validação</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Digite a função f(x,y) em notação matemática simples:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exemplo: y - x**2  (será interpretado como y - x²)&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Funções disponíveis: sin, cos, tan, exp, log, sqrt, pi, e, etc.&quot;</span><span class="p">)</span>
+            <span class="n">func_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;f(x,y) = &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Intervalo de integração [a,b]:&quot;</span><span class="p">)</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;a = &quot;</span><span class="p">))</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;b = &quot;</span><span class="p">))</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Condições iniciais:&quot;</span><span class="p">)</span>
-    <span class="n">x0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;x0 = &quot;</span><span class="p">))</span>
-    <span class="n">y0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;y0 = &quot;</span><span class="p">))</span>
-
-    <span class="c1"># passo: h ou m</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">escolha</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja informar passo por h ou por número de subintervalos m? [h/m]: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;h = &quot;</span><span class="p">))</span>
-                <span class="n">m</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">break</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Valor de h inválido. Tente novamente.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">func_input</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: A expressão da função não pode estar vazia. Tente novamente.&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
-        <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span>
+
+            <span class="c1"># Teste básico da função</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">m</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;m = &quot;</span><span class="p">))</span>
-                <span class="k">if</span> <span class="n">m</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;m deve ser inteiro positivo. Tente novamente.&quot;</span><span class="p">)</span>
+                <span class="n">test_func</span> <span class="o">=</span> <span class="n">_create_function_from_string</span><span class="p">(</span><span class="n">func_input</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="c1"># Teste numérico rápido</span>
+                <span class="n">test_result</span> <span class="o">=</span> <span class="n">test_func</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">test_result</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: A função produz resultado não-finito. Verifique a expressão.&quot;</span><span class="p">)</span>
                     <span class="k">continue</span>
-                <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">m</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calculado h = </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">break</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Valor de m inválido. Tente novamente.&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na expressão da função: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tente novamente.&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Escolha inválida. Digite &#39;h&#39; ou &#39;m&#39;.&quot;</span><span class="p">)</span>
 
-    <span class="n">xn</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="c1"># Entrada do intervalo [a,b] com validação</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Intervalo de integração [a,b]:&quot;</span><span class="p">)</span>
+                <span class="n">a_str</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;a = &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">a_str</span><span class="p">)</span>
+                <span class="n">b_str</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;b = &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">b_str</span><span class="p">)</span>
 
-    <span class="c1"># solução exata opcional</span>
-    <span class="n">solucao_exata</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">sol_exata_expr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Solução exata (y(x))? (pressione Enter se não houver): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">s</span><span class="p">:</span>
-        <span class="n">sol_exata_expr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="s1">&#39;**&#39;</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">x_sym</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-            <span class="c1"># usar o mapeamento global `SYMPY_LOCALS` (define sin, cos, pi, e, etc.)</span>
-            <span class="n">expr_sol</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sympify</span><span class="p">(</span><span class="n">sol_exata_expr</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
-            <span class="n">lam_sol</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x_sym</span><span class="p">,</span> <span class="n">expr_sol</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
-            <span class="k">def</span><span class="w"> </span><span class="nf">solucao_exata</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-                <span class="n">val</span> <span class="o">=</span> <span class="n">lam_sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-                <span class="c1"># tentar converter de numpy/sympy para float</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">b</span><span class="p">)):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Os limites devem ser finitos. Tente novamente.&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Os limites a e b devem ser diferentes. Tente novamente.&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="k">break</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Digite números válidos. Tente novamente.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Entrada das condições iniciais com validação</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Condições iniciais:&quot;</span><span class="p">)</span>
+                <span class="n">x0_str</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;x0 = &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">x0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x0_str</span><span class="p">)</span>
+                <span class="n">y0_str</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;y0 = &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">y0</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y0_str</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y0</span><span class="p">)):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: As condições iniciais devem ser finitas. Tente novamente.&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Verificar se x0 está no intervalo [a,b]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">x0</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Aviso: x0 = </span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2"> está fora do intervalo [</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+                <span class="k">break</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Digite números válidos. Tente novamente.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Escolha do passo: h ou m</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">escolha</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Deseja informar o passo por:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                              <span class="s2">&quot;  h - tamanho do passo diretamente</span><span class="se">\n</span><span class="s2">&quot;</span>
+                              <span class="s2">&quot;  m - número de subintervalos</span><span class="se">\n</span><span class="s2">&quot;</span>
+                              <span class="s2">&quot;Escolha [h/m]: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span>
+                    <span class="n">h_str</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;h = &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h_str</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: O passo h deve ser positivo. Tente novamente.&quot;</span><span class="p">)</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">):</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Aviso: h = </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2"> é maior que o intervalo |b-a| = </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">break</span>
+
+                <span class="k">elif</span> <span class="n">escolha</span> <span class="o">==</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span>
+                    <span class="n">m_str</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;m = &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m_str</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">m</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: O número de subintervalos m deve ser positivo. Tente novamente.&quot;</span><span class="p">)</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">:</span>  <span class="c1"># Limite razoável</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Número máximo de subintervalos é 10000. Tente novamente.&quot;</span><span class="p">)</span>
+                        <span class="k">continue</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">m</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calculado h = </span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">.8e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Escolha &#39;h&#39; ou &#39;m&#39;. Tente novamente.&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Digite um valor numérico válido. Tente novamente.&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Intervalo [a,b] tem comprimento zero. Tente novamente.&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+        <span class="n">xn</span> <span class="o">=</span> <span class="n">b</span>
+
+        <span class="c1"># Solução exata opcional</span>
+        <span class="n">solucao_exata</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">sol_exata_expr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Solução exata y(x) (pressione Enter se não houver): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="n">sol_exata_expr</span> <span class="o">=</span> <span class="n">s</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Criar função da solução exata</span>
+                <span class="n">x_sym</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+                <span class="n">expr_sol</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sympify</span><span class="p">(</span><span class="n">sol_exata_expr</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
+                <span class="n">lam_sol</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x_sym</span><span class="p">,</span> <span class="n">expr_sol</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
+
+                <span class="k">def</span><span class="w"> </span><span class="nf">solucao_exata</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">lam_sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                        <span class="c1"># Converter para float se possível</span>
+                        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">):</span>
+                            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">N</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expressão da solução exata inválida; ignorando solução exata.&quot;</span><span class="p">)</span>
-            <span class="n">sol_exata_expr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-            <span class="n">solucao_exata</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">N</span><span class="p">(</span><span class="n">expr_sol</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x_sym</span><span class="p">,</span> <span class="n">x</span><span class="p">)))</span>
 
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s1">&#39;func_input&#39;</span><span class="p">:</span> <span class="n">func_input</span><span class="p">,</span>
-        <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span>
-        <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span>
-        <span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="n">x0</span><span class="p">,</span>
-        <span class="s1">&#39;y0&#39;</span><span class="p">:</span> <span class="n">y0</span><span class="p">,</span>
-        <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span>
-        <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="n">m</span> <span class="k">if</span> <span class="s1">&#39;m&#39;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;xn&#39;</span><span class="p">:</span> <span class="n">xn</span><span class="p">,</span>
-        <span class="s1">&#39;solucao_exata&#39;</span><span class="p">:</span> <span class="n">solucao_exata</span> <span class="k">if</span> <span class="s1">&#39;solucao_exata&#39;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span> <span class="ow">and</span> <span class="n">sol_exata_expr</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;sol_exata_expr&#39;</span><span class="p">:</span> <span class="n">sol_exata_expr</span><span class="p">,</span>
-    <span class="p">}</span></div>
+                <span class="c1"># Teste da função</span>
+                <span class="n">test_val</span> <span class="o">=</span> <span class="n">solucao_exata</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">test_val</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: A solução exata produz valor não-finito em x0. Tente novamente.&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solução exata aceita.&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na expressão da solução exata: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tente novamente ou pressione Enter para pular.&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;func_input&#39;</span><span class="p">:</span> <span class="n">func_input</span><span class="p">,</span>
+            <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span>
+            <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span>
+            <span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="n">x0</span><span class="p">,</span>
+            <span class="s1">&#39;y0&#39;</span><span class="p">:</span> <span class="n">y0</span><span class="p">,</span>
+            <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span>
+            <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span>
+            <span class="s1">&#39;xn&#39;</span><span class="p">:</span> <span class="n">xn</span><span class="p">,</span>
+            <span class="s1">&#39;solucao_exata&#39;</span><span class="p">:</span> <span class="n">solucao_exata</span><span class="p">,</span>
+            <span class="s1">&#39;sol_exata_expr&#39;</span><span class="p">:</span> <span class="n">sol_exata_expr</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Entrada interrompida pelo usuário.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Erro inesperado na leitura dos dados: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span></div>
 
 
 
@@ -435,77 +811,138 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">runge_kutta</span><span class="p">(</span><span class="n">func_input</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xn</span><span class="p">,</span> <span class="n">ordem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve EDOs escalares usando métodos de Runge-Kutta de ordem 1 a 4.</span>
 
+<span class="sd">    Esta função implementa os métodos de Runge-Kutta para resolver numericamente</span>
+<span class="sd">    equações diferenciais ordinárias da forma dy/dx = f(x,y). Os métodos</span>
+<span class="sd">    implementados vão da ordem 1 (Euler) até a ordem 4 (Runge-Kutta clássico).</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    func_input : str</span>
-<span class="sd">        Expressão para f(x, y) como string (ex.: ``&#39;y&#39;`` para dy/dx = y).</span>
+<span class="sd">        Expressão matemática para f(x, y) como string. Deve ser uma função</span>
+<span class="sd">        válida das variáveis x e y. Exemplos: &#39;y&#39;, &#39;y - x**2&#39;, &#39;sin(x)*y&#39;.</span>
+<span class="sd">        Espaços são ignorados e &#39;^&#39; é convertido para &#39;**&#39;.</span>
 <span class="sd">    x0 : float</span>
-<span class="sd">        Ponto inicial.</span>
+<span class="sd">        Ponto inicial da integração (condição inicial para x).</span>
+<span class="sd">        Deve ser um número finito.</span>
 <span class="sd">    y0 : float</span>
-<span class="sd">        Valor inicial y(x0).</span>
+<span class="sd">        Valor inicial y(x0). Deve ser um número finito.</span>
 <span class="sd">    h : float</span>
-<span class="sd">        Tamanho do passo (deve dividir o intervalo (xn-x0)).</span>
+<span class="sd">        Tamanho do passo de integração. Deve ser positivo e dividir</span>
+<span class="sd">        exatamente o intervalo (xn - x0), caso contrário será truncado.</span>
 <span class="sd">    xn : float</span>
-<span class="sd">        Ponto final onde se integra até (xn &gt; x0 esperado).</span>
+<span class="sd">        Ponto final da integração. Deve ser diferente de x0.</span>
 <span class="sd">    ordem : int</span>
-<span class="sd">        Ordem do método (1, 2, 3 ou 4).</span>
+<span class="sd">        Ordem do método Runge-Kutta. Deve ser 1, 2, 3 ou 4:</span>
+<span class="sd">        - 1: Método de Euler (primeira ordem)</span>
+<span class="sd">        - 2: Euler modificado (segunda ordem)</span>
+<span class="sd">        - 3: Runge-Kutta de terceira ordem</span>
+<span class="sd">        - 4: Runge-Kutta clássico (quarta ordem)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    (list, list)</span>
-<span class="sd">        Tupla ``(x_vals, y_vals)`` com os pontos de amostragem e as aproximações y.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">func_input</span> <span class="o">=</span> <span class="n">func_input</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>  <span class="c1"># Remove espaços</span>
-    <span class="n">func_input</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d)([xy])&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1*\2&#39;</span><span class="p">,</span> <span class="n">func_input</span><span class="p">)</span>
-    <span class="c1"># Usar sympy para avaliar a função f(x,y)</span>
-    <span class="n">x_sym</span><span class="p">,</span> <span class="n">y_sym</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x y&#39;</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">expr</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sympify</span><span class="p">(</span><span class="n">func_input</span><span class="p">)</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lambdify</span><span class="p">((</span><span class="n">x_sym</span><span class="p">,</span> <span class="n">y_sym</span><span class="p">),</span> <span class="n">expr</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="c1"># fallback simples: usar eval em ambiente restrito com safe_math</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-            <span class="n">local_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func_input</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">local_vars</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="c1"># última tentativa: avaliar com python direto</span>
-                <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func_input</span><span class="p">)</span>
+<span class="sd">    x_vals : list of float</span>
+<span class="sd">        Lista dos pontos x onde a solução foi calculada, incluindo x0 e xn.</span>
+<span class="sd">    y_vals : list of float</span>
+<span class="sd">        Lista dos valores aproximados y(x) correspondentes aos pontos em x_vals.</span>
 
-    <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;h deve ser &gt; 0&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ordem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ordem deve ser 1, 2, 3 ou 4&#39;</span><span class="p">)</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">xn</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se os parâmetros forem inválidos (ver _validate_edo_inputs).</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        Se os tipos de entrada não forem adequados.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        Se ocorrer erro durante a avaliação da função f(x,y).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Os métodos de Runge-Kutta seguem as fórmulas clássicas (Euler, Euler modificado e RK4).</span>
+<span class="sd">    Por exemplo, para Euler: ``y_{n+1} = y_n + h * f(x_n, y_n)``.</span>
+<span class="sd">    Para RK4: ``y_{n+1} = y_n + (h/6) * (k1 + 2*k2 + 2*k3 + k4)``, onde ``k1``..``k4``</span>
+<span class="sd">    são os incrementos padrões do método.</span>
+<span class="sd">    A estabilidade e precisão aumentam com a ordem do método, mas também</span>
+<span class="sd">    o custo computacional.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Resolver dy/dx = y com y(0) = 1 no intervalo [0, 1]</span>
+<span class="sd">    &gt;&gt;&gt; x_vals, y_vals = runge_kutta(&#39;y&#39;, 0, 1, 0.1, 1, 4)</span>
+<span class="sd">    &gt;&gt;&gt; print(f&quot;Solução em x=1: {y_vals[-1]:.6f}&quot;)  # Aproxima e^1 ≈ 2.718282</span>
+
+<span class="sd">    &gt;&gt;&gt; # EDO não-linear: dy/dx = y - x²</span>
+<span class="sd">    &gt;&gt;&gt; x_vals, y_vals = runge_kutta(&#39;y - x**2&#39;, 0, 1, 0.1, 1, 2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validações de entrada</span>
+    <span class="n">func_input</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xn</span> <span class="o">=</span> <span class="n">_validate_edo_inputs</span><span class="p">(</span><span class="n">func_input</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">xn</span><span class="p">,</span> <span class="n">ordem</span><span class="p">)</span>
+
+    <span class="c1"># Preparar a expressão da função</span>
+    <span class="n">func_input</span> <span class="o">=</span> <span class="n">func_input</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>  <span class="c1"># Remove espaços</span>
+    <span class="n">func_input</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d)([xy])&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1*\2&#39;</span><span class="p">,</span> <span class="n">func_input</span><span class="p">)</span>  <span class="c1"># Corrigir multiplicação implícita</span>
+
+    <span class="c1"># Criar função f(x,y) com fallbacks robustos</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">_create_function_from_string</span><span class="p">(</span><span class="n">func_input</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível criar a função f(x,y) a partir de &#39;</span><span class="si">{</span><span class="n">func_input</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Calcular número de passos</span>
+    <span class="n">n_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">xn</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
+
+    <span class="c1"># Avisar se o passo não divide exatamente o intervalo</span>
+    <span class="n">remainder</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xn</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_steps</span> <span class="o">*</span> <span class="n">h</span>
+    <span class="k">if</span> <span class="n">remainder</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Aviso: O passo h=</span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2"> não divide exatamente o intervalo [</span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">xn</span><span class="si">}</span><span class="s2">]. &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;Será integrado até x=</span><span class="si">{</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n_steps</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> em </span><span class="si">{</span><span class="n">n_steps</span><span class="si">}</span><span class="s2"> passos.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Inicializar listas de resultados</span>
     <span class="n">x_vals</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">y_vals</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">y0</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
     <span class="n">x_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">y_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-    
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">k1</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-            <span class="n">k2</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k1</span><span class="p">)</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="n">k2</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">k1</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-            <span class="n">k2</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">k3</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">k1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k2</span><span class="p">)</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">k2</span> <span class="o">+</span> <span class="n">k3</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="n">k1</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-            <span class="n">k2</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">k3</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">k4</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k3</span><span class="p">)</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k2</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k3</span> <span class="o">+</span> <span class="n">k4</span><span class="p">)</span>
 
-        <span class="n">x</span> <span class="o">+=</span> <span class="n">h</span>
-        <span class="n">x_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">y_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="c1"># Loop principal de integração</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Método de Euler</span>
+                <span class="n">y_new</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># Euler Modificado (Runge-Kutta 2ª ordem)</span>
+                <span class="n">k1</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="n">k2</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k1</span><span class="p">)</span>
+                <span class="n">y_new</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="n">k2</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="c1"># Runge-Kutta 3ª ordem</span>
+                <span class="n">k1</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="n">k2</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">k3</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">k1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">k2</span><span class="p">)</span>
+                <span class="n">y_new</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">k2</span> <span class="o">+</span> <span class="n">k3</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="c1"># Runge-Kutta 4ª ordem (clássico)</span>
+                <span class="n">k1</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="n">k2</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">k3</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">k4</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">k3</span><span class="p">)</span>
+                <span class="n">y_new</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">k2</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">k3</span> <span class="o">+</span> <span class="n">k4</span><span class="p">)</span>
+
+            <span class="c1"># Verificar se o resultado é finito</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y_new</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado não-finito no passo </span><span class="si">{</span><span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: y = </span><span class="si">{</span><span class="n">y_new</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Atualizar valores</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">y_new</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="n">h</span>
+
+            <span class="n">x_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">y_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na integração no passo </span><span class="si">{</span><span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> (x=</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span></div>
 
@@ -556,111 +993,181 @@
 <div class="viewcode-block" id="runge_kutta_sistema">
 <a class="viewcode-back" href="../../modules.html#codigos.edos.runge_kutta_sistema">[documentos]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">runge_kutta_sistema</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">,</span> <span class="n">u0</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">ordem</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve sistemas de EDOs usando Runge-Kutta (vetorial).</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve sistemas de EDOs usando métodos de Runge-Kutta vetoriais.</span>
+
+<span class="sd">    Esta função resolve numericamente sistemas de equações diferenciais ordinárias</span>
+<span class="sd">    da forma dy/dt = f(t,y), onde y é um vetor de variáveis dependentes.</span>
+<span class="sd">    Implementa os métodos de Runge-Kutta de ordem 1 a 4 para sistemas.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    funcs_input : list of str or callables</span>
-<span class="sd">        Lista de expressões/funcões que descrevem cada componente do sistema. Use a notação</span>
-<span class="sd">        ``y[1]``, ``y[2]`` etc. quando passar strings (1-based index).</span>
+<span class="sd">    funcs_input : list of str</span>
+<span class="sd">        Lista de expressões matemáticas para as funções f_i(t, y) do sistema.</span>
+<span class="sd">        Cada string deve usar notação y[1], y[2], ... para as variáveis</span>
+<span class="sd">        (indexação 1-based). Exemplo: [&#39;y[2]&#39;, &#39;y[1] - y[2]&#39;].</span>
 <span class="sd">    u0 : array_like</span>
-<span class="sd">        Vetor de condições iniciais (tamanho n, onde n é número de equações).</span>
+<span class="sd">        Vetor de condições iniciais y(t0). Deve ter o mesmo comprimento</span>
+<span class="sd">        que funcs_input. Todos os valores devem ser finitos.</span>
 <span class="sd">    t0 : float</span>
-<span class="sd">        Tempo inicial.</span>
+<span class="sd">        Tempo inicial da integração. Deve ser finito.</span>
 <span class="sd">    tf : float</span>
-<span class="sd">        Tempo final para integração.</span>
+<span class="sd">        Tempo final da integração. Deve ser diferente de t0.</span>
 <span class="sd">    h : float</span>
-<span class="sd">        Passo de tempo.</span>
+<span class="sd">        Tamanho do passo de integração. Deve ser positivo.</span>
 <span class="sd">    ordem : int</span>
-<span class="sd">        Ordem do método de Runge-Kutta (1-4).</span>
+<span class="sd">        Ordem do método Runge-Kutta (1, 2, 3 ou 4).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    (list, ndarray)</span>
-<span class="sd">        Tupla ``(t_vals, u_vals)`` onde ``t_vals`` é lista de tempos e ``u_vals`` é array (m x n)</span>
-<span class="sd">        com as soluções em cada tempo.</span>
+<span class="sd">    t_vals : list of float</span>
+<span class="sd">        Lista dos pontos temporais onde a solução foi calculada,</span>
+<span class="sd">        incluindo t0 e tf (aproximadamente).</span>
+<span class="sd">    u_vals : ndarray</span>
+<span class="sd">        Array de shape (n_pontos, n_equacoes) contendo os valores</span>
+<span class="sd">        da solução em cada ponto temporal.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se as entradas não forem válidas (ver _validate_sistema_edo_inputs).</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        Se os tipos de entrada não forem adequados.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        Se ocorrer erro durante a integração do sistema.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    O sistema é resolvido usando a formulação vetorial dos métodos de Runge-Kutta.</span>
+<span class="sd">    Em termos práticos, aplica-se a versão vetorial das fórmulas escalares (Euler,</span>
+<span class="sd">    RK2/3/4). Por exemplo, em RK4 cada :math:`k_i` é um vetor de incrementos e</span>
+<span class="sd">    a combinação final segue a soma ponderada usual: ``y_{n+1} = y_n + (h/6)*(k1+2*k2+2*k3+k4)``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Sistema linear: dy1/dt = y2, dy2/dt = -y1</span>
+<span class="sd">    &gt;&gt;&gt; funcs = [&#39;y[2]&#39;, &#39;-y[1]&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y0 = [1, 0]  # y1(0)=1, y2(0)=0</span>
+<span class="sd">    &gt;&gt;&gt; t_vals, y_vals = runge_kutta_sistema(funcs, y0, 0, 2*np.pi, 0.1, 4)</span>
+<span class="sd">    &gt;&gt;&gt; # y_vals[-1] ≈ [cos(2π), -sin(2π)] ≈ [1, 0]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Preprocessar cada função do sistema para aceitar y[1], y[2], ... (1-based)</span>
+    <span class="c1"># Validações de entrada</span>
+    <span class="n">funcs_input</span><span class="p">,</span> <span class="n">u0</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">_validate_sistema_edo_inputs</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">,</span> <span class="n">u0</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">ordem</span><span class="p">)</span>
+
+    <span class="n">n_equacoes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
+
+    <span class="c1"># Preparar funções do sistema</span>
     <span class="n">funcs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">func_input</span> <span class="ow">in</span> <span class="n">funcs_input</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">func_input</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">funcs_input</span><span class="p">):</span>
         <span class="n">expr</span> <span class="o">=</span> <span class="n">func_input</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="s1">&#39;**&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="c1"># Substituir y[1] por y1, y[2] por y2, etc. (variáveis simbólicas)</span>
+
+        <span class="c1"># Substituir y[1], y[2], ... por y1, y2, ... (variáveis simbólicas)</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">repl_idx_name</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="n">n_equacoes</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Índice y[</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">] fora do intervalo válido [1, </span><span class="si">{</span><span class="n">n_equacoes</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;y</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s1">&#39;</span>
+
         <span class="n">expr_named</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;y\[(\d+)\]&#39;</span><span class="p">,</span> <span class="n">repl_idx_name</span><span class="p">,</span> <span class="n">expr</span><span class="p">)</span>
 
-        <span class="c1"># Criar símbolos x, y1, y2, ... conforme o número de equações</span>
-        <span class="n">y_symbols</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;y</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]))</span>
+        <span class="c1"># Expressão preparada para compilação (não imprimir em execução normal)</span>
+
+        <span class="c1"># Criar símbolos: x (tempo) e y1, y2, ... (variáveis do sistema)</span>
+        <span class="n">y_symbols</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;y</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_equacoes</span><span class="p">)]))</span>
         <span class="n">x_sym</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-        <span class="c1"># mapear nomes para símbolos</span>
+
+        <span class="c1"># Mapear nomes para símbolos</span>
         <span class="n">locals_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x_sym</span><span class="p">}</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ys</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">y_symbols</span><span class="p">):</span>
-            <span class="n">locals_map</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;y</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ys</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">ys</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">y_symbols</span><span class="p">):</span>
+            <span class="n">locals_map</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;y</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ys</span>
 
         <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Tentar criar função com SymPy</span>
             <span class="n">expr_sym</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sympify</span><span class="p">(</span><span class="n">expr_named</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">locals_map</span><span class="p">)</span>
-            <span class="c1"># lambdify aceita (x, y1, y2, ...)</span>
-            <span class="n">lam</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lambdify</span><span class="p">((</span><span class="n">x_sym</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">y_symbols</span><span class="p">),</span> <span class="n">expr_sym</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
-            <span class="k">def</span><span class="w"> </span><span class="nf">make_func_from_lam</span><span class="p">(</span><span class="n">lf</span><span class="p">):</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-                    <span class="c1"># y é array-like; passar cada componente como argumento</span>
-                    <span class="k">return</span> <span class="n">lf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;tolist&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
-                <span class="k">return</span> <span class="n">f</span>
-            <span class="n">funcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_func_from_lam</span><span class="p">(</span><span class="n">lam</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="c1"># fallback para compatibilidade com código anterior</span>
-            <span class="k">def</span><span class="w"> </span><span class="nf">make_func</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-                    <span class="n">local</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
+            <span class="n">lam</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lambdify</span><span class="p">((</span><span class="n">x_sym</span><span class="p">,)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">y_symbols</span><span class="p">),</span> <span class="n">expr_sym</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">):</span>
+                <span class="c1"># y é array-like; passar cada componente como argumento</span>
+                <span class="k">return</span> <span class="n">lam</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;tolist&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
+
+            <span class="n">funcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Fallback para eval com ambiente restrito</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">expr_str</span><span class="o">=</span><span class="n">expr_named</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">):</span>
+                    <span class="c1"># Criar dicionário local com x e componentes de y</span>
+                    <span class="n">local_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;np&#39;</span><span class="p">:</span> <span class="n">np</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_equacoes</span><span class="p">):</span>
+                        <span class="n">local_vars</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;y</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">local</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">expr_str</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">local_vars</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">f</span>
-            <span class="n">funcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_func</span><span class="p">(</span><span class="n">expr</span><span class="p">))</span>
-    
-    <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;h deve ser &gt; 0&#39;</span><span class="p">)</span>
-    <span class="n">t_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">t0</span><span class="p">]</span>
+                        <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">expr_str</span><span class="p">)</span>
+
+                <span class="n">funcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">fallback_error</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível criar função </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> a partir de &#39;</span><span class="si">{</span><span class="n">func_input</span><span class="si">}</span><span class="s2">&#39;: &quot;</span>
+                               <span class="sa">f</span><span class="s2">&quot;SymPy: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, Fallback: </span><span class="si">{</span><span class="n">fallback_error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Inicializar resultados</span>
+    <span class="n">t_vals</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">t0</span><span class="p">)]</span>
     <span class="n">u_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>  <span class="c1"># número de equações</span>
-    
-    <span class="k">while</span> <span class="n">t0</span> <span class="o">&lt;</span> <span class="n">tf</span><span class="p">:</span>
-        <span class="n">step</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">tf</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>  <span class="c1"># last step may be smaller than h</span>
-        <span class="c1"># Evitar passo nulo que causaria loop infinito</span>
-        <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Passo nulo ou intervalo concluído; interrompendo resolução do sistema.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Loop de integração</span>
+    <span class="n">t_current</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t0</span><span class="p">)</span>
+    <span class="n">u_current</span> <span class="o">=</span> <span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="n">t_current</span> <span class="o">&lt;</span> <span class="n">tf</span><span class="p">:</span>
+        <span class="c1"># Calcular passo atual (último passo pode ser menor)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">tf</span> <span class="o">-</span> <span class="n">t_current</span><span class="p">)</span>
+
+        <span class="c1"># Evitar passo nulo</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;=</span> <span class="mf">1e-15</span><span class="p">:</span>
             <span class="k">break</span>
-        <span class="k">if</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># Euler</span>
-            <span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">u_new</span> <span class="o">=</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">step</span> <span class="o">*</span> <span class="n">k1</span>
-        <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="c1"># RK2</span>
-            <span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">k2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">step</span> <span class="o">*</span> <span class="n">k1</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">u_new</span> <span class="o">=</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">step</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="n">k2</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="c1"># RK3</span>
-            <span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">k2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="n">step</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">k1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">k3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">step</span><span class="o">*</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">step</span><span class="o">*</span><span class="n">k2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">u_new</span> <span class="o">=</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">step</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">k2</span> <span class="o">+</span> <span class="n">k3</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="c1"># RK4</span>
-            <span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">k2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="n">step</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">k1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">k3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="n">step</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">k2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">k4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">k3</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
-            <span class="n">u_new</span> <span class="o">=</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">step</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">k2</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">k3</span> <span class="o">+</span> <span class="n">k4</span><span class="p">)</span>
-        
-        <span class="n">t0</span> <span class="o">+=</span> <span class="n">step</span>
-        <span class="c1"># append new time and value (ensures final tf is included)</span>
-        <span class="n">t_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t0</span><span class="p">)</span>
-        <span class="n">u_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u_new</span><span class="p">)</span>
-    
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Método de Euler</span>
+                <span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span><span class="p">,</span> <span class="n">u_current</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">u_new</span> <span class="o">=</span> <span class="n">u_current</span> <span class="o">+</span> <span class="n">step</span> <span class="o">*</span> <span class="n">k1</span>
+
+            <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># Runge-Kutta 2ª ordem</span>
+                <span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span><span class="p">,</span> <span class="n">u_current</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">k2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">u_current</span> <span class="o">+</span> <span class="n">step</span> <span class="o">*</span> <span class="n">k1</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">u_new</span> <span class="o">=</span> <span class="n">u_current</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">step</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="n">k2</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="c1"># Runge-Kutta 3ª ordem</span>
+                <span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span><span class="p">,</span> <span class="n">u_current</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">k2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span> <span class="o">+</span> <span class="n">step</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">u_current</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">k1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">k3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">u_current</span> <span class="o">-</span> <span class="n">step</span><span class="o">*</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">step</span><span class="o">*</span><span class="n">k2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">u_new</span> <span class="o">=</span> <span class="n">u_current</span> <span class="o">+</span> <span class="p">(</span><span class="n">step</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">k2</span> <span class="o">+</span> <span class="n">k3</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="c1"># Runge-Kutta 4ª ordem</span>
+                <span class="n">k1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span><span class="p">,</span> <span class="n">u_current</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">k2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span> <span class="o">+</span> <span class="n">step</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">u_current</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">k1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">k3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span> <span class="o">+</span> <span class="n">step</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">u_current</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">k2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">k4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">t_current</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">u_current</span> <span class="o">+</span> <span class="n">step</span><span class="o">*</span><span class="n">k3</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">])</span>
+                <span class="n">u_new</span> <span class="o">=</span> <span class="n">u_current</span> <span class="o">+</span> <span class="p">(</span><span class="n">step</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">k2</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">k3</span> <span class="o">+</span> <span class="n">k4</span><span class="p">)</span>
+
+            <span class="c1"># Verificar se os resultados são finitos</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">u_new</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultado não-finito no tempo t=</span><span class="si">{</span><span class="n">t_current</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Atualizar valores</span>
+            <span class="n">t_current</span> <span class="o">+=</span> <span class="n">step</span>
+            <span class="n">u_current</span> <span class="o">=</span> <span class="n">u_new</span>
+
+            <span class="n">t_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t_current</span><span class="p">)</span>
+            <span class="n">u_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u_current</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na integração em t=</span><span class="si">{</span><span class="n">t_current</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">t_vals</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">u_vals</span><span class="p">)</span></div>
 
 

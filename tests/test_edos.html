@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pt-BR" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testes: test_edos &mdash; Documentação Cálculo Numérico </title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8946c2f5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=71a39b36"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Buscar" href="../search.html" />
+    <link rel="next" title="Testes: test_inputs_calcnum" href="test_inputs_calcnum.html" />
+    <link rel="prev" title="Testes: test_bases" href="test_bases.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Cálculo Numérico
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Pesquisar documentos" aria-label="Pesquisar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Menu de navegação">
+              <p class="caption" role="heading"><span class="caption-text">Conteúdo:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../calcnum_matrix.html">Matriz de Cobertura — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial_calcnum.html">Tutorial — <cite>calcnum</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bases.html">Conversões de Bases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sistemas.html">Sistemas Lineares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolacoes.html">Interpolações</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ajustes.html">Ajustes de Curvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integracoes.html">Integrações Numéricas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tests_unitarios.html">Documentação dos Testes Unitários</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="test_ajustecurvas.html">Testes: test_ajustecurvas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_bases.html">Testes: test_bases</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Testes: test_edos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_inputs_calcnum.html">Testes: test_inputs_calcnum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_integracoes.html">Testes: test_integracoes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_interpolacoes.html">Testes: test_interpolacoes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_raizes.html">Testes: test_raizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_sistemaslineares.html">Testes: test_sistemaslineares</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../disclaimer.html">Aviso — Passos futuros</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Menu de navegação móvel" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Cálculo Numérico</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Navegação da página">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tests_unitarios.html">Documentação dos Testes Unitários</a></li>
+      <li class="breadcrumb-item active">Testes: test_edos</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tests/test_edos.rst.txt" rel="nofollow"> Ver código-fonte da página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="testes-test-edos">
+<h1>Testes: test_edos<a class="headerlink" href="#testes-test-edos" title="Link para este cabeçalho"></a></h1>
+<p>Testes para o módulo <cite>codigos.edos</cite>.</p>
+<p>Cobre solver Runge-Kutta (ordens 1-4) para EDOs escalares e sistemas, bem
+como validações de entradas e tratamento de passos/resíduos.</p>
+<p>Conteúdo dos testes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="sd">&quot;&quot;&quot;Testes para o módulo `codigos.edos`.</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="sd">Cobre solver Runge-Kutta (ordens 1-4) para EDOs escalares e sistemas, bem</span>
+<span class="linenos"> 4</span><span class="sd">como validações de entradas e tratamento de passos/resíduos.&quot;&quot;&quot;</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos"> 7</span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="linenos"> 8</span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="linenos"> 9</span><span class="kn">from</span><span class="w"> </span><span class="nn">codigos</span><span class="w"> </span><span class="kn">import</span> <span class="n">edos</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">def</span><span class="w"> </span><span class="nf">test_runge_kutta_scalar_exp</span><span class="p">():</span>
+<span class="linenos">12</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Verifica RK (4ª ordem) para dy/dx = y com y(0)=1; y(1) ≈ e.&quot;&quot;&quot;</span>
+<span class="linenos">13</span>    <span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span> <span class="o">=</span> <span class="n">edos</span><span class="o">.</span><span class="n">runge_kutta</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">14</span>    <span class="n">approx</span> <span class="o">=</span> <span class="n">y_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">15</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">approx</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">1.0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">5e-4</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="k">def</span><span class="w"> </span><span class="nf">test_runge_kutta_system_exp</span><span class="p">():</span>
+<span class="linenos">19</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sistema simples: u0&#39; = u0, u1&#39; = 2*u1; verifica solução analítica em t=1.&quot;&quot;&quot;</span>
+<span class="linenos">20</span>    <span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;y[1]&#39;</span><span class="p">,</span> <span class="s1">&#39;2*y[2]&#39;</span><span class="p">]</span>
+<span class="linenos">21</span>    <span class="n">t_vals</span><span class="p">,</span> <span class="n">u_vals</span> <span class="o">=</span> <span class="n">edos</span><span class="o">.</span><span class="n">runge_kutta_sistema</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">22</span>    <span class="n">u_end</span> <span class="o">=</span> <span class="n">u_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">23</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u_end</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">1.0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+<span class="linenos">24</span>    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u_end</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-3</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="k">def</span><span class="w"> </span><span class="nf">test_passos_edo_with_m</span><span class="p">():</span>
+<span class="linenos">28</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Verifica cálculo de h e xn dado número de subintervalos m.&quot;&quot;&quot;</span>
+<span class="linenos">29</span>    <span class="n">h</span><span class="p">,</span> <span class="n">xn</span> <span class="o">=</span> <span class="n">edos</span><span class="o">.</span><span class="n">passos_edo</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="linenos">30</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.1</span>
+<span class="linenos">31</span>    <span class="k">assert</span> <span class="n">xn</span> <span class="o">==</span> <span class="mf">1.0</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span><span class="k">def</span><span class="w"> </span><span class="nf">test_runge_kutta_orders_accuracy</span><span class="p">():</span>
+<span class="linenos">35</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Valida precisão aproximada por ordem do método Runge-Kutta.&quot;&quot;&quot;</span>
+<span class="linenos">36</span>    <span class="n">exact</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">e</span>
+<span class="linenos">37</span>    <span class="n">h</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="linenos">38</span>    <span class="n">tol_order</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="mf">5e-3</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mf">5e-5</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span><span class="mf">1e-6</span><span class="p">}</span>
+<span class="linenos">39</span>    <span class="k">for</span> <span class="n">order</span><span class="p">,</span> <span class="n">tol</span> <span class="ow">in</span> <span class="n">tol_order</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="linenos">40</span>        <span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span> <span class="o">=</span> <span class="n">edos</span><span class="o">.</span><span class="n">runge_kutta</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+<span class="linenos">41</span>        <span class="n">approx</span> <span class="o">=</span> <span class="n">y_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">42</span>        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">approx</span> <span class="o">-</span> <span class="n">exact</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span>
+<span class="linenos">43</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="k">def</span><span class="w"> </span><span class="nf">test_runge_kutta_h_nonpositive_raises</span><span class="p">():</span>
+<span class="linenos">46</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;h &lt;= 0 deve levantar ValueError.&quot;&quot;&quot;</span>
+<span class="linenos">47</span>    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="linenos">48</span>        <span class="n">edos</span><span class="o">.</span><span class="n">runge_kutta</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">49</span>
+<span class="linenos">50</span>
+<span class="linenos">51</span><span class="k">def</span><span class="w"> </span><span class="nf">test_runge_kutta_sistema_last_step</span><span class="p">():</span>
+<span class="linenos">52</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Garante que o tempo final coincide exatamente com tf quando o último passo é menor que h.&quot;&quot;&quot;</span>
+<span class="linenos">53</span>    <span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;y[1]&#39;</span><span class="p">,</span> <span class="s1">&#39;y[2]&#39;</span><span class="p">]</span>
+<span class="linenos">54</span>    <span class="n">t_vals</span><span class="p">,</span> <span class="n">u_vals</span> <span class="o">=</span> <span class="n">edos</span><span class="o">.</span><span class="n">runge_kutta_sistema</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">55</span>    <span class="k">assert</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">t_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
+<span class="linenos">56</span>
+<span class="linenos">57</span>
+<span class="linenos">58</span><span class="k">def</span><span class="w"> </span><span class="nf">test_runge_kutta_sistema_predator_prey</span><span class="p">():</span>
+<span class="linenos">59</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Teste qualitativo da simulação de Lotka-Volterra (predador-presa).&quot;&quot;&quot;</span>
+<span class="linenos">60</span>    <span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;y[1] - y[1]*y[2]&#39;</span><span class="p">,</span> <span class="s1">&#39;-y[2] + y[1]*y[2]&#39;</span><span class="p">]</span>
+<span class="linenos">61</span>    <span class="n">t_vals</span><span class="p">,</span> <span class="n">u_vals</span> <span class="o">=</span> <span class="n">edos</span><span class="o">.</span><span class="n">runge_kutta_sistema</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">62</span>    <span class="c1"># Check that values are positive and reasonable</span>
+<span class="linenos">63</span>    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">u</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">u_vals</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="linenos">64</span>    <span class="k">assert</span> <span class="n">u_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">2.0</span>  <span class="c1"># initial</span>
+<span class="linenos">65</span>    <span class="k">assert</span> <span class="n">u_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.0</span>
+<span class="linenos">66</span>
+<span class="linenos">67</span>
+<span class="linenos">68</span><span class="k">def</span><span class="w"> </span><span class="nf">test_runge_kutta_negative_h_raises</span><span class="p">():</span>
+<span class="linenos">69</span>    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="linenos">70</span>        <span class="n">edos</span><span class="o">.</span><span class="n">runge_kutta</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="linenos">71</span>
+<span class="linenos">72</span>
+<span class="linenos">73</span><span class="k">def</span><span class="w"> </span><span class="nf">test_runge_kutta_invalid_order_raises</span><span class="p">():</span>
+<span class="linenos">74</span>    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="linenos">75</span>        <span class="n">edos</span><span class="o">.</span><span class="n">runge_kutta</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Resumo das funções de teste:</p>
+<ul class="simple">
+<li><p><strong>test_runge_kutta_scalar_exp</strong>: Verifica RK (4ª ordem) para dy/dx = y com y(0)=1; y(1) ≈ e.</p></li>
+<li><p><strong>test_runge_kutta_system_exp</strong>: Sistema simples: u0’ = u0, u1’ = 2*u1; verifica solução analítica em t=1.</p></li>
+<li><p><strong>test_passos_edo_with_m</strong>: Verifica cálculo de h e xn dado número de subintervalos m.</p></li>
+<li><p><strong>test_runge_kutta_orders_accuracy</strong>: Valida precisão aproximada por ordem do método Runge-Kutta.</p></li>
+<li><p><strong>test_runge_kutta_h_nonpositive_raises</strong>: h &lt;= 0 deve levantar ValueError.</p></li>
+<li><p><strong>test_runge_kutta_sistema_last_step</strong>: Garante que o tempo final coincide exatamente com tf quando o último passo é menor que h.</p></li>
+<li><p><strong>test_runge_kutta_sistema_predator_prey</strong>: Teste qualitativo da simulação de Lotka-Volterra (predador-presa).</p></li>
+<li><p><strong>test_runge_kutta_negative_h_raises</strong>: _Sem docstring._</p></li>
+<li><p><strong>test_runge_kutta_invalid_order_raises</strong>: _Sem docstring._</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Rodapé">
+        <a href="test_bases.html" class="btn btn-neutral float-left" title="Testes: test_bases" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="test_inputs_calcnum.html" class="btn btn-neutral float-right" title="Testes: test_inputs_calcnum" accesskey="n" rel="next">Próximo <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Direitos autorais 2025, Pedro Henrique Rocha de Andrade.</p>
+  </div>
+
+  Compilado com <a href="https://www.sphinx-doc.org/">Sphinx</a> usando um
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    fornecido por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

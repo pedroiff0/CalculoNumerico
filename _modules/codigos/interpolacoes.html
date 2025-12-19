@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../integracoes.html">Integrações Numéricas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tests_unitarios.html">Documentação dos Testes Unitários</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../disclaimer.html">Aviso — Passos futuros</a></li>
 </ul>
 
@@ -600,10 +601,11 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;O ponto de interpolação xp deve ser finito (não NaN ou infinito)&quot;</span><span class="p">)</span>
 
     <span class="c1"># Configuração dos flags de saída</span>
+    <span class="c1"># Se verbose=True e tabela/grafico não forem informados, habilita-os automaticamente</span>
     <span class="k">if</span> <span class="n">tabela</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># Exibição da tabela se solicitado</span>
     <span class="k">if</span> <span class="n">tabela</span><span class="p">:</span>
@@ -804,10 +806,11 @@
     <span class="n">tabela_dif_finitas</span> <span class="o">=</span> <span class="n">tabela_diferencas_finitas</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
     <span class="c1"># Configuração dos flags de saída</span>
+    <span class="c1"># Se verbose=True e tabela/grafico não forem informados, habilita-os automaticamente</span>
     <span class="k">if</span> <span class="n">tabela</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># Exibição da tabela se solicitado</span>
     <span class="k">if</span> <span class="n">tabela</span><span class="p">:</span>
@@ -988,18 +991,20 @@
     <span class="n">yp</span> <span class="o">=</span> <span class="mf">0.0</span>
 
     <span class="c1"># Configuração dos flags de saída</span>
+    <span class="c1"># Se verbose=True e tabela/grafico não forem informados, habilita-os automaticamente</span>
     <span class="k">if</span> <span class="n">tabela</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-    <span class="c1"># Exibição da tabela de pontos se solicitado</span>
-    <span class="k">if</span> <span class="n">tabela</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Tabela de pontos de interpolação:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; i |   x[i]   |   y[i]   &quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---|----------|----------&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">max_grau</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2d&quot;</span><span class="p">)</span>
+    <span class="c1"># Exibição da tabela de pontos se solicitado (detalhes impressos apenas em verbose)</span>
+    <span class="k">if</span> <span class="n">tabela</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Tabela de pontos de interpolação:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; i |   x[i]   |   y[i]   &quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---|----------|----------&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">max_grau</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Cálculo da interpolação</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>

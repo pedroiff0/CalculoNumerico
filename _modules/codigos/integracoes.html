@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../integracoes.html">Integrações Numéricas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tests_unitarios.html">Documentação dos Testes Unitários</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../disclaimer.html">Aviso — Passos futuros</a></li>
 </ul>
 
@@ -536,105 +537,174 @@
 
 <div class="viewcode-block" id="newton_cotes">
 <a class="viewcode-back" href="../../modules.html#codigos.integracoes.newton_cotes">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">newton_cotes</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">ordem</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Newton-Cotes para integração numérica.</span>
-<span class="sd">    </span>
-<span class="sd">    Suporta ordens 1 (Trapézio), 2 (Simpson 1/3), 3 (Simpson 3/8) e 4.</span>
-<span class="sd">    Fórmulas:</span>
-<span class="sd">    Ordem 1 (Trapézio): int_a^b f(x) dx ≈ (h/2) * [f(x0) + f(x1)]</span>
-<span class="sd">    Ordem 2 (Simpson 1/3): int_a^b f(x) dx ≈ (h/3) * [f(x0) + 4f(x1) + f(x2)]</span>
-<span class="sd">    Ordem 3 (Simpson 3/8): int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + f(x3)]</span>
-<span class="sd">    </span>
-<span class="sd">    Quando usar? Para integrais simples com poucos pontos (&gt;= ordem)</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">newton_cotes</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">ordem</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grafico</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Newton-Cotes para integração numérica (ordens 1,2,3).</span>
+
+<span class="sd">    Otimizações</span>
+<span class="sd">    -----------</span>
+<span class="sd">    - Tenta usar `sympy.lambdify` para avaliar a função de forma vetorizada quando possível.</span>
+
+<span class="sd">    Verbose &amp; Gráficos</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    - `verbose=False` (padrão): execução silenciosa (comportamento compatível com testes automatizados).</span>
+<span class="sd">    - `verbose=True`: imprime detalhes auxiliares e, por padrão, habilita `grafico=True`.</span>
+
+<span class="sd">    Parâmetros</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : str</span>
+<span class="sd">        Expressão da função em termos de ``x``.</span>
+<span class="sd">    a, b : float</span>
+<span class="sd">        Limites do intervalo de integração (números finitos, distintos).</span>
+<span class="sd">    ordem : int</span>
+<span class="sd">        Ordem da regra (1, 2 ou 3).</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Habilita saídas detalhadas e gráficos (padrão: False).</span>
+<span class="sd">    grafico : bool or None, optional</span>
+<span class="sd">        Controla plotagem: se None e ``verbose`` for True, é habilitado; caso contrário, respeitado.</span>
+
+<span class="sd">    Retorno</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Aproximação da integral.</span>
+
+<span class="sd">    Notas de teste</span>
+<span class="sd">    --------------</span>
+<span class="sd">    Os testes unitários que cobrem Newton-Cotes e regras compostas estão em ``tests/test_integracoes.py``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validações básicas de entrada</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">);</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Os limites a e b devem ser numéricos e conversíveis para float.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Os limites a e b devem ser finitos (não NaN ou infinito).&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Os limites a e b não podem ser iguais.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ordem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Ordem inválida para Newton-Cotes. Deve ser 1, 2 ou 3.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
+
     <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">ordem</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">safe_math</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
-    <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
-        <span class="n">global_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">xi</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">yi</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">global_vars</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na avaliação da função: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span>
+
+    <span class="c1"># Tentar avaliação vetorizada com SymPy/lambdify</span>
+    <span class="n">x_sym</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">func_clean</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;math.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fexpr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
+        <span class="n">fvec</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x_sym</span><span class="p">,</span> <span class="n">fexpr</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fvec</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="c1"># Fallback ponto a ponto</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">safe_math</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
+        <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">yi</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">xi</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na avaliação da função em x=</span><span class="si">{</span><span class="n">xi</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">yi</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">resultado</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="n">metodo_nome</span> <span class="o">=</span> <span class="s2">&quot;Regra do Trapézio&quot;</span>
     <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
         <span class="n">metodo_nome</span> <span class="o">=</span> <span class="s2">&quot;Regra de Simpson 1/3&quot;</span>
-    <span class="k">elif</span> <span class="n">ordem</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">h</span><span class="o">/</span><span class="mi">8</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-        <span class="n">metodo_nome</span> <span class="o">=</span> <span class="s2">&quot;Regra de Simpson 3/8&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ordem inválida para Newton-Cotes.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">metodo_nome</span> <span class="o">=</span> <span class="s2">&quot;Regra de Simpson 3/8&quot;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado pela </span><span class="si">{</span><span class="n">metodo_nome</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1"># Pergunta ao usuário se deseja plotar a função e a aproximação (para Newton-Cotes simples)</span>
-    <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado pela </span><span class="si">{</span><span class="n">metodo_nome</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">grafico</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># `ordem` é o número de subintervalos para a regra simples</span>
             <span class="n">plotar_funcao_e_aproximacao</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">ordem</span><span class="p">,</span> <span class="n">metodo</span><span class="o">=</span><span class="n">metodo_nome</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">resultado</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="trapezio_composta">
 <a class="viewcode-back" href="../../modules.html#codigos.integracoes.trapezio_composta">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">trapezio_composta</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">trapezio_composta</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grafico</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Regra do Trapézio composta para integração numérica.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    func : str</span>
-<span class="sd">        Expressão da função em termos de ``x`` (usada via ``eval`` no contexto seguro).</span>
+<span class="sd">        Expressão da função em termos de ``x``.</span>
 <span class="sd">    a, b : float</span>
 <span class="sd">        Limites do intervalo de integração.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Se True, imprime detalhes e habilita (por padrão) a plotagem e estimativa de erro.</span>
+<span class="sd">    grafico : bool or None, optional</span>
+<span class="sd">        Controla plotagem: se None e verbose for True, habilita-a.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    float or None</span>
 <span class="sd">        Aproximação da integral ou ``None`` em caso de erro/entrada inválida.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Testes para regras compostas estão em ``tests/test_integracoes.py``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">m</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">pedir_m_ou_h</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;trapezio&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">soma</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">safe_math</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
-    
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-        <span class="n">x_i</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span>
-        <span class="n">global_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x_i</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">f_x</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">global_vars</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na avaliação da função: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">soma</span> <span class="o">+=</span> <span class="n">f_x</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
 
-    <span class="n">f_a</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
-    <span class="n">f_b</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
+    <span class="c1"># Tentar vetorizar avaliação via sympy</span>
+    <span class="n">x_sym</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">func_clean</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;math.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fexpr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
+        <span class="n">fvec</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x_sym</span><span class="p">,</span> <span class="n">fexpr</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fvec</span><span class="p">(</span><span class="n">xi</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">safe_math</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
+        <span class="k">for</span> <span class="n">xv</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">yv</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">xv</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na avaliação da função em x=</span><span class="si">{</span><span class="n">xv</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">yv</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yi</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
-    <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">f_a</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">soma</span> <span class="o">+</span> <span class="n">f_b</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado pela Regra do Trapézio composta: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;m (subintervalos): </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">, h (passo): </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1"># Pergunta ao usuário se deseja plotar a função antes de estimar o erro</span>
-    <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+    <span class="c1"># Regra composta</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">yi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">yi</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">yi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado pela Regra do Trapézio composta: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;m (subintervalos): </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">, h (passo): </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">grafico</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">plotar_funcao_e_aproximacao</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">metodo</span><span class="o">=</span><span class="s1">&#39;Trapézio composta&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja estimar o erro de truncamento? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Se verbose, estima erro automaticamente; caso contrário, mantém prompts interativos</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-            <span class="n">func_clean</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;math.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="n">func_expr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
             <span class="n">deriv2</span> <span class="o">=</span> <span class="n">diff</span><span class="p">(</span><span class="n">func_expr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
             <span class="n">deriv2_func</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">deriv2</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;numpy&quot;</span><span class="p">])</span>  <span class="c1"># vetoriza com numpy</span>
@@ -644,55 +714,106 @@
             <span class="n">erro</span> <span class="o">=</span> <span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;trapezio&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro de truncamento estimado (Trapézio composta): </span><span class="si">{</span><span class="n">erro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível calcular o erro automaticamente: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível calcular o erro automaticamente: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># modo interativo: perguntar ao usuário se deseja plotar e estimar erro (compatibilidade)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">plotar_funcao_e_aproximacao</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">metodo</span><span class="o">=</span><span class="s1">&#39;Trapézio composta&#39;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+            <span class="c1"># Em ambiente não interativo, ignora</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja estimar o erro de truncamento? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+                    <span class="n">func_expr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
+                    <span class="n">deriv2</span> <span class="o">=</span> <span class="n">diff</span><span class="p">(</span><span class="n">func_expr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">deriv2_func</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">deriv2</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;numpy&quot;</span><span class="p">])</span>
+                    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+                    <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">deriv2_func</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
+                    <span class="n">derivada_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">vals</span><span class="p">))</span>
+                    <span class="n">erro</span> <span class="o">=</span> <span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;trapezio&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro de truncamento estimado (Trapézio composta): </span><span class="si">{</span><span class="n">erro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível calcular o erro automaticamente: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
     <span class="nb">print</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">resultado</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simpson_1_3_composta">
 <a class="viewcode-back" href="../../modules.html#codigos.integracoes.simpson_1_3_composta">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">simpson_1_3_composta</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Regra de Simpson 1/3 composta para integração numérica.</span>
-<span class="sd">    </span>
-<span class="sd">    Quando usar: m deve ser par, pois cada aplicação usa 2 subintervalos.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">simpson_1_3_composta</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grafico</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Regra de Simpson 1/3 composta para integração numérica.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : str</span>
+<span class="sd">        Expressão da função em termos de ``x``.</span>
+<span class="sd">    a, b : float</span>
+<span class="sd">        Limites do intervalo de integração.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Se True, imprime detalhes, habilita plot e estimativa de erro.</span>
+<span class="sd">    grafico : bool or None, optional</span>
+<span class="sd">        Controla plotagem: se None e verbose for True, habilita-a.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or None</span>
+<span class="sd">        Aproximação da integral ou ``None`` em caso de erro/entrada inválida.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">m</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">pedir_m_ou_h</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;simpson13&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">soma</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">safe_math</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-        <span class="n">x_i</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span>
-        <span class="n">global_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x_i</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">f_x</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">global_vars</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na avaliação da função: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">soma</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">f_x</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">soma</span> <span class="o">+=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">f_x</span>
+    <span class="c1"># Tentar vetorizar avaliação</span>
+    <span class="n">x_sym</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">func_clean</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;math.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fexpr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
+        <span class="n">fvec</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x_sym</span><span class="p">,</span> <span class="n">fexpr</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fvec</span><span class="p">(</span><span class="n">xi</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">safe_math</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
+        <span class="k">for</span> <span class="n">xv</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">yv</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">xv</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na avaliação da função em x=</span><span class="si">{</span><span class="n">xv</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">yv</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yi</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
-    <span class="n">f_a</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
-    <span class="n">f_b</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
+    <span class="c1"># Aplica a regra composta (Simpson 1/3 exige m par)</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">yi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">yi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">yi</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">yi</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]))</span>
 
-    <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">f_a</span> <span class="o">+</span> <span class="n">soma</span> <span class="o">+</span> <span class="n">f_b</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado pela Regra de Simpson 1/3 composta: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1"># print(f&quot;m (subintervalos): {m}, h (passo): {h}&quot;)</span>
-    <span class="c1"># Pergunta ao usuário se deseja plotar a função antes de estimar o erro</span>
-    <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado pela Regra de Simpson 1/3 composta: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">grafico</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">plotar_funcao_e_aproximacao</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">metodo</span><span class="o">=</span><span class="s1">&#39;Simpson 1/3 composta&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja estimar o erro de truncamento? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-            <span class="n">func_clean</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;math.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="n">func_expr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
             <span class="n">deriv4</span> <span class="o">=</span> <span class="n">diff</span><span class="p">(</span><span class="n">func_expr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
             <span class="n">deriv4_func</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">deriv4</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;numpy&quot;</span><span class="p">])</span>
@@ -702,64 +823,109 @@
             <span class="n">erro</span> <span class="o">=</span> <span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;simpson13&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro de truncamento estimado (Simpson 1/3 composta): </span><span class="si">{</span><span class="n">erro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível calcular o erro automaticamente: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível calcular o erro automaticamente: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">plotar_funcao_e_aproximacao</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">metodo</span><span class="o">=</span><span class="s1">&#39;Simpson 1/3 composta&#39;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja estimar o erro de truncamento? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+                    <span class="n">func_expr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
+                    <span class="n">deriv4</span> <span class="o">=</span> <span class="n">diff</span><span class="p">(</span><span class="n">func_expr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+                    <span class="n">deriv4_func</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">deriv4</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;numpy&quot;</span><span class="p">])</span>
+                    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+                    <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">deriv4_func</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
+                    <span class="n">derivada_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">vals</span><span class="p">))</span>
+                    <span class="n">erro</span> <span class="o">=</span> <span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;simpson13&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro de truncamento estimado (Simpson 1/3 composta): </span><span class="si">{</span><span class="n">erro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível calcular o erro automaticamente: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
     <span class="nb">print</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">resultado</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="simpson_3_8_composta">
 <a class="viewcode-back" href="../../modules.html#codigos.integracoes.simpson_3_8_composta">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">simpson_3_8_composta</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">simpson_3_8_composta</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grafico</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Regra de Simpson 3/8 composta para integração numérica.</span>
-<span class="sd">    </span>
-<span class="sd">    Quando usar: n deve ser múltiplo de 3</span>
-<span class="sd">    Passos manuais:</span>
-<span class="sd">    1. Calcular h = (b - a) / n</span>
-<span class="sd">    2. Calcular os pontos x_i = a + i*h para i = 0, 1, ..., n</span>
-<span class="sd">    3. Avaliar f(x_i) para cada ponto</span>
-<span class="sd">    4. Aplicar a fórmula composta   </span>
-<span class="sd">     </span>
-<span class="sd">    Fórmula: int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + 2f(x3) + ... + 3f(xn-1) + f(xn)]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : str</span>
+<span class="sd">        Expressão da função em termos de ``x``.</span>
+<span class="sd">    a, b : float</span>
+<span class="sd">        Limites do intervalo de integração.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Se True, imprime detalhes e habilita plot/estimativa de erro.</span>
+<span class="sd">    grafico : bool or None, optional</span>
+<span class="sd">        Controla plotagem: se None e verbose for True, habilita-a.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    
     <span class="n">m</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">pedir_m_ou_h</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;simpson38&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># Tentar vetorizar avaliação</span>
+    <span class="n">x_sym</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">func_clean</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;math.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fexpr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
+        <span class="n">fvec</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x_sym</span><span class="p">,</span> <span class="n">fexpr</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;numpy&#39;</span><span class="p">])</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fvec</span><span class="p">(</span><span class="n">xi</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">safe_math</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
+        <span class="k">for</span> <span class="n">xv</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">yv</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">xv</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na avaliação da função em x=</span><span class="si">{</span><span class="n">xv</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">yi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">yv</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yi</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># composição para Simpson 3/8</span>
     <span class="n">soma</span> <span class="o">=</span> <span class="mf">0.0</span>
-
-    <span class="n">safe_math</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-        <span class="n">x_i</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">h</span>
-        <span class="n">global_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x_i</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">}</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">f_x</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="n">global_vars</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro na avaliação da função: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
         <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">soma</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">f_x</span>
+            <span class="n">soma</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">yi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">soma</span> <span class="o">+=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">f_x</span>
+            <span class="n">soma</span> <span class="o">+=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">yi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
-    <span class="n">f_a</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
-    <span class="n">f_b</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s2">&quot;math&quot;</span><span class="p">:</span> <span class="n">math</span><span class="p">,</span> <span class="o">**</span><span class="n">safe_math</span><span class="p">})</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">yi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">soma</span> <span class="o">+</span> <span class="n">yi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="n">resultado</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">f_a</span> <span class="o">+</span> <span class="n">soma</span> <span class="o">+</span> <span class="n">f_b</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado pela Regra de Simpson 3/8 composta: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;m (subintervalos): </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">, h (passo): </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1"># Pergunta ao usuário se deseja plotar a função antes de estimar o erro</span>
-    <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado pela Regra de Simpson 3/8 composta: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;m (subintervalos): </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">, h (passo): </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">grafico</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">plotar_funcao_e_aproximacao</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">metodo</span><span class="o">=</span><span class="s1">&#39;Simpson 3/8 composta&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja estimar o erro de truncamento? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-            <span class="n">func_clean</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;math.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="n">func_expr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
             <span class="n">deriv4</span> <span class="o">=</span> <span class="n">diff</span><span class="p">(</span><span class="n">func_expr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
             <span class="n">deriv4_func</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">deriv4</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;numpy&quot;</span><span class="p">])</span>
@@ -769,9 +935,37 @@
             <span class="n">erro</span> <span class="o">=</span> <span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;simpson38&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro de truncamento estimado (Simpson 3/8 composta): </span><span class="si">{</span><span class="n">erro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível calcular o erro automaticamente: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível calcular o erro automaticamente: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja plotar a função e a aproximação no intervalo [a,b]? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">plotar_funcao_e_aproximacao</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">metodo</span><span class="o">=</span><span class="s1">&#39;Simpson 3/8 composta&#39;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível gerar o gráfico: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja estimar o erro de truncamento? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+                    <span class="n">func_expr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">func_clean</span><span class="p">,</span> <span class="nb">locals</span><span class="o">=</span><span class="n">SYMPY_LOCALS</span><span class="p">)</span>
+                    <span class="n">deriv4</span> <span class="o">=</span> <span class="n">diff</span><span class="p">(</span><span class="n">func_expr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+                    <span class="n">deriv4_func</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">deriv4</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;numpy&quot;</span><span class="p">])</span>
+                    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+                    <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">deriv4_func</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
+                    <span class="n">derivada_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">vals</span><span class="p">))</span>
+                    <span class="n">erro</span> <span class="o">=</span> <span class="n">erro_truncamento_composta</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">derivada_max</span><span class="p">,</span> <span class="s1">&#39;simpson38&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro de truncamento estimado (Simpson 3/8 composta): </span><span class="si">{</span><span class="n">erro</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Não foi possível calcular o erro automaticamente: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
     <span class="nb">print</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">resultado</span></div>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">resultado</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="menu">
@@ -826,6 +1020,8 @@
             <span class="k">continue</span>
 
         <span class="k">if</span> <span class="n">resultado</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Mostrar o resultado numérico no menu (útil em execução não-verbose/input-driven)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">valor_exato</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">calc_exata</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Deseja calcular a integral exata (simbólica)? (s/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span>
             <span class="k">if</span> <span class="n">calc_exata</span><span class="p">:</span>

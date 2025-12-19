@@ -53,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="integracoes.html">Integrações Numéricas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="edos.html">Equações Diferenciais Ordinárias (EDOs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="raizes.html">Métodos de Raízes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests_unitarios.html">Documentação dos Testes Unitários</a></li>
 <li class="toctree-l1"><a class="reference internal" href="disclaimer.html">Aviso — Passos futuros</a></li>
 </ul>
 
@@ -160,16 +161,47 @@ Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</p>
 <dl class="py function" id="module-codigos.raizes">
 <dt class="sig sig-object py" id="codigos.raizes.f">
 <span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#f"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.f" title="Link para esta definição"></a></dt>
-<dd></dd></dl>
+<dd><p>Avalia <cite>func_str</cite> em <cite>x</cite> com ambiente seguro (sem builtins).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – Valor de avaliação.</p></li>
+<li><p><strong>func_str</strong> (<em>str</em>) – Expressão Python da função em x (ex.: ‘x**2 - 4’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Valor de f(x).</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Levanta<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Em caso de erro na avaliação.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.raizes.plotar_funcao">
-<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">plotar_funcao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raiz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#plotar_funcao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.plotar_funcao" title="Link para esta definição"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">plotar_funcao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raiz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#plotar_funcao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.plotar_funcao" title="Link para esta definição"></a></dt>
+<dd><p>Plota a função <cite>f(x)</cite> opcionalmente mostrando a raiz.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_str</strong> (<em>str</em>) – Expressão Python de <code class="docutils literal notranslate"><span class="pre">f(x)</span></code>.</p></li>
+<li><p><strong>a</strong> (<em>float</em><em>, </em><em>optional</em>) – Intervalo de plotagem (padrão: [-10, 10] se None).</p></li>
+<li><p><strong>b</strong> (<em>float</em><em>, </em><em>optional</em>) – Intervalo de plotagem (padrão: [-10, 10] se None).</p></li>
+<li><p><strong>raiz</strong> (<em>float</em><em>, </em><em>optional</em>) – Ponto da raiz a ser destacado.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Controla se o gráfico será exibido. Se None, segue <code class="docutils literal notranslate"><span class="pre">verbose</span></code> (True mostra o gráfico).</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Habilita saídas e, por padrão, ativa o gráfico.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.raizes.bissecao">
-<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">bissecao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#bissecao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.bissecao" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">bissecao</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#bissecao"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.bissecao" title="Link para esta definição"></a></dt>
 <dd><p>Método da bisseção para encontrar raiz de uma função dada por string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
@@ -179,6 +211,8 @@ Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</p>
 <li><p><strong>b</strong> (<em>float</em>) – Intervalo inicial [a, b] com sinais opostos.</p></li>
 <li><p><strong>tol</strong> (<em>float</em>) – Tolerância para critério de parada.</p></li>
 <li><p><strong>max_iter</strong> (<em>int</em>) – Número máximo de iterações.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se <code class="docutils literal notranslate"><span class="pre">True</span></code>, imprime detalhes de cada iteração e ativa o gráfico por padrão.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Controla plotagem: se <code class="docutils literal notranslate"><span class="pre">None</span></code> e <code class="docutils literal notranslate"><span class="pre">verbose</span></code> for True, o gráfico é mostrado.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
@@ -192,7 +226,7 @@ Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.raizes.newton">
-<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">newton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#newton"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.newton" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">newton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#newton"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.newton" title="Link para esta definição"></a></dt>
 <dd><p>Método de Newton-Raphson para encontrar raiz de função dada por string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
@@ -201,6 +235,7 @@ Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</p>
 <li><p><strong>x0</strong> (<em>float</em>) – Chute inicial.</p></li>
 <li><p><strong>tol</strong> (<em>float</em>) – Tolerância para critério de parada.</p></li>
 <li><p><strong>max_iter</strong> (<em>int</em>) – Número máximo de iterações.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True imprime detalhes de cada iteração.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
@@ -214,7 +249,7 @@ Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.raizes.secante">
-<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">secante</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#secante"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.secante" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.raizes.</span></span><span class="sig-name descname"><span class="pre">secante</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/raizes.html#secante"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.raizes.secante" title="Link para esta definição"></a></dt>
 <dd><p>Método da secante para encontrar raiz de função dada por string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
@@ -224,6 +259,7 @@ Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</p>
 <li><p><strong>x1</strong> (<em>float</em>) – Dois chutes iniciais.</p></li>
 <li><p><strong>tol</strong> (<em>float</em>) – Tolerância para critério de parada.</p></li>
 <li><p><strong>max_iter</strong> (<em>int</em>) – Número máximo de iterações.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True imprime detalhes de cada iteração.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
@@ -244,6 +280,8 @@ Oferece métodos RK1..RK4, sistemas e EDOs de segunda ordem.</p>
 <code class="docutils literal notranslate"><span class="pre">'bissecao'</span></code>, <code class="docutils literal notranslate"><span class="pre">'newton'</span></code> ou <code class="docutils literal notranslate"><span class="pre">'secante'</span></code>, apenas lê os parâmetros e
 retorna uma tupla <code class="docutils literal notranslate"><span class="pre">(func_str,</span> <span class="pre">tol,</span> <span class="pre">max_iter,</span> <span class="pre">params)</span></code> para uso por
 menus externos (compatibilidade com <cite>menu_raizes</cite>).</p>
+<p>Em modo interativo, protege contra EOFError para permitir execuções em
+ambientes não interativos (scripts/tests).</p>
 </dd></dl>
 
 <dl class="py function" id="module-codigos.integracoes">
@@ -376,26 +414,86 @@ Fórmula: int_a^b f(x) dx</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.integracoes.newton_cotes">
-<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">newton_cotes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#newton_cotes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.newton_cotes" title="Link para esta definição"></a></dt>
-<dd><p>Newton-Cotes para integração numérica.</p>
-<p>Suporta ordens 1 (Trapézio), 2 (Simpson 1/3), 3 (Simpson 3/8) e 4.
-Fórmulas:
-Ordem 1 (Trapézio): int_a^b f(x) dx ≈ (h/2) * [f(x0) + f(x1)]
-Ordem 2 (Simpson 1/3): int_a^b f(x) dx ≈ (h/3) * [f(x0) + 4f(x1) + f(x2)]
-Ordem 3 (Simpson 3/8): int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + f(x3)]</p>
-<p>Quando usar? Para integrais simples com poucos pontos (&gt;= ordem)</p>
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">newton_cotes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#newton_cotes"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.newton_cotes" title="Link para esta definição"></a></dt>
+<dd><p>Newton-Cotes para integração numérica (ordens 1,2,3).</p>
+<section id="otimizacoes">
+<h2>Otimizações<a class="headerlink" href="#otimizacoes" title="Link para este cabeçalho"></a></h2>
+<ul class="simple">
+<li><p>Tenta usar <cite>sympy.lambdify</cite> para avaliar a função de forma vetorizada quando possível.</p></li>
+</ul>
+</section>
+<section id="verbose-graficos">
+<h2>Verbose &amp; Gráficos<a class="headerlink" href="#verbose-graficos" title="Link para este cabeçalho"></a></h2>
+<ul class="simple">
+<li><p><cite>verbose=False</cite> (padrão): execução silenciosa (comportamento compatível com testes automatizados).</p></li>
+<li><p><cite>verbose=True</cite>: imprime detalhes auxiliares e, por padrão, habilita <cite>grafico=True</cite>.</p></li>
+</ul>
+</section>
+<section id="parametros">
+<h2>Parâmetros<a class="headerlink" href="#parametros" title="Link para este cabeçalho"></a></h2>
+<dl class="simple">
+<dt>func<span class="classifier">str</span></dt><dd><p>Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+</dd>
+<dt>a, b<span class="classifier">float</span></dt><dd><p>Limites do intervalo de integração (números finitos, distintos).</p>
+</dd>
+<dt>ordem<span class="classifier">int</span></dt><dd><p>Ordem da regra (1, 2 ou 3).</p>
+</dd>
+<dt>verbose<span class="classifier">bool, optional</span></dt><dd><p>Habilita saídas detalhadas e gráficos (padrão: False).</p>
+</dd>
+<dt>grafico<span class="classifier">bool or None, optional</span></dt><dd><p>Controla plotagem: se None e <code class="docutils literal notranslate"><span class="pre">verbose</span></code> for True, é habilitado; caso contrário, respeitado.</p>
+</dd>
+</dl>
+</section>
+<section id="retorno">
+<h2>Retorno<a class="headerlink" href="#retorno" title="Link para este cabeçalho"></a></h2>
+<dl class="simple">
+<dt>float</dt><dd><p>Aproximação da integral.</p>
+</dd>
+</dl>
+</section>
+<section id="notas-de-teste">
+<h2>Notas de teste<a class="headerlink" href="#notas-de-teste" title="Link para este cabeçalho"></a></h2>
+<p>Os testes unitários que cobrem Newton-Cotes e regras compostas estão em <code class="docutils literal notranslate"><span class="pre">tests/test_integracoes.py</span></code>.</p>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.integracoes.trapezio_composta">
-<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">trapezio_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#trapezio_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.trapezio_composta" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">trapezio_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#trapezio_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.trapezio_composta" title="Link para esta definição"></a></dt>
 <dd><p>Regra do Trapézio composta para integração numérica.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code> (usada via <code class="docutils literal notranslate"><span class="pre">eval</span></code> no contexto seguro).</p></li>
+<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
 <li><p><strong>a</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
 <li><p><strong>b</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime detalhes e habilita (por padrão) a plotagem e estimativa de erro.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Controla plotagem: se None e verbose for True, habilita-a.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Retorna<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aproximação da integral ou <code class="docutils literal notranslate"><span class="pre">None</span></code> em caso de erro/entrada inválida.</p>
+</dd>
+<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or None</p>
+</dd>
+</dl>
+<p class="rubric">Notas</p>
+<p>Testes para regras compostas estão em <code class="docutils literal notranslate"><span class="pre">tests/test_integracoes.py</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codigos.integracoes.simpson_1_3_composta">
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_1_3_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_1_3_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.simpson_1_3_composta" title="Link para esta definição"></a></dt>
+<dd><p>Regra de Simpson 1/3 composta para integração numérica.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime detalhes, habilita plot e estimativa de erro.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Controla plotagem: se None e verbose for True, habilita-a.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
@@ -408,23 +506,20 @@ Ordem 3 (Simpson 3/8): int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + f
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="codigos.integracoes.simpson_1_3_composta">
-<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_1_3_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_1_3_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.simpson_1_3_composta" title="Link para esta definição"></a></dt>
-<dd><p>Regra de Simpson 1/3 composta para integração numérica.</p>
-<p>Quando usar: m deve ser par, pois cada aplicação usa 2 subintervalos.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="codigos.integracoes.simpson_3_8_composta">
-<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_3_8_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_3_8_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.simpson_3_8_composta" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.integracoes.</span></span><span class="sig-name descname"><span class="pre">simpson_3_8_composta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/integracoes.html#simpson_3_8_composta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.integracoes.simpson_3_8_composta" title="Link para esta definição"></a></dt>
 <dd><p>Regra de Simpson 3/8 composta para integração numérica.</p>
-<p>Quando usar: n deve ser múltiplo de 3
-Passos manuais:
-1. Calcular h = (b - a) / n
-2. Calcular os pontos x_i = a + i*h para i = 0, 1, …, n
-3. Avaliar f(x_i) para cada ponto
-4. Aplicar a fórmula composta</p>
-<p>Fórmula: int_a^b f(x) dx ≈ (3h/8) * [f(x0) + 3f(x1) + 3f(x2) + 2f(x3) + … + 3f(xn-1) + f(xn)]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>str</em>) – Expressão da função em termos de <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Limites do intervalo de integração.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime detalhes e habilita plot/estimativa de erro.</p></li>
+<li><p><strong>grafico</strong> (<em>bool</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Controla plotagem: se None e verbose for True, habilita-a.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -779,17 +874,35 @@ da variável global ‘grafico’ ou False. Requer matplotlib instalado.</p></li
 <dl class="py function" id="module-codigos.edos">
 <dt class="sig sig-object py" id="codigos.edos.pedir_dados_edo">
 <span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">pedir_dados_edo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#pedir_dados_edo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.pedir_dados_edo" title="Link para esta definição"></a></dt>
-<dd><p>Obtém entradas do usuário para resolução de EDOs (RK/Euler).</p>
-<p>A função solicita interativamente a função <code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">y)</span></code>, intervalo de integração,
-condições iniciais e passo (<code class="docutils literal notranslate"><span class="pre">h</span></code>) ou número de subintervalos (<code class="docutils literal notranslate"><span class="pre">m</span></code>). Também
-permite informar uma solução exata opcional.</p>
+<dd><p>Obtém entradas do usuário para resolução de EDOs com validação robusta.</p>
+<p>Esta função solicita interativamente ao usuário os dados necessários para
+resolver uma equação diferencial ordinária: a função f(x,y), o intervalo
+de integração [a,b], as condições iniciais (x0,y0), e o passo de integração.
+Também permite especificar uma solução exata opcional para comparação.</p>
+<p>A função inclui validações abrangentes para garantir que os dados sejam
+adequados para a resolução numérica da EDO.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Retorna<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dicionário com chaves: ‘func_input’, ‘a’, ‘b’, ‘x0’, ‘y0’, ‘h’, ‘m’, ‘xn’,
-‘solucao_exata’ (callable ou None) e ‘sol_exata_expr’ (string).</p>
+<dd class="field-odd"><p>Dicionário contendo todos os dados validados com as seguintes chaves:
+- ‘func_input’: str, expressão da função f(x,y)
+- ‘a’: float, limite inferior do intervalo
+- ‘b’: float, limite superior do intervalo
+- ‘x0’: float, ponto inicial das condições iniciais
+- ‘y0’: float, valor inicial y(x0)
+- ‘h’: float, tamanho do passo de integração
+- ‘m’: int or None, número de subintervalos (se especificado)
+- ‘xn’: float, ponto final (sempre igual a b)
+- ‘solucao_exata’: callable or None, função da solução exata
+- ‘sol_exata_expr’: str, expressão da solução exata</p>
 </dd>
 <dt class="field-even">Tipo de retorno<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">Levanta<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – Se os dados inseridos forem inválidos ou inconsistentes.</p></li>
+<li><p><strong>KeyboardInterrupt</strong> – Se o usuário interromper a entrada (Ctrl+C).</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -820,24 +933,60 @@ permite informar uma solução exata opcional.</p>
 <dt class="sig sig-object py" id="codigos.edos.runge_kutta">
 <span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">runge_kutta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#runge_kutta"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.runge_kutta" title="Link para esta definição"></a></dt>
 <dd><p>Resolve EDOs escalares usando métodos de Runge-Kutta de ordem 1 a 4.</p>
+<p>Esta função implementa os métodos de Runge-Kutta para resolver numericamente
+equações diferenciais ordinárias da forma dy/dx = f(x,y). Os métodos
+implementados vão da ordem 1 (Euler) até a ordem 4 (Runge-Kutta clássico).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func_input</strong> (<em>str</em>) – Expressão para f(x, y) como string (ex.: <code class="docutils literal notranslate"><span class="pre">'y'</span></code> para dy/dx = y).</p></li>
-<li><p><strong>x0</strong> (<em>float</em>) – Ponto inicial.</p></li>
-<li><p><strong>y0</strong> (<em>float</em>) – Valor inicial y(x0).</p></li>
-<li><p><strong>h</strong> (<em>float</em>) – Tamanho do passo (deve dividir o intervalo (xn-x0)).</p></li>
-<li><p><strong>xn</strong> (<em>float</em>) – Ponto final onde se integra até (xn &gt; x0 esperado).</p></li>
-<li><p><strong>ordem</strong> (<em>int</em>) – Ordem do método (1, 2, 3 ou 4).</p></li>
+<li><p><strong>func_input</strong> (<em>str</em>) – Expressão matemática para f(x, y) como string. Deve ser uma função
+válida das variáveis x e y. Exemplos: ‘y’, ‘y - x**2’, ‘sin(x)*y’.
+Espaços são ignorados e ‘^’ é convertido para ‘**’.</p></li>
+<li><p><strong>x0</strong> (<em>float</em>) – Ponto inicial da integração (condição inicial para x).
+Deve ser um número finito.</p></li>
+<li><p><strong>y0</strong> (<em>float</em>) – Valor inicial y(x0). Deve ser um número finito.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – Tamanho do passo de integração. Deve ser positivo e dividir
+exatamente o intervalo (xn - x0), caso contrário será truncado.</p></li>
+<li><p><strong>xn</strong> (<em>float</em>) – Ponto final da integração. Deve ser diferente de x0.</p></li>
+<li><p><strong>ordem</strong> (<em>int</em>) – Ordem do método Runge-Kutta. Deve ser 1, 2, 3 ou 4:
+- 1: Método de Euler (primeira ordem)
+- 2: Euler modificado (segunda ordem)
+- 3: Runge-Kutta de terceira ordem
+- 4: Runge-Kutta clássico (quarta ordem)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tupla <code class="docutils literal notranslate"><span class="pre">(x_vals,</span> <span class="pre">y_vals)</span></code> com os pontos de amostragem e as aproximações y.</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>x_vals</strong> (<em>list of float</em>) – Lista dos pontos x onde a solução foi calculada, incluindo x0 e xn.</p></li>
+<li><p><strong>y_vals</strong> (<em>list of float</em>) – Lista dos valores aproximados y(x) correspondentes aos pontos em x_vals.</p></li>
+</ul>
+</p>
 </dd>
-<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list, list)</p>
+<dt class="field-odd">Levanta<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – Se os parâmetros forem inválidos (ver _validate_edo_inputs).</p></li>
+<li><p><strong>TypeError</strong> – Se os tipos de entrada não forem adequados.</p></li>
+<li><p><strong>RuntimeError</strong> – Se ocorrer erro durante a avaliação da função f(x,y).</p></li>
+</ul>
 </dd>
 </dl>
+<p class="rubric">Notas</p>
+<p>Os métodos de Runge-Kutta seguem as fórmulas clássicas (Euler, Euler modificado e RK4).
+Por exemplo, para Euler: <code class="docutils literal notranslate"><span class="pre">y_{n+1}</span> <span class="pre">=</span> <span class="pre">y_n</span> <span class="pre">+</span> <span class="pre">h</span> <span class="pre">*</span> <span class="pre">f(x_n,</span> <span class="pre">y_n)</span></code>.
+Para RK4: <code class="docutils literal notranslate"><span class="pre">y_{n+1}</span> <span class="pre">=</span> <span class="pre">y_n</span> <span class="pre">+</span> <span class="pre">(h/6)</span> <span class="pre">*</span> <span class="pre">(k1</span> <span class="pre">+</span> <span class="pre">2*k2</span> <span class="pre">+</span> <span class="pre">2*k3</span> <span class="pre">+</span> <span class="pre">k4)</span></code>, onde <code class="docutils literal notranslate"><span class="pre">k1</span></code>..``k4``
+são os incrementos padrões do método.
+A estabilidade e precisão aumentam com a ordem do método, mas também
+o custo computacional.</p>
+<p class="rubric">Exemplos</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Resolver dy/dx = y com y(0) = 1 no intervalo [0, 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span> <span class="o">=</span> <span class="n">runge_kutta</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Solução em x=1: </span><span class="si">{</span><span class="n">y_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Aproxima e^1 ≈ 2.718282</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># EDO não-linear: dy/dx = y - x²</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span> <span class="o">=</span> <span class="n">runge_kutta</span><span class="p">(</span><span class="s1">&#39;y - x**2&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -848,27 +997,54 @@ permite informar uma solução exata opcional.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.edos.runge_kutta_sistema">
 <span class="sig-prename descclassname"><span class="pre">codigos.edos.</span></span><span class="sig-name descname"><span class="pre">runge_kutta_sistema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/edos.html#runge_kutta_sistema"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.edos.runge_kutta_sistema" title="Link para esta definição"></a></dt>
-<dd><p>Resolve sistemas de EDOs usando Runge-Kutta (vetorial).</p>
+<dd><p>Resolve sistemas de EDOs usando métodos de Runge-Kutta vetoriais.</p>
+<p>Esta função resolve numericamente sistemas de equações diferenciais ordinárias
+da forma dy/dt = f(t,y), onde y é um vetor de variáveis dependentes.
+Implementa os métodos de Runge-Kutta de ordem 1 a 4 para sistemas.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>funcs_input</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>callables</em>) – Lista de expressões/funcões que descrevem cada componente do sistema. Use a notação
-<code class="docutils literal notranslate"><span class="pre">y[1]</span></code>, <code class="docutils literal notranslate"><span class="pre">y[2]</span></code> etc. quando passar strings (1-based index).</p></li>
-<li><p><strong>u0</strong> (<em>array_like</em>) – Vetor de condições iniciais (tamanho n, onde n é número de equações).</p></li>
-<li><p><strong>t0</strong> (<em>float</em>) – Tempo inicial.</p></li>
-<li><p><strong>tf</strong> (<em>float</em>) – Tempo final para integração.</p></li>
-<li><p><strong>h</strong> (<em>float</em>) – Passo de tempo.</p></li>
-<li><p><strong>ordem</strong> (<em>int</em>) – Ordem do método de Runge-Kutta (1-4).</p></li>
+<li><p><strong>funcs_input</strong> (<em>list</em><em> of </em><em>str</em>) – Lista de expressões matemáticas para as funções f_i(t, y) do sistema.
+Cada string deve usar notação y[1], y[2], … para as variáveis
+(indexação 1-based). Exemplo: [‘y[2]’, ‘y[1] - y[2]’].</p></li>
+<li><p><strong>u0</strong> (<em>array_like</em>) – Vetor de condições iniciais y(t0). Deve ter o mesmo comprimento
+que funcs_input. Todos os valores devem ser finitos.</p></li>
+<li><p><strong>t0</strong> (<em>float</em>) – Tempo inicial da integração. Deve ser finito.</p></li>
+<li><p><strong>tf</strong> (<em>float</em>) – Tempo final da integração. Deve ser diferente de t0.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – Tamanho do passo de integração. Deve ser positivo.</p></li>
+<li><p><strong>ordem</strong> (<em>int</em>) – Ordem do método Runge-Kutta (1, 2, 3 ou 4).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tupla <code class="docutils literal notranslate"><span class="pre">(t_vals,</span> <span class="pre">u_vals)</span></code> onde <code class="docutils literal notranslate"><span class="pre">t_vals</span></code> é lista de tempos e <code class="docutils literal notranslate"><span class="pre">u_vals</span></code> é array (m x n)
-com as soluções em cada tempo.</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>t_vals</strong> (<em>list of float</em>) – Lista dos pontos temporais onde a solução foi calculada,
+incluindo t0 e tf (aproximadamente).</p></li>
+<li><p><strong>u_vals</strong> (<em>ndarray</em>) – Array de shape (n_pontos, n_equacoes) contendo os valores
+da solução em cada ponto temporal.</p></li>
+</ul>
+</p>
 </dd>
-<dt class="field-odd">Tipo de retorno<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list, ndarray)</p>
+<dt class="field-odd">Levanta<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – Se as entradas não forem válidas (ver _validate_sistema_edo_inputs).</p></li>
+<li><p><strong>TypeError</strong> – Se os tipos de entrada não forem adequados.</p></li>
+<li><p><strong>RuntimeError</strong> – Se ocorrer erro durante a integração do sistema.</p></li>
+</ul>
 </dd>
 </dl>
+<p class="rubric">Notas</p>
+<p>O sistema é resolvido usando a formulação vetorial dos métodos de Runge-Kutta.
+Em termos práticos, aplica-se a versão vetorial das fórmulas escalares (Euler,
+RK2/3/4). Por exemplo, em RK4 cada <span class="math notranslate nohighlight">\(k_i\)</span> é um vetor de incrementos e
+a combinação final segue a soma ponderada usual: <code class="docutils literal notranslate"><span class="pre">y_{n+1}</span> <span class="pre">=</span> <span class="pre">y_n</span> <span class="pre">+</span> <span class="pre">(h/6)*(k1+2*k2+2*k3+k4)</span></code>.</p>
+<p class="rubric">Exemplos</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sistema linear: dy1/dt = y2, dy2/dt = -y1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;y[2]&#39;</span><span class="p">,</span> <span class="s1">&#39;-y[1]&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># y1(0)=1, y2(0)=0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t_vals</span><span class="p">,</span> <span class="n">y_vals</span> <span class="o">=</span> <span class="n">runge_kutta_sistema</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># y_vals[-1] ≈ [cos(2π), -sin(2π)] ≈ [1, 0]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
