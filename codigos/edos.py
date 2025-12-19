@@ -1,21 +1,20 @@
+"""
+Módulo para solução numérica de equações diferenciais ordinárias.
+
+Este módulo implementa métodos numéricos para EDOs:
+Euler, Runge-Kutta (1ª a 4ª ordem) e diferenças finitas.
+
+Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import math
 import sympy as sp
 from sympy import sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, exp, sqrt, log, Abs, pi, E
 import re
-
-# mapa seguro com funções do math (para uso em fallbacks com eval)
-safe_math = {k: getattr(math, k) for k in dir(math) if not k.startswith("_")}
-
-# Mapeamento padrão para uso com sympify (padroniza nomes de funções/constantes)
-SYMPY_LOCALS = {
-    'sin': sin, 'cos': cos, 'tan': tan,
-    'asin': asin, 'acos': acos, 'atan': atan,
-    'sinh': sinh, 'cosh': cosh, 'tanh': tanh,
-    'exp': exp, 'sqrt': sqrt, 'log': log, 'abs': Abs,
-    'pi': pi, 'e': E, 'E': E
-}
+from .constants import SYMPY_LOCALS, SAFE_MATH
 
 def _validate_edo_inputs(func_input, x0, y0, h, xn, ordem=None):
     """Valida entradas para funções de resolução de EDOs.
@@ -255,7 +254,7 @@ def _create_function_from_string(func_str, variables, verbose=False):
                                    f"recebido: {len(args)}")
 
                 local_vars = dict(zip(variables, args))
-                local_vars.update({'np': np, 'math': math, **safe_math})
+                local_vars.update({'np': np, 'math': math, **SAFE_MATH})
 
                 try:
                     return eval(func_str, {"__builtins__": None}, local_vars)
@@ -277,7 +276,7 @@ def _create_function_from_string(func_str, variables, verbose=False):
             raise ValueError(f"Não foi possível criar função a partir de '{func_str}'. "
                            f"Erro SymPy: {e}. Erro fallback: {fallback_error}")
 
-def pedir_dados_edo():
+def coletar_dados_edo():
     """Obtém entradas do usuário para resolução de EDOs com validação robusta.
 
     Esta função solicita interativamente ao usuário os dados necessários para
@@ -593,7 +592,7 @@ def resolver_edo_2ordem():
     except Exception:
         # fallback: usar eval em namespace restrito
         def f2(x, y):
-            local = {"x": x, "y": y[0], "yp": y[1], "np": np, "math": math, **safe_math}
+            local = {"x": x, "y": y[0], "yp": y[1], "np": np, "math": math, **SAFE_MATH}
             try:
                 return eval(f_input, {"__builtins__": None}, local)
             except Exception:
@@ -624,7 +623,7 @@ def resolver_edo_2ordem():
                     return lam0(x, *tuple(y.tolist() if hasattr(y, 'tolist') else list(y)))
             except Exception:
                 def func0_callable(x, y):
-                    local = {'x': x, 'y': y, 'np': np, 'math': math, **safe_math}
+                    local = {'x': x, 'y': y, 'np': np, 'math': math, **SAFE_MATH}
                     try:
                         return eval(expr0, {"__builtins__": None}, local)
                     except Exception:
@@ -856,7 +855,7 @@ def executar_runge_kutta(ordem):
     }
     print(f"\n--- {nomes.get(ordem, 'Runge-Kutta')} ---")
     try:
-        dados = pedir_dados_edo()
+        dados = coletar_dados_edo()
         func_input = dados['func_input']
         a = dados['a']
         b = dados['b']
@@ -991,7 +990,7 @@ def runge_kutta_sistema(funcs_input, u0, t0, tf, h, ordem):
             try:
                 def func(x, y, expr_str=expr_named, idx=i):
                     # Criar dicionário local com x e componentes de y
-                    local_vars = {'x': x, 'np': np, 'math': math, **safe_math}
+                    local_vars = {'x': x, 'np': np, 'math': math, **SAFE_MATH}
                     for j in range(n_equacoes):
                         local_vars[f'y{j+1}'] = y[j]
 
@@ -1267,6 +1266,19 @@ def menu_principal():
             resolver_edo_2ordem()
         else:
             print("Opção inválida.")
+
+
+def dados():
+    """Menu interativo para métodos de resolução de EDOs."""
+    print("\n===== MENU DE EQUAÇÕES DIFERENCIAIS =====")
+    print("1 - Método de Euler (Runge-Kutta 1ª ordem)")
+    print("2 - Método de Runge-Kutta (2ª, 3ª ou 4ª ordem)")
+    print("3 - Sistemas de EDOs")
+    print("4 - Equações Diferenciais de 2ª Ordem")
+    print("0 - Voltar ao menu principal")
+    opcao = input("Escolha uma opção: ")
+    return opcao
+
 
 if __name__ == "__main__":
     menu_principal()
