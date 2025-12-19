@@ -6,22 +6,79 @@ Módulo contendo funções para montagem e exibição de sistemas lineares,
 eliminação de Gauss (com e sem pivotamento), decomposição LU (com e sem
 pivotamento), forward/backward solves e cálculo do resíduo.
 
-Todas as funções assumem entradas do tipo ``numpy.ndarray`` e retornam
+Todas as funções aceitam entradas ``array_like`` (listas, arrays numpy, etc.),
+convertem internamente para ``numpy.ndarray`` quando necessário, e retornam
 estruturas numpy compatíveis para fácil integração com demais rotinas.
 """
 
-def imprimir_sistema_linear(A, b, titulo="Sistema de Equações"):
+def _validate_linear_system_inputs(A, b):
+    """Valida e converte entradas para funções de sistemas lineares.
+    
+    Parameters
+    ----------
+    A : array_like
+        Matriz dos coeficientes.
+    b : array_like
+        Vetor dos termos independentes.
+        
+    Returns
+    -------
+    A_valid, b_valid : np.ndarray
+        Entradas validadas e convertidas para float.
+        
+    Raises
+    ------
+    ValueError
+        Se as entradas não forem válidas.
+    """
+    A = np.asarray(A, dtype=float)
+    b = np.asarray(b, dtype=float)
+    if A.ndim != 2 or A.shape[0] != A.shape[1]:
+        raise ValueError("A deve ser uma matriz quadrada 2D.")
+    if b.ndim != 1 or b.shape[0] != A.shape[0]:
+        raise ValueError("b deve ser um vetor 1D com comprimento igual ao número de linhas de A.")
+    return A, b
+
+def _validate_lu_inputs(A, b):
+    """Valida entradas para funções de decomposição LU.
+    
+    Parameters
+    ----------
+    A : array_like
+        Matriz a ser decomposta.
+    b : array_like or None
+        Vetor opcional para exibição.
+        
+    Returns
+    -------
+    A_valid, b_valid : np.ndarray
+        Entradas validadas.
+    """
+    A = np.asarray(A, dtype=float)
+    if A.ndim != 2 or A.shape[0] != A.shape[1]:
+        raise ValueError("A deve ser uma matriz quadrada 2D.")
+    if b is not None:
+        b = np.asarray(b, dtype=float)
+        if b.ndim != 1 or b.shape[0] != A.shape[0]:
+            raise ValueError("b deve ser um vetor 1D com comprimento igual ao número de linhas de A.")
+    return A, b
+
+def imprimir_sistema_linear(A, b, titulo="Sistema de Equações", verbose=True):
     """Exibe um sistema linear A|b formatado no terminal.
 
     Parameters
     ----------
     A : np.ndarray
         Matriz de coeficientes (n x n).
-    b : np.ndarray
-        Vetor dos termos independentes (n,).
+    b : np.ndarray or None
+        Vetor dos termos independentes (n,), ou None se não houver.
     titulo : str, optional
         Título a ser exibido antes do sistema (default: ``'Sistema de Equações'``).
+    verbose : bool, optional
+        Se True, imprime o sistema; se False, não imprime nada (default: True).
     """
+    if not verbose:
+        return
     n = len(A)
     largura = 24 
     print(f"\n{titulo}:")
@@ -29,7 +86,8 @@ def imprimir_sistema_linear(A, b, titulo="Sistema de Equações"):
         linha = ""
         for j in range(A.shape[1]):
             linha += f"{A[i,j]:>{largura}} "
-        linha += f"|{b[i]:>{largura}}"
+        if b is not None:
+            linha += f"|{b[i]:>{largura}}"
         print(linha)
     print()
     
@@ -68,7 +126,7 @@ def montar_sistema_valores():
         raise ValueError("Número de termos independentes deve ser igual ao número de variáveis!")
     return np.array(A, dtype=float), np.array(b, dtype=float), [f"x{i+1}" for i in range(n)]
 
-def eliminacao_gauss_sem_pivotamento(A, b):
+def eliminacao_gauss_sem_pivotamento(A, b, verbose=False):
     """Executa a eliminação de Gauss sem pivotamento parcial.
 
     Triangulariza a matriz ``A`` e aplica substituição regressiva para
@@ -81,6 +139,8 @@ def eliminacao_gauss_sem_pivotamento(A, b):
         Matriz dos coeficientes do sistema linear.
     b : array_like, shape (n,)
         Vetor dos termos independentes.
+    verbose : bool, optional
+        Se True, imprime os passos da eliminação; se False, executa silenciosamente (default: False).
 
     Returns
     -------
@@ -88,60 +148,91 @@ def eliminacao_gauss_sem_pivotamento(A, b):
         ``(x, A_triangular, b_modificado, erro_flag)`` onde ``x`` é o vetor
         solução (ou ``None`` em caso de falha), ``A_triangular`` é a matriz A
         após eliminação e ``b_modificado`` o vetor b modificado. ``erro_flag`` é
-        ``False`` em execução bem-sucedida ou ``True``/detalhe em caso de erro.
+        ``False`` em execução bem-sucedida ou ``True`` em caso de erro.
     """
-    n = len(A)
+    A, b = _validate_linear_system_inputs(A, b)
+    n = A.shape[0]
     A = A.copy()
     b = b.copy()
-    imprimir_sistema_linear(A, b, "Sistema inicial")
+    imprimir_sistema_linear(A, b, "Sistema inicial", verbose)
     for k in range(n-1):
         if abs(A[k,k]) < 1e-20:
-            print(f"Pivô zero detectado na linha {k+1} no método sem pivotamento. Não é possível continuar.")
-            return None, None, None, False
+            if verbose:
+                print(f"Pivô zero detectado na linha {k+1} no método sem pivotamento. Não é possível continuar.")
+            return None, None, None, True
         for i in range(k+1, n):
             fator = -A[i,k] / A[k,k] 
             A[i,k:] += fator * A[k,k:]
             b[i] += fator * b[k]
-            print(f"Eliminando elemento A[{i+1},{k+1}], multiplicando linha {k+1} por {fator} e subtraindo da linha {i+1}:")
-            imprimir_sistema_linear(A, b, f"Sistema após eliminar entrada A[{i+1},{k+1}]")
+            if verbose:
+                print(f"Eliminando elemento A[{i+1},{k+1}], multiplicando linha {k+1} por {fator} e subtraindo da linha {i+1}:")
+                imprimir_sistema_linear(A, b, f"Sistema após eliminar entrada A[{i+1},{k+1}]", verbose)
     if any(abs(A[i,i]) < 1e-20 for i in range(n)):
-        print("Sistema impossível (pivô zero na diagonal após eliminação).")
-        return None, None, None, False
+        if verbose:
+            print("Sistema impossível (pivô zero na diagonal após eliminação).")
+        return None, None, None, True
     x = np.zeros(n)
     for i in range(n-1, -1, -1):
         soma = np.dot(A[i,i+1:], x[i+1:])
         x[i] = (b[i] - soma) / A[i,i]
     return x, A, b, False
 
-def eliminacao_gauss_com_pivotamento(A, b):
-    n = len(A)
+def eliminacao_gauss_com_pivotamento(A, b, verbose=False):
+    """Executa a eliminação de Gauss com pivotamento parcial.
+
+    Triangulariza a matriz ``A`` com trocas de linha para escolher o melhor pivô,
+    e aplica substituição regressiva para obter a solução ``x``.
+
+    Parameters
+    ----------
+    A : array_like, shape (n, n)
+        Matriz dos coeficientes do sistema linear.
+    b : array_like, shape (n,)
+        Vetor dos termos independentes.
+    verbose : bool, optional
+        Se True, imprime os passos da eliminação; se False, executa silenciosamente (default: False).
+
+    Returns
+    -------
+    tuple
+        ``(x, A_triangular, b_modificado, erro_flag)`` onde ``x`` é o vetor
+        solução (ou ``None`` em caso de falha), ``A_triangular`` é a matriz A
+        após eliminação e ``b_modificado`` o vetor b modificado. ``erro_flag`` é
+        ``False`` em execução bem-sucedida ou ``True`` em caso de erro.
+    """
+    A, b = _validate_linear_system_inputs(A, b)
+    n = A.shape[0]
     A = A.copy()
     b = b.copy()
-    imprimir_sistema_linear(A, b, "Sistema inicial")
+    imprimir_sistema_linear(A, b, "Sistema inicial", verbose)
     for k in range(n):
         pivo_linha = max(range(k, n), key=lambda i: abs(A[i,k]))
-        print(f"Pivô escolhido: {pivo_linha}")
+        if verbose:
+            print(f"Pivô escolhido: {pivo_linha}")
         if abs(A[pivo_linha,k]) < 1e-20:
-            print("Sistema impossível (pivô zero detectado).")
-            return None, None, None
+            if verbose:
+                print("Sistema impossível (pivô zero detectado).")
+            return None, None, None, True
         if pivo_linha != k:
             A[[k,pivo_linha]] = A[[pivo_linha,k]]
             b[[k,pivo_linha]] = b[[pivo_linha,k]]
-            print(f"Trocando linha {k+1} com linha {pivo_linha+1} (pivoteamento):")
-            imprimir_sistema_linear(A, b, f"Sistema após troca das linhas {k+1} e {pivo_linha+1}")
+            if verbose:
+                print(f"Trocando linha {k+1} com linha {pivo_linha+1} (pivoteamento):")
+                imprimir_sistema_linear(A, b, f"Sistema após troca das linhas {k+1} e {pivo_linha+1}", verbose)
         for i in range(k+1, n):
             fator = -A[i,k] / A[k,k]
             A[i,k:] += fator * A[k,k:]
             b[i] += fator * b[k]
-            print(f"Eliminando elemento A[{i+1},{k+1}], multiplicando linha {k+1} por {fator} e subtraindo da linha {i+1}:")
-            imprimir_sistema_linear(A, b, f"Sistema após eliminar entrada A[{i+1},{k+1}]")
+            if verbose:
+                print(f"Eliminando elemento A[{i+1},{k+1}], multiplicando linha {k+1} por {fator} e subtraindo da linha {i+1}:")
+                imprimir_sistema_linear(A, b, f"Sistema após eliminar entrada A[{i+1},{k+1}]", verbose)
     x = np.zeros(n)
     for i in range(n-1, -1, -1):
         soma = np.dot(A[i,i+1:], x[i+1:])
         x[i] = (b[i] - soma) / A[i,i]
-    return x, A, b
+    return x, A, b, False
 
-def lu_sem_pivot(A,b):
+def lu_sem_pivot(A, b, verbose=False):
     """Decomposição LU sem pivotamento.
 
     Calcula matrizes ``L`` (inferior) e ``U`` (superior) tais que
@@ -155,32 +246,39 @@ def lu_sem_pivot(A,b):
     b : array_like
         (opcional) vetor usado apenas para exibição durante passos (pode ser
         ``None`` quando não for necessário).
+    verbose : bool, optional
+        Se True, imprime os passos da decomposição; se False, executa silenciosamente (default: False).
 
     Returns
     -------
     L, U : np.ndarray
         Matrizes inferior e superior da decomposição LU.
     """
-    n = len(A)
+    A, b = _validate_lu_inputs(A, b)
+    n = A.shape[0]
     U = A.astype(float).copy()
     L = np.eye(n)
-    imprimir_sistema_linear(U, b, "Matriz U inicial")
-    imprimir_sistema_linear(L, b, "Matriz L inicial")
+    if verbose:
+        imprimir_sistema_linear(U, b, "Matriz U inicial", verbose)
+        imprimir_sistema_linear(L, b, "Matriz L inicial", verbose)
     for k in range(n-1):
         if abs(U[k,k]) < 1e-20:
-            print(f"Pivô zero detectado na etapa {k+1} da decomposição LU sem pivotamento.")
+            if verbose:
+                print(f"Pivô zero detectado na etapa {k+1} da decomposição LU sem pivotamento.")
             raise ZeroDivisionError("Pivô zero na LU sem pivotamento - sistema pode ser impossível ou indeterminado.")
-        print(f'Etapa {k+1} da decomposição LU sem pivotamento:')
+        if verbose:
+            print(f'Etapa {k+1} da decomposição LU sem pivotamento:')
         for i in range(k+1, n):
             m = - U[i,k] / U[k,k]
             L[i,k] = - m 
             U[i,:] += m * U[k,:]
-            print(f"m_{{{i+1},{k+1}}} = {m}")
-            imprimir_sistema_linear(L, b, "Matriz L após etapa")
-            imprimir_sistema_linear(U, b, "Matriz U após etapa")
+            if verbose:
+                print(f"m_{{{i+1},{k+1}}} = {m}")
+                imprimir_sistema_linear(L, b, "Matriz L após etapa", verbose)
+                imprimir_sistema_linear(U, b, "Matriz U após etapa", verbose)
     return L, U
 
-def lu_com_pivot(A,b):
+def lu_com_pivot(A, b, verbose=False):
     """Decomposição LU com pivotamento parcial.
 
     Retorna a tripla ``P, L, U`` tal que ``P @ A = L @ U``.
@@ -191,41 +289,49 @@ def lu_com_pivot(A,b):
         Matriz a ser decomposta.
     b : array_like
         (opcional) vetor usado apenas para exibição durante passos.
+    verbose : bool, optional
+        Se True, imprime os passos da decomposição; se False, executa silenciosamente (default: False).
 
     Returns
     -------
     P, L, U : np.ndarray
         ``P`` matriz de permutação, ``L`` inferior, ``U`` superior.
     """
-    n = len(A)
+    A, b = _validate_lu_inputs(A, b)
+    n = A.shape[0]
     U = A.astype(float).copy()
     L = np.eye(n)
     P = np.eye(n)
-    imprimir_sistema_linear(U, b, "Matriz U inicial")
-    imprimir_sistema_linear(L, b, "Matriz L inicial")
-    imprimir_sistema_linear(P, np.zeros(n), "Matriz P inicial")
+    if verbose:
+        imprimir_sistema_linear(U, b, "Matriz U inicial", verbose)
+        imprimir_sistema_linear(L, b, "Matriz L inicial", verbose)
+        imprimir_sistema_linear(P, np.zeros(n), "Matriz P inicial", verbose)
     for k in range(n-1):
         pivo_linha = max(range(k, n), key=lambda i: abs(U[i,k]))
         if abs(U[pivo_linha,k]) < 1e-20:
-            print("Sistema impossível (pivô zero detectado na LU com pivotamento).")
+            if verbose:
+                print("Sistema impossível (pivô zero detectado na LU com pivotamento).")
             return None
         if pivo_linha != k:
             U[[k, pivo_linha], :] = U[[pivo_linha, k], :]
             P[[k, pivo_linha], :] = P[[pivo_linha, k], :]
             if k > 0:
                 L[[k, pivo_linha], :k] = L[[pivo_linha, k], :k]
-            print(f"Trocando linha {k+1} com linha {pivo_linha+1} na matriz U (pivotamento):")
-            imprimir_sistema_linear(U, b, "Matriz U após permutação")
-            imprimir_sistema_linear(L, b, "Matriz L após permutação")
-            imprimir_sistema_linear(P, np.zeros(n), "Matriz P após permutação")
-        print(f'Etapa {k+1} da decomposição LU com pivotamento:')
+            if verbose:
+                print(f"Trocando linha {k+1} com linha {pivo_linha+1} na matriz U (pivotamento):")
+                imprimir_sistema_linear(U, b, "Matriz U após permutação", verbose)
+                imprimir_sistema_linear(L, b, "Matriz L após permutação", verbose)
+                imprimir_sistema_linear(P, np.zeros(n), "Matriz P após permutação", verbose)
+        if verbose:
+            print(f'Etapa {k+1} da decomposição LU com pivotamento:')
         for i in range(k+1, n):
             m = -U[i,k] / U[k,k]   
             L[i,k] = -m             
             U[i,:] += m * U[k,:]   
-            print(f"m_{{{i+1},{k+1}}} = {m}")
-            imprimir_sistema_linear(L, np.zeros(n), "Matriz L após etapa")
-            imprimir_sistema_linear(U, np.zeros(n), "Matriz U após etapa")
+            if verbose:
+                print(f"m_{{{i+1},{k+1}}} = {m}")
+                imprimir_sistema_linear(L, np.zeros(n), "Matriz L após etapa", verbose)
+                imprimir_sistema_linear(U, np.zeros(n), "Matriz U após etapa", verbose)
     return P, L, U
 
 def forward_solve(L, b):
@@ -243,7 +349,13 @@ def forward_solve(L, b):
     y : np.ndarray
         Solução do sistema triangular inferior.
     """
-    n = len(L)
+    L = np.asarray(L, dtype=float)
+    b = np.asarray(b, dtype=float)
+    if L.ndim != 2 or L.shape[0] != L.shape[1]:
+        raise ValueError("L deve ser uma matriz quadrada 2D.")
+    if b.ndim != 1 or b.shape[0] != L.shape[0]:
+        raise ValueError("b deve ser um vetor 1D com comprimento igual ao número de linhas de L.")
+    n = L.shape[0]
     y = np.zeros(n)
     for i in range(n):
         y[i] = (b[i] - np.dot(L[i,:i], y[:i])) / L[i,i]
@@ -264,7 +376,13 @@ def backward_solve(U, y):
     x : np.ndarray
         Solução do sistema triangular superior.
     """
-    n = len(U)
+    U = np.asarray(U, dtype=float)
+    y = np.asarray(y, dtype=float)
+    if U.ndim != 2 or U.shape[0] != U.shape[1]:
+        raise ValueError("U deve ser uma matriz quadrada 2D.")
+    if y.ndim != 1 or y.shape[0] != U.shape[0]:
+        raise ValueError("y deve ser um vetor 1D com comprimento igual ao número de linhas de U.")
+    n = U.shape[0]
     x = np.zeros(n)
     for i in range(n-1, -1, -1):
         x[i] = (y[i] - np.dot(U[i,i+1:], x[i+1:])) / U[i,i]
@@ -287,6 +405,15 @@ def calcular_residuo(A, x, b):
     r : np.ndarray
         Vetor resíduo (b - A x).
     """
+    A = np.asarray(A, dtype=float)
+    x = np.asarray(x, dtype=float)
+    b = np.asarray(b, dtype=float)
+    if A.ndim != 2:
+        raise ValueError("A deve ser uma matriz 2D.")
+    if x.ndim != 1 or x.shape[0] != A.shape[1]:
+        raise ValueError("x deve ser um vetor 1D com comprimento igual ao número de colunas de A.")
+    if b.ndim != 1 or b.shape[0] != A.shape[0]:
+        raise ValueError("b deve ser um vetor 1D com comprimento igual ao número de linhas de A.")
     r = b - A @ x
     return r
 
