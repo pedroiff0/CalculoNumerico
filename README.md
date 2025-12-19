@@ -155,6 +155,18 @@ make html
 # abrir docs/_build/html/index.html
 ```
 
+### Documentação dos testes
+
+- Geramos um resumo com as *docstrings* dos testes unitários em `docs/tests_unitarios.md`.
+- Esse arquivo é atualizado automaticamente por `scripts/generate_tests_docs.py` e contém todas as descrições dos testes por módulo.
+
+Para regenerar a documentação dos testes localmente:
+
+```bash
+python scripts/generate_tests_docs.py
+# abrir docs/tests_unitarios.md
+```
+
 ## ✅ Testes
 
 Utilizamos `pytest`. Execute:
