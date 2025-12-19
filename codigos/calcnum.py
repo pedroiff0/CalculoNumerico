@@ -1,25 +1,18 @@
 """
-Requirements do projeto:
+Módulo principal do projeto de Cálculo Numérico.
 
-matplotlib==3.10.7
-numpy==2.3.4
-sympy==1.14.0
-pandas==2.3.3
-mpmath==1.3.0
+Este módulo fornece uma interface interativa unificada para todos os
+algoritmos implementados: conversões de bases, sistemas lineares,
+interpolação, ajuste de curvas, integração e EDOs.
 
+Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025
 """
+
 import numpy as np
 from sympy import symbols, integrate, sympify
 from sympy import sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, exp, sqrt, log, Abs, pi, E
-
-# Mapeamento padrão para uso com sympify (padroniza nomes de funções/constantes)
-SYMPY_LOCALS = {
-    'sin': sin, 'cos': cos, 'tan': tan,
-    'asin': asin, 'acos': acos, 'atan': atan,
-    'sinh': sinh, 'cosh': cosh, 'tanh': tanh,
-    'exp': exp, 'sqrt': sqrt, 'log': log, 'abs': Abs,
-    'pi': pi, 'e': E, 'E': E
-}
+from .constants import SYMPY_LOCALS
 
 
 """
