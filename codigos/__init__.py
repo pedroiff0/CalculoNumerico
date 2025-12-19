@@ -1,1 +1,1 @@
-__all__ = ['bases', 'sistemaslineares', 'interpolacoes', 'ajustecurvas', 'integracoes', 'edos', 'raizes', 'calcnum']
+__all__ = ['bases', 'sistemaslineares', 'interpolacoes', 'ajustecurvas', 'integracoes', 'edos', 'raizes', 'calcnum', 'constants']
