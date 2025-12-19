@@ -17,97 +17,472 @@ SYMPY_LOCALS = {
     'pi': pi, 'e': E, 'E': E
 }
 
-def pedir_dados_edo():
-    """Obtém entradas do usuário para resolução de EDOs (RK/Euler).
+def _validate_edo_inputs(func_input, x0, y0, h, xn, ordem=None):
+    """Valida entradas para funções de resolução de EDOs.
 
-    A função solicita interativamente a função ``f(x, y)``, intervalo de integração,
-    condições iniciais e passo (``h``) ou número de subintervalos (``m``). Também
-    permite informar uma solução exata opcional.
+    Esta função realiza validações abrangentes dos dados de entrada para garantir
+    que a resolução de EDO possa ser realizada corretamente.
+
+    Parameters
+    ----------
+    func_input : str
+        Expressão da função f(x, y) como string.
+    x0, y0 : float
+        Condições iniciais: ponto inicial x0 e valor y(x0).
+    h : float
+        Tamanho do passo de integração. Deve ser positivo.
+    xn : float
+        Ponto final de integração. Deve ser diferente de x0.
+    ordem : int or None, optional
+        Ordem do método Runge-Kutta (1, 2, 3, 4). Se None, não valida.
+
+    Returns
+    -------
+    func_input_valid, x0_valid, y0_valid, h_valid, xn_valid : str, float, float, float, float
+        Entradas validadas e convertidas para tipos apropriados.
+
+    Raises
+    ------
+    TypeError
+        Se os tipos de entrada não forem adequados.
+    ValueError
+        Se os valores não forem válidos (passo negativo, pontos iguais, etc.).
+    """
+    # Validação da função de entrada
+    if not isinstance(func_input, str):
+        raise TypeError(f"func_input deve ser uma string. Recebido: {type(func_input)}")
+
+    func_input = func_input.strip()
+    if not func_input:
+        raise ValueError("A expressão da função f(x,y) não pode estar vazia")
+
+    # Validação e conversão dos valores numéricos
+    try:
+        x0 = float(x0)
+        y0 = float(y0)
+        h = float(h)
+        xn = float(xn)
+    except (ValueError, TypeError) as e:
+        raise TypeError(f"Todos os parâmetros numéricos devem ser números. Erro: {e}")
+
+    # Validação de valores finitos
+    if not np.isfinite(x0):
+        raise ValueError("O ponto inicial x0 deve ser finito (não NaN ou infinito)")
+    if not np.isfinite(y0):
+        raise ValueError("O valor inicial y0 deve ser finito (não NaN ou infinito)")
+    if not np.isfinite(h):
+        raise ValueError("O passo h deve ser finito (não NaN ou infinito)")
+    if not np.isfinite(xn):
+        raise ValueError("O ponto final xn deve ser finito (não NaN ou infinito)")
+
+    # Validação do passo
+    if h <= 0:
+        raise ValueError(f"O passo h deve ser positivo. Recebido: {h}")
+
+    # Validação do intervalo
+    if abs(xn - x0) < 1e-15:
+        raise ValueError(f"Os pontos inicial e final devem ser diferentes. x0={x0}, xn={xn}")
+
+    # Validação da ordem (se fornecida)
+    if ordem is not None:
+        try:
+            ordem = int(ordem)
+        except (ValueError, TypeError):
+            raise TypeError(f"A ordem deve ser um inteiro. Recebido: {type(ordem)}")
+
+        if ordem not in [1, 2, 3, 4]:
+            raise ValueError(f"A ordem deve ser 1, 2, 3 ou 4. Recebido: {ordem}")
+
+    return func_input, x0, y0, h, xn
+
+def _validate_sistema_edo_inputs(funcs_input, y0, t0, tf, h, ordem=None):
+    """Valida entradas para resolução de sistemas de EDOs.
+
+    Parameters
+    ----------
+    funcs_input : list of str
+        Lista de expressões das funções f_i(t, y) como strings.
+    y0 : array_like
+        Condições iniciais y(t0) como array ou lista.
+    t0, tf : float
+        Pontos inicial e final de integração.
+    h : float
+        Tamanho do passo de integração. Deve ser positivo.
+    ordem : int or None, optional
+        Ordem do método Runge-Kutta (1, 2, 3, 4). Se None, não valida.
+
+    Returns
+    -------
+    funcs_valid, y0_valid, t0_valid, tf_valid, h_valid : list, np.ndarray, float, float, float
+        Entradas validadas e convertidas.
+
+    Raises
+    ------
+    TypeError
+        Se os tipos de entrada não forem adequados.
+    ValueError
+        Se os valores não forem válidos.
+    """
+    # Validação das funções
+    if not isinstance(funcs_input, (list, tuple)):
+        raise TypeError(f"funcs_input deve ser uma lista ou tupla. Recebido: {type(funcs_input)}")
+
+    if len(funcs_input) == 0:
+        raise ValueError("Deve haver pelo menos uma função no sistema")
+
+    funcs_valid = []
+    for i, func in enumerate(funcs_input):
+        if not isinstance(func, str):
+            raise TypeError(f"Todas as funções devem ser strings. Função {i}: {type(func)}")
+        func = func.strip()
+        if not func:
+            raise ValueError(f"A função {i} não pode estar vazia")
+        funcs_valid.append(func)
+
+    # Validação das condições iniciais
+    try:
+        y0 = np.asarray(y0, dtype=float)
+    except (ValueError, TypeError) as e:
+        raise TypeError(f"y0 deve ser conversível para array numérico. Erro: {e}")
+
+    if y0.ndim != 1:
+        raise ValueError(f"y0 deve ser um array 1D. Recebido: {y0.ndim}D com shape {y0.shape}")
+
+    if len(y0) != len(funcs_input):
+        raise ValueError(f"Número de condições iniciais ({len(y0)}) deve corresponder ao "
+                        f"número de funções ({len(funcs_input)})")
+
+    if not np.all(np.isfinite(y0)):
+        raise ValueError("Todas as condições iniciais em y0 devem ser finitas")
+
+    # Validação dos pontos temporais e passo
+    try:
+        t0 = float(t0)
+        tf = float(tf)
+        h = float(h)
+    except (ValueError, TypeError) as e:
+        raise TypeError(f"t0, tf e h devem ser números. Erro: {e}")
+
+    if not np.isfinite(t0):
+        raise ValueError("O ponto inicial t0 deve ser finito")
+    if not np.isfinite(tf):
+        raise ValueError("O ponto final tf deve ser finito")
+    if not np.isfinite(h):
+        raise ValueError("O passo h deve ser finito")
+
+    if h <= 0:
+        raise ValueError(f"O passo h deve ser positivo. Recebido: {h}")
+
+    if abs(tf - t0) < 1e-15:
+        raise ValueError(f"Os pontos inicial e final devem ser diferentes. t0={t0}, tf={tf}")
+
+    # Validação da ordem (se fornecida)
+    if ordem is not None:
+        try:
+            ordem = int(ordem)
+        except (ValueError, TypeError):
+            raise TypeError(f"A ordem deve ser um inteiro. Recebido: {type(ordem)}")
+
+        if ordem not in [1, 2, 3, 4]:
+            raise ValueError(f"A ordem deve ser 1, 2, 3 ou 4. Recebido: {ordem}")
+
+    return funcs_valid, y0, t0, tf, h
+
+def _create_function_from_string(func_str, variables, verbose=False):
+    """Cria uma função callable a partir de uma string matemática.
+
+    Esta função tenta múltiplas abordagens para converter uma expressão
+    matemática em string para uma função Python callable, com fallbacks
+    para máxima compatibilidade.
+
+    Parameters
+    ----------
+    func_str : str
+        Expressão matemática como string (ex.: 'y - x**2').
+    variables : list of str
+        Nomes das variáveis na expressão (ex.: ['x', 'y']).
+    verbose : bool, optional
+        Se True, imprime informações sobre o processo de criação.
+
+    Returns
+    -------
+    callable
+        Função que pode ser chamada com os argumentos correspondentes.
+
+    Raises
+    ------
+    ValueError
+        Se não for possível criar uma função válida da string.
+    """
+    if verbose:
+        print(f"Criando função a partir de: {func_str}")
+
+    # Preparar a string: remover espaços, corrigir notação
+    func_str = func_str.replace(' ', '').replace('^', '**')
+
+    # Corrigir multiplicação implícita (ex.: 2x -> 2*x)
+    func_str = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', func_str)
+
+    # Criar símbolos do SymPy
+    symbols = sp.symbols(variables)
+    symbols_dict = dict(zip(variables, symbols))
+
+    try:
+        # Tentar primeiro com SymPy (mais robusto)
+        expr = sp.sympify(func_str, locals={**SYMPY_LOCALS, **symbols_dict})
+        func = sp.lambdify(symbols, expr, modules=['numpy'])
+
+        # Teste rápido da função
+        test_args = [1.0] * len(variables)
+        test_result = func(*test_args)
+        if not np.isfinite(test_result):
+            raise ValueError("Função produz resultado não-finito no teste")
+
+        if verbose:
+            print("Função criada com sucesso usando SymPy")
+
+        return func
+
+    except Exception as e:
+        if verbose:
+            print(f"Falhou com SymPy: {e}. Tentando fallback com eval...")
+
+        # Fallback: usar eval com ambiente restrito
+        try:
+            def func(*args):
+                if len(args) != len(variables):
+                    raise ValueError(f"Número incorreto de argumentos. Esperado: {len(variables)}, "
+                                   f"recebido: {len(args)}")
+
+                local_vars = dict(zip(variables, args))
+                local_vars.update({'np': np, 'math': math, **safe_math})
+
+                try:
+                    return eval(func_str, {"__builtins__": None}, local_vars)
+                except Exception as eval_error:
+                    raise ValueError(f"Erro na avaliação da função: {eval_error}")
+
+            # Teste da função
+            test_args = [1.0] * len(variables)
+            test_result = func(*test_args)
+            if not np.isfinite(test_result):
+                raise ValueError("Função produz resultado não-finito no teste")
+
+            if verbose:
+                print("Função criada com sucesso usando eval")
+
+            return func
+
+        except Exception as fallback_error:
+            raise ValueError(f"Não foi possível criar função a partir de '{func_str}'. "
+                           f"Erro SymPy: {e}. Erro fallback: {fallback_error}")
+
+def pedir_dados_edo():
+    """Obtém entradas do usuário para resolução de EDOs com validação robusta.
+
+    Esta função solicita interativamente ao usuário os dados necessários para
+    resolver uma equação diferencial ordinária: a função f(x,y), o intervalo
+    de integração [a,b], as condições iniciais (x0,y0), e o passo de integração.
+    Também permite especificar uma solução exata opcional para comparação.
+
+    A função inclui validações abrangentes para garantir que os dados sejam
+    adequados para a resolução numérica da EDO.
 
     Returns
     -------
     dict
-        Dicionário com chaves: 'func_input', 'a', 'b', 'x0', 'y0', 'h', 'm', 'xn',
-        'solucao_exata' (callable ou None) e 'sol_exata_expr' (string).
+        Dicionário contendo todos os dados validados com as seguintes chaves:
+        - 'func_input': str, expressão da função f(x,y)
+        - 'a': float, limite inferior do intervalo
+        - 'b': float, limite superior do intervalo
+        - 'x0': float, ponto inicial das condições iniciais
+        - 'y0': float, valor inicial y(x0)
+        - 'h': float, tamanho do passo de integração
+        - 'm': int or None, número de subintervalos (se especificado)
+        - 'xn': float, ponto final (sempre igual a b)
+        - 'solucao_exata': callable or None, função da solução exata
+        - 'sol_exata_expr': str, expressão da solução exata
+
+    Raises
+    ------
+    ValueError
+        Se os dados inseridos forem inválidos ou inconsistentes.
+    KeyboardInterrupt
+        Se o usuário interromper a entrada (Ctrl+C).
     """
-    print("Digite a função f(x,y) em notação matemática simples:")
-    print("Exemplo: y - x  (será interpretado como y - x)")
-    func_input = input("f(x,y) = ").strip()
+    try:
+        # Entrada da função f(x,y) com validação
+        while True:
+            print("\nDigite a função f(x,y) em notação matemática simples:")
+            print("Exemplo: y - x**2  (será interpretado como y - x²)")
+            print("Funções disponíveis: sin, cos, tan, exp, log, sqrt, pi, e, etc.")
+            func_input = input("f(x,y) = ").strip()
 
-    print("\nIntervalo de integração [a,b]:")
-    a = float(input("a = "))
-    b = float(input("b = "))
-
-    print("\nCondições iniciais:")
-    x0 = float(input("x0 = "))
-    y0 = float(input("y0 = "))
-
-    # passo: h ou m
-    while True:
-        escolha = input("Deseja informar passo por h ou por número de subintervalos m? [h/m]: ").strip().lower()
-        if escolha == 'h':
-            try:
-                h = float(input("h = "))
-                m = None
-                break
-            except Exception:
-                print("Valor de h inválido. Tente novamente.")
+            if not func_input:
+                print("Erro: A expressão da função não pode estar vazia. Tente novamente.")
                 continue
-        elif escolha == 'm':
+
+            # Teste básico da função
             try:
-                m = int(input("m = "))
-                if m <= 0:
-                    print("m deve ser inteiro positivo. Tente novamente.")
+                test_func = _create_function_from_string(func_input, ['x', 'y'], verbose=False)
+                # Teste numérico rápido
+                test_result = test_func(1.0, 1.0)
+                if not np.isfinite(test_result):
+                    print("Erro: A função produz resultado não-finito. Verifique a expressão.")
                     continue
-                h = (b - a) / m
-                print(f"Calculado h = {h}")
                 break
-            except Exception:
-                print("Valor de m inválido. Tente novamente.")
+            except Exception as e:
+                print(f"Erro na expressão da função: {e}")
+                print("Tente novamente.")
                 continue
-        else:
-            print("Escolha inválida. Digite 'h' ou 'm'.")
 
-    xn = b
+        # Entrada do intervalo [a,b] com validação
+        while True:
+            try:
+                print("\nIntervalo de integração [a,b]:")
+                a_str = input("a = ").strip()
+                a = float(a_str)
+                b_str = input("b = ").strip()
+                b = float(b_str)
 
-    # solução exata opcional
-    solucao_exata = None
-    sol_exata_expr = ''
-    s = input("Solução exata (y(x))? (pressione Enter se não houver): ").strip()
-    if s:
-        sol_exata_expr = s.replace(' ', '').replace('^', '**')
-        try:
-            x_sym = sp.symbols('x')
-            # usar o mapeamento global `SYMPY_LOCALS` (define sin, cos, pi, e, etc.)
-            expr_sol = sp.sympify(sol_exata_expr, locals=SYMPY_LOCALS)
-            lam_sol = sp.lambdify(x_sym, expr_sol, modules=['numpy'])
-            def solucao_exata(x):
-                val = lam_sol(x)
-                # tentar converter de numpy/sympy para float
-                try:
-                    return float(val)
-                except Exception:
+                if not (np.isfinite(a) and np.isfinite(b)):
+                    print("Erro: Os limites devem ser finitos. Tente novamente.")
+                    continue
+
+                if abs(b - a) < 1e-15:
+                    print("Erro: Os limites a e b devem ser diferentes. Tente novamente.")
+                    continue
+
+                break
+            except ValueError:
+                print("Erro: Digite números válidos. Tente novamente.")
+
+        # Entrada das condições iniciais com validação
+        while True:
+            try:
+                print("\nCondições iniciais:")
+                x0_str = input("x0 = ").strip()
+                x0 = float(x0_str)
+                y0_str = input("y0 = ").strip()
+                y0 = float(y0_str)
+
+                if not (np.isfinite(x0) and np.isfinite(y0)):
+                    print("Erro: As condições iniciais devem ser finitas. Tente novamente.")
+                    continue
+
+                # Verificar se x0 está no intervalo [a,b]
+                if not (min(a, b) <= x0 <= max(a, b)):
+                    print(f"Aviso: x0 = {x0} está fora do intervalo [{a}, {b}]")
+
+                break
+            except ValueError:
+                print("Erro: Digite números válidos. Tente novamente.")
+
+        # Escolha do passo: h ou m
+        h = None
+        m = None
+        while True:
+            try:
+                escolha = input("\nDeseja informar o passo por:\n"
+                              "  h - tamanho do passo diretamente\n"
+                              "  m - número de subintervalos\n"
+                              "Escolha [h/m]: ").strip().lower()
+
+                if escolha == 'h':
+                    h_str = input("h = ").strip()
+                    h = float(h_str)
+                    if h <= 0:
+                        print("Erro: O passo h deve ser positivo. Tente novamente.")
+                        continue
+                    if h > abs(b - a):
+                        print(f"Aviso: h = {h} é maior que o intervalo |b-a| = {abs(b-a)}")
+                    m = None
+                    break
+
+                elif escolha == 'm':
+                    m_str = input("m = ").strip()
+                    m = int(m_str)
+                    if m <= 0:
+                        print("Erro: O número de subintervalos m deve ser positivo. Tente novamente.")
+                        continue
+                    if m > 10000:  # Limite razoável
+                        print("Erro: Número máximo de subintervalos é 10000. Tente novamente.")
+                        continue
+                    h = abs(b - a) / m
+                    print(f"Calculado h = {h:.8e}")
+                    break
+
+                else:
+                    print("Erro: Escolha 'h' ou 'm'. Tente novamente.")
+                    continue
+
+            except ValueError:
+                print("Erro: Digite um valor numérico válido. Tente novamente.")
+            except ZeroDivisionError:
+                print("Erro: Intervalo [a,b] tem comprimento zero. Tente novamente.")
+                continue
+
+        xn = b
+
+        # Solução exata opcional
+        solucao_exata = None
+        sol_exata_expr = ''
+
+        while True:
+            s = input("\nSolução exata y(x) (pressione Enter se não houver): ").strip()
+            if not s:
+                break
+
+            sol_exata_expr = s
+            try:
+                # Criar função da solução exata
+                x_sym = sp.symbols('x')
+                expr_sol = sp.sympify(sol_exata_expr, locals=SYMPY_LOCALS)
+                lam_sol = sp.lambdify(x_sym, expr_sol, modules=['numpy'])
+
+                def solucao_exata(x):
                     try:
-                        return float(np.asarray(val).item())
+                        val = lam_sol(x)
+                        # Converter para float se possível
+                        if hasattr(val, 'item'):
+                            val = val.item()
+                        return float(val)
                     except Exception:
-                        return float(sp.N(val))
-        except Exception:
-            print("Expressão da solução exata inválida; ignorando solução exata.")
-            sol_exata_expr = ''
-            solucao_exata = None
+                        return float(sp.N(expr_sol.subs(x_sym, x)))
 
-    return {
-        'func_input': func_input,
-        'a': a,
-        'b': b,
-        'x0': x0,
-        'y0': y0,
-        'h': h,
-        'm': m if 'm' in locals() else None,
-        'xn': xn,
-        'solucao_exata': solucao_exata if 'solucao_exata' in locals() and sol_exata_expr else None,
-        'sol_exata_expr': sol_exata_expr,
-    }
+                # Teste da função
+                test_val = solucao_exata(x0)
+                if not np.isfinite(test_val):
+                    print("Erro: A solução exata produz valor não-finito em x0. Tente novamente.")
+                    continue
+
+                print("Solução exata aceita.")
+                break
+
+            except Exception as e:
+                print(f"Erro na expressão da solução exata: {e}")
+                print("Tente novamente ou pressione Enter para pular.")
+                continue
+
+        return {
+            'func_input': func_input,
+            'a': a,
+            'b': b,
+            'x0': x0,
+            'y0': y0,
+            'h': h,
+            'm': m,
+            'xn': xn,
+            'solucao_exata': solucao_exata,
+            'sol_exata_expr': sol_exata_expr,
+        }
+
+    except KeyboardInterrupt:
+        print("\n\nEntrada interrompida pelo usuário.")
+        raise
+    except Exception as e:
+        print(f"\nErro inesperado na leitura dos dados: {e}")
+        raise
 
 
 def passos_edo(a, b, x0, h=None, m=None):
@@ -337,77 +712,138 @@ def resolver_edo_2ordem():
 def runge_kutta(func_input, x0, y0, h, xn, ordem):
     """Resolve EDOs escalares usando métodos de Runge-Kutta de ordem 1 a 4.
 
+    Esta função implementa os métodos de Runge-Kutta para resolver numericamente
+    equações diferenciais ordinárias da forma dy/dx = f(x,y). Os métodos
+    implementados vão da ordem 1 (Euler) até a ordem 4 (Runge-Kutta clássico).
+
     Parameters
     ----------
     func_input : str
-        Expressão para f(x, y) como string (ex.: ``'y'`` para dy/dx = y).
+        Expressão matemática para f(x, y) como string. Deve ser uma função
+        válida das variáveis x e y. Exemplos: 'y', 'y - x**2', 'sin(x)*y'.
+        Espaços são ignorados e '^' é convertido para '**'.
     x0 : float
-        Ponto inicial.
+        Ponto inicial da integração (condição inicial para x).
+        Deve ser um número finito.
     y0 : float
-        Valor inicial y(x0).
+        Valor inicial y(x0). Deve ser um número finito.
     h : float
-        Tamanho do passo (deve dividir o intervalo (xn-x0)).
+        Tamanho do passo de integração. Deve ser positivo e dividir
+        exatamente o intervalo (xn - x0), caso contrário será truncado.
     xn : float
-        Ponto final onde se integra até (xn > x0 esperado).
+        Ponto final da integração. Deve ser diferente de x0.
     ordem : int
-        Ordem do método (1, 2, 3 ou 4).
+        Ordem do método Runge-Kutta. Deve ser 1, 2, 3 ou 4:
+        - 1: Método de Euler (primeira ordem)
+        - 2: Euler modificado (segunda ordem)
+        - 3: Runge-Kutta de terceira ordem
+        - 4: Runge-Kutta clássico (quarta ordem)
 
     Returns
     -------
-    (list, list)
-        Tupla ``(x_vals, y_vals)`` com os pontos de amostragem e as aproximações y.
-    """
-    func_input = func_input.replace(' ', '')  # Remove espaços
-    func_input = re.sub(r'(\d)([xy])', r'\1*\2', func_input)
-    # Usar sympy para avaliar a função f(x,y)
-    x_sym, y_sym = sp.symbols('x y')
-    try:
-        expr = sp.sympify(func_input)
-        f = sp.lambdify((x_sym, y_sym), expr, modules=['numpy'])
-    except Exception:
-        # fallback simples: usar eval em ambiente restrito com safe_math
-        def f(x, y):
-            local_vars = {"x": x, "y": y, "math": math, **safe_math}
-            try:
-                return eval(func_input, {"__builtins__": None}, local_vars)
-            except Exception:
-                # última tentativa: avaliar com python direto
-                return eval(func_input)
+    x_vals : list of float
+        Lista dos pontos x onde a solução foi calculada, incluindo x0 e xn.
+    y_vals : list of float
+        Lista dos valores aproximados y(x) correspondentes aos pontos em x_vals.
 
-    if h <= 0:
-        raise ValueError('h deve ser > 0')
-    if ordem not in [1, 2, 3, 4]:
-        raise ValueError('ordem deve ser 1, 2, 3 ou 4')
-    n = int((xn - x0) / h)
+    Raises
+    ------
+    ValueError
+        Se os parâmetros forem inválidos (ver _validate_edo_inputs).
+    TypeError
+        Se os tipos de entrada não forem adequados.
+    RuntimeError
+        Se ocorrer erro durante a avaliação da função f(x,y).
+
+    Notes
+    -----
+    Os métodos de Runge-Kutta seguem as fórmulas clássicas (Euler, Euler modificado e RK4).
+    Por exemplo, para Euler: ``y_{n+1} = y_n + h * f(x_n, y_n)``.
+    Para RK4: ``y_{n+1} = y_n + (h/6) * (k1 + 2*k2 + 2*k3 + k4)``, onde ``k1``..``k4``
+    são os incrementos padrões do método.
+    A estabilidade e precisão aumentam com a ordem do método, mas também
+    o custo computacional.
+
+    Examples
+    --------
+    >>> # Resolver dy/dx = y com y(0) = 1 no intervalo [0, 1]
+    >>> x_vals, y_vals = runge_kutta('y', 0, 1, 0.1, 1, 4)
+    >>> print(f"Solução em x=1: {y_vals[-1]:.6f}")  # Aproxima e^1 ≈ 2.718282
+
+    >>> # EDO não-linear: dy/dx = y - x²
+    >>> x_vals, y_vals = runge_kutta('y - x**2', 0, 1, 0.1, 1, 2)
+    """
+    # Validações de entrada
+    func_input, x0, y0, h, xn = _validate_edo_inputs(func_input, x0, y0, h, xn, ordem)
+
+    # Preparar a expressão da função
+    func_input = func_input.replace(' ', '')  # Remove espaços
+    func_input = re.sub(r'(\d)([xy])', r'\1*\2', func_input)  # Corrigir multiplicação implícita
+
+    # Criar função f(x,y) com fallbacks robustos
+    try:
+        f = _create_function_from_string(func_input, ['x', 'y'], verbose=False)
+    except Exception as e:
+        raise ValueError(f"Não foi possível criar a função f(x,y) a partir de '{func_input}': {e}")
+
+    # Calcular número de passos
+    n_steps = int((xn - x0) / h)
+
+    # Avisar se o passo não divide exatamente o intervalo
+    remainder = abs(xn - x0) - n_steps * h
+    if remainder > 1e-10:
+        print(f"Aviso: O passo h={h} não divide exatamente o intervalo [{x0}, {xn}]. "
+              f"Será integrado até x={x0 + n_steps * h:.6f} em {n_steps} passos.")
+
+    # Inicializar listas de resultados
     x_vals = []
     y_vals = []
-    x = x0
-    y = y0
+    x = float(x0)
+    y = float(y0)
     x_vals.append(x)
     y_vals.append(y)
-    
-    for _ in range(n):
-        if ordem == 1:
-            y = y + h * f(x, y)
-        elif ordem == 2:
-            k1 = h * f(x, y)
-            k2 = h * f(x + h, y + k1)
-            y = y + 0.5 * (k1 + k2)
-        elif ordem == 3:
-            k1 = h * f(x, y)
-            k2 = h * f(x + h / 2, y + k1 / 2)
-            k3 = h * f(x + h, y - k1 + 2 * k2)
-            y = y + (1/6) * (k1 + 4 * k2 + k3)
-        elif ordem == 4:
-            k1 = h * f(x, y)
-            k2 = h * f(x + h / 2, y + k1 / 2)
-            k3 = h * f(x + h / 2, y + k2 / 2)
-            k4 = h * f(x + h, y + k3)
-            y = y + (1 / 6) * (k1 + 2 * k2 + 2 * k3 + k4)
 
-        x += h
-        x_vals.append(x)
-        y_vals.append(y)
+    # Loop principal de integração
+    for step in range(n_steps):
+        try:
+            if ordem == 1:
+                # Método de Euler
+                y_new = y + h * f(x, y)
+
+            elif ordem == 2:
+                # Euler Modificado (Runge-Kutta 2ª ordem)
+                k1 = h * f(x, y)
+                k2 = h * f(x + h, y + k1)
+                y_new = y + 0.5 * (k1 + k2)
+
+            elif ordem == 3:
+                # Runge-Kutta 3ª ordem
+                k1 = h * f(x, y)
+                k2 = h * f(x + h/2, y + k1/2)
+                k3 = h * f(x + h, y - k1 + 2*k2)
+                y_new = y + (1/6) * (k1 + 4*k2 + k3)
+
+            elif ordem == 4:
+                # Runge-Kutta 4ª ordem (clássico)
+                k1 = h * f(x, y)
+                k2 = h * f(x + h/2, y + k1/2)
+                k3 = h * f(x + h/2, y + k2/2)
+                k4 = h * f(x + h, y + k3)
+                y_new = y + (1/6) * (k1 + 2*k2 + 2*k3 + k4)
+
+            # Verificar se o resultado é finito
+            if not np.isfinite(y_new):
+                raise RuntimeError(f"Resultado não-finito no passo {step+1}: y = {y_new}")
+
+            # Atualizar valores
+            y = y_new
+            x += h
+
+            x_vals.append(x)
+            y_vals.append(y)
+
+        except Exception as e:
+            raise RuntimeError(f"Erro na integração no passo {step+1} (x={x:.6f}, y={y:.6f}): {e}")
 
     return x_vals, y_vals
 
@@ -452,111 +888,181 @@ def executar_runge_kutta(ordem):
 # === NOVAS FUNÇÕES PARA SISTEMAS DE EDOS ===
 
 def runge_kutta_sistema(funcs_input, u0, t0, tf, h, ordem):
-    """Resolve sistemas de EDOs usando Runge-Kutta (vetorial).
+    """Resolve sistemas de EDOs usando métodos de Runge-Kutta vetoriais.
+
+    Esta função resolve numericamente sistemas de equações diferenciais ordinárias
+    da forma dy/dt = f(t,y), onde y é um vetor de variáveis dependentes.
+    Implementa os métodos de Runge-Kutta de ordem 1 a 4 para sistemas.
 
     Parameters
     ----------
-    funcs_input : list of str or callables
-        Lista de expressões/funcões que descrevem cada componente do sistema. Use a notação
-        ``y[1]``, ``y[2]`` etc. quando passar strings (1-based index).
+    funcs_input : list of str
+        Lista de expressões matemáticas para as funções f_i(t, y) do sistema.
+        Cada string deve usar notação y[1], y[2], ... para as variáveis
+        (indexação 1-based). Exemplo: ['y[2]', 'y[1] - y[2]'].
     u0 : array_like
-        Vetor de condições iniciais (tamanho n, onde n é número de equações).
+        Vetor de condições iniciais y(t0). Deve ter o mesmo comprimento
+        que funcs_input. Todos os valores devem ser finitos.
     t0 : float
-        Tempo inicial.
+        Tempo inicial da integração. Deve ser finito.
     tf : float
-        Tempo final para integração.
+        Tempo final da integração. Deve ser diferente de t0.
     h : float
-        Passo de tempo.
+        Tamanho do passo de integração. Deve ser positivo.
     ordem : int
-        Ordem do método de Runge-Kutta (1-4).
+        Ordem do método Runge-Kutta (1, 2, 3 ou 4).
 
     Returns
     -------
-    (list, ndarray)
-        Tupla ``(t_vals, u_vals)`` onde ``t_vals`` é lista de tempos e ``u_vals`` é array (m x n)
-        com as soluções em cada tempo.
+    t_vals : list of float
+        Lista dos pontos temporais onde a solução foi calculada,
+        incluindo t0 e tf (aproximadamente).
+    u_vals : ndarray
+        Array de shape (n_pontos, n_equacoes) contendo os valores
+        da solução em cada ponto temporal.
+
+    Raises
+    ------
+    ValueError
+        Se as entradas não forem válidas (ver _validate_sistema_edo_inputs).
+    TypeError
+        Se os tipos de entrada não forem adequados.
+    RuntimeError
+        Se ocorrer erro durante a integração do sistema.
+
+    Notes
+    -----
+    O sistema é resolvido usando a formulação vetorial dos métodos de Runge-Kutta.
+    Em termos práticos, aplica-se a versão vetorial das fórmulas escalares (Euler,
+    RK2/3/4). Por exemplo, em RK4 cada :math:`k_i` é um vetor de incrementos e
+    a combinação final segue a soma ponderada usual: ``y_{n+1} = y_n + (h/6)*(k1+2*k2+2*k3+k4)``.
+
+    Examples
+    --------
+    >>> # Sistema linear: dy1/dt = y2, dy2/dt = -y1
+    >>> funcs = ['y[2]', '-y[1]']
+    >>> y0 = [1, 0]  # y1(0)=1, y2(0)=0
+    >>> t_vals, y_vals = runge_kutta_sistema(funcs, y0, 0, 2*np.pi, 0.1, 4)
+    >>> # y_vals[-1] ≈ [cos(2π), -sin(2π)] ≈ [1, 0]
     """
-    # Preprocessar cada função do sistema para aceitar y[1], y[2], ... (1-based)
+    # Validações de entrada
+    funcs_input, u0, t0, tf, h = _validate_sistema_edo_inputs(funcs_input, u0, t0, tf, h, ordem)
+
+    n_equacoes = len(u0)
+
+    # Preparar funções do sistema
     funcs = []
-    n = len(u0)
-    for func_input in funcs_input:
+    for i, func_input in enumerate(funcs_input):
         expr = func_input.strip().replace('^', '**').replace(' ', '')
-        # Substituir y[1] por y1, y[2] por y2, etc. (variáveis simbólicas)
+
+        # Substituir y[1], y[2], ... por y1, y2, ... (variáveis simbólicas)
         def repl_idx_name(m):
             idx = int(m.group(1))
+            if idx < 1 or idx > n_equacoes:
+                raise ValueError(f"Índice y[{idx}] fora do intervalo válido [1, {n_equacoes}]")
             return f'y{idx}'
+
         expr_named = re.sub(r'y\[(\d+)\]', repl_idx_name, expr)
 
-        # Criar símbolos x, y1, y2, ... conforme o número de equações
-        y_symbols = sp.symbols(' '.join([f'y{i+1}' for i in range(n)]))
+        # Expressão preparada para compilação (não imprimir em execução normal)
+
+        # Criar símbolos: x (tempo) e y1, y2, ... (variáveis do sistema)
+        y_symbols = sp.symbols(' '.join([f'y{j+1}' for j in range(n_equacoes)]))
         x_sym = sp.symbols('x')
-        # mapear nomes para símbolos
+
+        # Mapear nomes para símbolos
         locals_map = {'x': x_sym}
-        for i, ys in enumerate(y_symbols):
-            locals_map[f'y{i+1}'] = ys
+        for j, ys in enumerate(y_symbols):
+            locals_map[f'y{j+1}'] = ys
 
         try:
+            # Tentar criar função com SymPy
             expr_sym = sp.sympify(expr_named, locals=locals_map)
-            # lambdify aceita (x, y1, y2, ...)
-            lam = sp.lambdify((x_sym, ) + tuple(y_symbols), expr_sym, modules=['numpy'])
-            def make_func_from_lam(lf):
-                def f(x, y):
-                    # y é array-like; passar cada componente como argumento
-                    return lf(x, *tuple(y.tolist() if hasattr(y, 'tolist') else list(y)))
-                return f
-            funcs.append(make_func_from_lam(lam))
-        except Exception:
-            # fallback para compatibilidade com código anterior
-            def make_func(e):
-                def f(x, y):
-                    local = {'x': x, 'y': y, 'np': np, 'math': math, **safe_math}
+            lam = sp.lambdify((x_sym,) + tuple(y_symbols), expr_sym, modules=['numpy'])
+
+            def func(x, y, lam=lam, idx=i):
+                # y é array-like; passar cada componente como argumento
+                return lam(x, *tuple(y.tolist() if hasattr(y, 'tolist') else list(y)))
+
+            funcs.append(func)
+
+        except Exception as e:
+            # Fallback para eval com ambiente restrito
+            try:
+                def func(x, y, expr_str=expr_named, idx=i):
+                    # Criar dicionário local com x e componentes de y
+                    local_vars = {'x': x, 'np': np, 'math': math, **safe_math}
+                    for j in range(n_equacoes):
+                        local_vars[f'y{j+1}'] = y[j]
+
                     try:
-                        return eval(e, {"__builtins__": None}, local)
+                        return eval(expr_str, {"__builtins__": None}, local_vars)
                     except Exception:
-                        return eval(e)
-                return f
-            funcs.append(make_func(expr))
-    
-    if h <= 0:
-        raise ValueError('h deve ser > 0')
-    t_vals = [t0]
+                        return eval(expr_str)
+
+                funcs.append(func)
+
+            except Exception as fallback_error:
+                raise ValueError(f"Não foi possível criar função {i+1} a partir de '{func_input}': "
+                               f"SymPy: {e}, Fallback: {fallback_error}")
+
+    # Inicializar resultados
+    t_vals = [float(t0)]
     u_vals = [u0.copy()]
-    n = len(u0)  # número de equações
-    
-    while t0 < tf:
-        step = min(h, tf - t0)  # last step may be smaller than h
-        # Evitar passo nulo que causaria loop infinito
-        if step <= 0:
-            print("Passo nulo ou intervalo concluído; interrompendo resolução do sistema.")
+
+    # Loop de integração
+    t_current = float(t0)
+    u_current = u0.copy()
+
+    while t_current < tf:
+        # Calcular passo atual (último passo pode ser menor)
+        step = min(h, tf - t_current)
+
+        # Evitar passo nulo
+        if step <= 1e-15:
             break
-        if ordem == 1:
-            # Euler
-            k1 = np.array([f(t0, u_vals[-1]) for f in funcs])
-            u_new = u_vals[-1] + step * k1
-        elif ordem == 2:
-            # RK2
-            k1 = np.array([f(t0, u_vals[-1]) for f in funcs])
-            k2 = np.array([f(t0 + step, u_vals[-1] + step * k1) for f in funcs])
-            u_new = u_vals[-1] + 0.5 * step * (k1 + k2)
-        elif ordem == 3:
-            # RK3
-            k1 = np.array([f(t0, u_vals[-1]) for f in funcs])
-            k2 = np.array([f(t0 + step/2, u_vals[-1] + step*k1/2) for f in funcs])
-            k3 = np.array([f(t0 + step, u_vals[-1] - step*k1 + 2*step*k2) for f in funcs])
-            u_new = u_vals[-1] + (step/6) * (k1 + 4*k2 + k3)
-        elif ordem == 4:
-            # RK4
-            k1 = np.array([f(t0, u_vals[-1]) for f in funcs])
-            k2 = np.array([f(t0 + step/2, u_vals[-1] + step*k1/2) for f in funcs])
-            k3 = np.array([f(t0 + step/2, u_vals[-1] + step*k2/2) for f in funcs])
-            k4 = np.array([f(t0 + step, u_vals[-1] + step*k3) for f in funcs])
-            u_new = u_vals[-1] + (step/6) * (k1 + 2*k2 + 2*k3 + k4)
-        
-        t0 += step
-        # append new time and value (ensures final tf is included)
-        t_vals.append(t0)
-        u_vals.append(u_new)
-    
+
+        try:
+            if ordem == 1:
+                # Método de Euler
+                k1 = np.array([f(t_current, u_current) for f in funcs])
+                u_new = u_current + step * k1
+
+            elif ordem == 2:
+                # Runge-Kutta 2ª ordem
+                k1 = np.array([f(t_current, u_current) for f in funcs])
+                k2 = np.array([f(t_current + step, u_current + step * k1) for f in funcs])
+                u_new = u_current + 0.5 * step * (k1 + k2)
+
+            elif ordem == 3:
+                # Runge-Kutta 3ª ordem
+                k1 = np.array([f(t_current, u_current) for f in funcs])
+                k2 = np.array([f(t_current + step/2, u_current + step*k1/2) for f in funcs])
+                k3 = np.array([f(t_current + step, u_current - step*k1 + 2*step*k2) for f in funcs])
+                u_new = u_current + (step/6) * (k1 + 4*k2 + k3)
+
+            elif ordem == 4:
+                # Runge-Kutta 4ª ordem
+                k1 = np.array([f(t_current, u_current) for f in funcs])
+                k2 = np.array([f(t_current + step/2, u_current + step*k1/2) for f in funcs])
+                k3 = np.array([f(t_current + step/2, u_current + step*k2/2) for f in funcs])
+                k4 = np.array([f(t_current + step, u_current + step*k3) for f in funcs])
+                u_new = u_current + (step/6) * (k1 + 2*k2 + 2*k3 + k4)
+
+            # Verificar se os resultados são finitos
+            if not np.all(np.isfinite(u_new)):
+                raise RuntimeError(f"Resultado não-finito no tempo t={t_current:.6f}")
+
+            # Atualizar valores
+            t_current += step
+            u_current = u_new
+
+            t_vals.append(t_current)
+            u_vals.append(u_current.copy())
+
+        except Exception as e:
+            raise RuntimeError(f"Erro na integração em t={t_current:.6f}: {e}")
+
     return t_vals, np.array(u_vals)
 
 def executar_sistema_edos():
