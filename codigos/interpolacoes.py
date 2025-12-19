@@ -1,5 +1,62 @@
 from math import factorial, isclose # isclose é só pro gregory newton
 import sympy as sp # pro erro e truncamento
+import numpy as np
+
+def _validate_interpolation_inputs(x, y, xp=None):
+    """Valida entradas para funções de interpolação.
+    
+    Parameters
+    ----------
+    x, y : array_like
+        Nós e valores correspondentes.
+    xp : float, optional
+        Ponto de interpolação.
+        
+    Returns
+    -------
+    x_valid, y_valid : np.ndarray
+        Entradas validadas e convertidas.
+        
+    Raises
+    ------
+    ValueError
+        Se as entradas não forem válidas.
+    """
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+    if x.ndim != 1:
+        raise ValueError("x deve ser um array 1D.")
+    if y.ndim != 1:
+        raise ValueError("y deve ser um array 1D.")
+    if len(x) != len(y):
+        raise ValueError("x e y devem ter o mesmo comprimento.")
+    if len(x) < 2:
+        raise ValueError("São necessários pelo menos 2 pontos para interpolação.")
+    # Verificar pontos x duplicados
+    if len(np.unique(x)) != len(x):
+        raise ValueError("Os pontos x devem ser únicos.")
+    return x, y
+
+def _validate_max_grau(n, max_grau):
+    """Valida e ajusta o grau máximo.
+    
+    Parameters
+    ----------
+    n : int
+        Número de pontos.
+    max_grau : int or None
+        Grau máximo solicitado.
+        
+    Returns
+    -------
+    int
+        Grau máximo válido.
+    """
+    if max_grau is None:
+        return n - 1
+    if max_grau < 1 or max_grau > n - 1:
+        return n - 1
+    return max_grau
 
 def dados_interpolacao():
     """Lê interativamente pontos para interpolação.
@@ -78,6 +135,7 @@ def tabela_diferencas_divididas(x, y):
     list of lists
         Tabela em que cada linha j contém as diferenças divididas de ordem j.
     """
+    x, y = _validate_interpolation_inputs(x, y)
     n = len(x)
     tabela = [y.copy()]
     for j in range(1, n):
@@ -90,7 +148,9 @@ def tabela_diferencas_divididas(x, y):
     return tabela
 
 # impressao de tabela 
-def imprimir_tabela_diferencas_divididas(tabela):
+def imprimir_tabela_diferencas_divididas(tabela, verbose=True):
+    if not verbose:
+        return
     print("\nTabela de Diferenças Divididas:")
     for i in range(len(tabela[0])):
         linha = [f"{tabela[j][i]:>12.6f}" if i < len(tabela[j]) else " " * 12 for j in range(len(tabela))]
@@ -109,6 +169,11 @@ def tabela_diferencas_finitas(y):
     list of lists
         Tabela de diferenças finitas progressivas.
     """
+    y = np.asarray(y, dtype=float)
+    if y.ndim != 1:
+        raise ValueError("y deve ser um array 1D.")
+    if len(y) < 2:
+        raise ValueError("São necessários pelo menos 2 pontos para diferenças finitas.")
     n = len(y)
     tabela = [y.copy()]
     for j in range(1, n):
@@ -118,7 +183,9 @@ def tabela_diferencas_finitas(y):
         tabela.append(coluna)
     return tabela
 
-def imprimir_tabela_diferencas_finitas(tabela):
+def imprimir_tabela_diferencas_finitas(tabela, verbose=True):
+    if not verbose:
+        return
     print("\nTabela de Diferenças Finitas Progressivas:")
     for i in range(len(tabela[0])):
         linha = [f"{tabela[j][i]:>12.6f}" if i < len(tabela[j]) else " " * 12 for j in range(len(tabela))]
@@ -185,7 +252,7 @@ def calcular_erro(func_str, x_vals, x_interp, grau, valor_interpolado):
         print(f"Erro ao calcular erro truncamento máximo: {e}")
         return None, None
 
-def newton_dif_divididas(x, tabela, xp, max_grau=None):
+def newton_dif_divididas(x, tabela, xp, max_grau=None, verbose=False):
     """Avalia o polinômio interpolador de Newton (diferenças divididas) em xp.
 
     Parameters
@@ -198,6 +265,8 @@ def newton_dif_divididas(x, tabela, xp, max_grau=None):
         Ponto onde avaliar o polinômio.
     max_grau : int or None
         Grau máximo a ser usado.
+    verbose : bool, optional
+        Se True, imprime os passos do cálculo; se False, executa silenciosamente (default: False).
 
     Returns
     -------
@@ -205,44 +274,48 @@ def newton_dif_divididas(x, tabela, xp, max_grau=None):
         Valor do polinômio interpolador em ``xp``.
     """
     n = len(x)
-    if max_grau is None or max_grau > n - 1:
-        max_grau = n - 1
+    max_grau = _validate_max_grau(n, max_grau)
     resultado = tabela[0][0]
     termo = 1.0
-    print("\nCálculo passo a passo (Newton Diferenças Divididas):")
-    print(f"P0 = {resultado}")
+    if verbose:
+        print("\nCálculo passo a passo (Newton Diferenças Divididas):")
+        print(f"P0 = {resultado}")
     for i in range(1, max_grau + 1):
         termo *= (xp - x[i - 1])
-        print(f"Termo {i}: (xp - x[{i-1}]) = ({xp} - {x[i-1]}) = {xp - x[i-1]}")
-        print(f"Δ^{i} f = {tabela[i][0]}") # Δ é o operador da dif dividida
+        if verbose:
+            print(f"Termo {i}: (xp - x[{i-1}]) = ({xp} - {x[i-1]}) = {xp - x[i-1]}")
+            print(f"Δ^{i} f = {tabela[i][0]}") # Δ é o operador da dif dividida
         resultado += tabela[i][0] * termo
-        print(f"Parcial após termo {i}: {resultado}")
+        if verbose:
+            print(f"Parcial após termo {i}: {resultado}")
     return resultado
 
-def gregory_newton_progressivo(x, y, xp, max_grau=None):
+def gregory_newton_progressivo(x, y, xp, max_grau=None, verbose=False):
+    x, y = _validate_interpolation_inputs(x, y)
     n = len(x)
-    if max_grau is None or max_grau > n - 1:
-        max_grau = n - 1
+    max_grau = _validate_max_grau(n, max_grau)
     dx = x[1] - x[0]
     s = (xp - x[0]) / dx  # variável u
     tabela = tabela_diferencas_finitas(y)
     resultado = y[0]
     termo = 1.0
 
-    print(f"\nPasso h = {dx}")
-    print(f"Valor de u (s) = (xp - x[0]) / h = ({xp} - {x[0]}) / {dx} = {s}")
-    print("\nCálculo passo a passo (Gregory-Newton Progressivo):")
-    print(f"y[0] = {y[0]}")
+    if verbose:
+        print(f"\nPasso h = {dx}")
+        print(f"Valor de u (s) = (xp - x[0]) / h = ({xp} - {x[0]}) / {dx} = {s}")
+        print("\nCálculo passo a passo (Gregory-Newton Progressivo):")
+        print(f"y[0] = {y[0]}")
 
     for k in range(1, max_grau + 1):
         termo *= (s - (k - 1)) / k
         delta = tabela[k][0]
         resultado += delta * termo
-        print(f"Δ^{k} y[0] = {delta}, termo: {termo}, parcial: {resultado}")
+        if verbose:
+            print(f"Δ^{k} y[0] = {delta}, termo: {termo}, parcial: {resultado}")
 
     return resultado
 
-def lagrange_interpol(x, y, xp, max_grau=None):
+def lagrange_interpol(x, y, xp, max_grau=None, verbose=False):
     """Avalia o polinômio interpolador de Lagrange em xp.
 
     Parameters
@@ -253,36 +326,42 @@ def lagrange_interpol(x, y, xp, max_grau=None):
         Ponto a ser interpolado.
     max_grau : int or None
         Grau máximo a ser usado.
+    verbose : bool, optional
+        Se True, imprime os cálculos detalhados; se False, executa silenciosamente (default: False).
 
     Returns
     -------
     float
         Valor interpolado em ``xp``.
     """
+    x, y = _validate_interpolation_inputs(x, y)
     n = len(x)
-    if max_grau is None or max_grau > n - 1:
-        max_grau = n - 1
+    max_grau = _validate_max_grau(n, max_grau)
     yp = 0.0
-    print("\nCálculos detalhados do polinômio de Lagrange:")
+    if verbose:
+        print("\nCálculos detalhados do polinômio de Lagrange:")
 
     for i in range(max_grau + 1):
         li = 1.0
-        print(f"\nTermo {i}: L{i}(xp) = ", end="")
+        if verbose:
+            print(f"\nTermo {i}: L{i}(xp) = ", end="")
         for j in range(n):
             if i != j:
                 li *= (xp - x[j]) / (x[i] - x[j])
-                print(f"(({xp} - {x[j]}) / ({x[i]} - {x[j]})) ", end="")
+                if verbose:
+                    print(f"(({xp} - {x[j]}) / ({x[i]} - {x[j]})) ", end="")
         termo = y[i] * li
         yp += termo
-        print(f"= {li}")
-        print(f"y[{i}] * L{i} = {y[i]} * {li} = {termo}")
+        if verbose:
+            print(f"= {li}")
+            print(f"y[{i}] * L{i} = {y[i]} * {li} = {termo}")
 
     return yp
 
-def dispositivo_pratico_lagrange(x, y, xp, max_grau=None):
+def dispositivo_pratico_lagrange(x, y, xp, max_grau=None, verbose=False):
+    x, y = _validate_interpolation_inputs(x, y)
     n = len(x)
-    if max_grau is None or max_grau > n - 1:
-        max_grau = n - 1
+    max_grau = _validate_max_grau(n, max_grau)
     resultado = 0.0
     G = []
     for i in range(n):
@@ -294,8 +373,9 @@ def dispositivo_pratico_lagrange(x, y, xp, max_grau=None):
                 linha.append(x[i] - x[j])
         G.append(linha)
 
-    print("\nDispositivo Prático de Lagrange:")
-    print(f"{'i':>2} {'x[i]':>10} {'y[i]':>10} {'L[i](xp)':>15}")
+    if verbose:
+        print("\nDispositivo Prático de Lagrange:")
+        print(f"{'i':>2} {'x[i]':>10} {'y[i]':>10} {'L[i](xp)':>15}")
 
     for i in range(max_grau + 1):
         numerador = 1.0
@@ -307,11 +387,13 @@ def dispositivo_pratico_lagrange(x, y, xp, max_grau=None):
         Li = numerador / denominador
         termo = y[i] * Li
         resultado += termo
-        print(f"{i:2d} {x[i]:10} {y[i]:10} {Li:15}")
+        if verbose:
+            print(f"{i:2d} {x[i]:10} {y[i]:10} {Li:15}")
 
-    print("\nMatriz G (x[i] - x[j], diagonal = xp - x[i]):")
-    for linha in G:
-        print("[ " + " ".join(str(v) for v in linha) + " ]")
+    if verbose:
+        print("\nMatriz G (x[i] - x[j], diagonal = xp - x[i]):")
+        for linha in G:
+            print("[ " + " ".join(str(v) for v in linha) + " ]")
 
     Gi = []
     Gd = 1.0
@@ -322,15 +404,16 @@ def dispositivo_pratico_lagrange(x, y, xp, max_grau=None):
         Gi.append(prod)
         Gd *= G[i][i]
 
-    print(f"\nProduto da diagonal Gd = {Gd}")
-    for i, val in enumerate(Gi):
-        print(f"Produto da linha G[{i}] = {val}")
+    if verbose:
+        print(f"\nProduto da diagonal Gd = {Gd}")
+        for i, val in enumerate(Gi):
+            print(f"Produto da linha G[{i}] = {val}")
 
-    soma_serie = 0.0
-    for i in range(max_grau + 1):
-        soma_serie += y[i] / Gi[i]
-    print(f"\nCálculo final: Gd * sum(y[i]/Gi[i]) = {Gd} * {soma_serie} = {Gd * soma_serie}")
-    print(f"\nValor interpolado em x = {xp} é: {resultado}")
+        soma_serie = 0.0
+        for i in range(max_grau + 1):
+            soma_serie += y[i] / Gi[i]
+        print(f"\nCálculo final: Gd * sum(y[i]/Gi[i]) = {Gd} * {soma_serie} = {Gd * soma_serie}")
+        print(f"\nValor interpolado em x = {xp} é: {resultado}")
 
     return resultado
 
@@ -354,21 +437,21 @@ def menu():
         max_grau = obter_max_grau(n)
 
         if opcao == '1':
-            resultado = lagrange_interpol(x_vals, y_vals, x_interp, max_grau=max_grau)
+            resultado = lagrange_interpol(x_vals, y_vals, x_interp, max_grau=max_grau, verbose=True)
             if resultado is not None:
                 erro_trunc, erro_real = perguntar_erro(x_vals[:max_grau+1], x_interp, max_grau, resultado)
             print(f"\nResultado final (Lagrange): {resultado}")
 
         elif opcao == '2':
-            resultado = dispositivo_pratico_lagrange(x_vals, y_vals, x_interp, max_grau=max_grau)
+            resultado = dispositivo_pratico_lagrange(x_vals, y_vals, x_interp, max_grau=max_grau, verbose=True)
             if resultado is not None:
                 erro_trunc, erro_real = perguntar_erro(x_vals[:max_grau+1], x_interp, max_grau, resultado)
             print(f"\nResultado final (Dispositivo Prático de Lagrange): {resultado}")
 
         elif opcao == '3':
             tabela = tabela_diferencas_divididas(x_vals, y_vals)
-            imprimir_tabela_diferencas_divididas(tabela)
-            resultado = newton_dif_divididas(x_vals, tabela, x_interp, max_grau=max_grau)
+            imprimir_tabela_diferencas_divididas(tabela, verbose=True)
+            resultado = newton_dif_divididas(x_vals, tabela, x_interp, max_grau=max_grau, verbose=True)
             if resultado is not None:
                 erro_trunc, erro_real = perguntar_erro(x_vals[:max_grau+1], x_interp, max_grau, resultado)
             print(f"\nResultado final (Newton Diferenças Divididas): {resultado}")
@@ -379,8 +462,8 @@ def menu():
                 print("Erro: Os pontos x não têm espaçamento uniforme! Gregory-Newton requer x igualmente espaçados.")
                 continue
             tabela = tabela_diferencas_finitas(y_vals)
-            imprimir_tabela_diferencas_finitas(tabela)
-            resultado = gregory_newton_progressivo(x_vals, y_vals, x_interp, max_grau=max_grau)
+            imprimir_tabela_diferencas_finitas(tabela, verbose=True)
+            resultado = gregory_newton_progressivo(x_vals, y_vals, x_interp, max_grau=max_grau, verbose=True)
             if resultado is not None:
                 erro_trunc, erro_real = perguntar_erro(x_vals[:max_grau+1], x_interp, max_grau, resultado)
             print(f"\nResultado final (Gregory-Newton Progressivo): {resultado}")
