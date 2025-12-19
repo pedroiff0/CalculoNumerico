@@ -1,7 +1,22 @@
+"""Testes para `codigos.interpolacoes`.
+
+Cobre:
+- Cálculo de diferenças divididas e avaliação de Newton
+- Interpolação de Lagrange e dispositivo prático
+- Método de diferenças finitas de Gregory-Newton
+- Estimativa de erro e verificação de espaçamento
+- Comportamentos de verbose/tabela/gráfico e validação de entradas
+"""
+
 from codigos import interpolacoes
 import numpy as np
 
 def test_tabela_diferencas_divididas_and_newton():
+    """Verifica a tabela de diferenças divididas e avaliação de Newton.
+
+    - Confirma primeira linha da tabela igual a y e que a avaliação em 1.5
+      produz o valor esperado 2.25.
+    """
     x = [0.0, 1.0, 2.0]
     y = [0.0, 1.0, 4.0]
     tabela = interpolacoes.tabela_diferencas_divididas(x, y)
@@ -12,6 +27,10 @@ def test_tabela_diferencas_divididas_and_newton():
 
 
 def test_lagrange_interpol():
+    """Verifica a interpolação por Lagrange em um ponto simples.
+
+    - Usa pontos [0,1,2] e valida que p(1.5) ≈ 2.25.
+    """
     x = [0.0, 1.0, 2.0]
     y = [0.0, 1.0, 4.0]
     val = interpolacoes.lagrange_interpol(x, y, 1.5)
@@ -19,6 +38,7 @@ def test_lagrange_interpol():
 
 
 def test_tabela_diferencas_finitas_and_gregory():
+    """Verifica diferenças finitas e interpolação Gregory-Newton progressiva."""
     x = [0.0, 1.0, 2.0]
     y = [0.0, 1.0, 4.0]
     tabela = interpolacoes.tabela_diferencas_finitas(y)
@@ -30,6 +50,7 @@ def test_tabela_diferencas_finitas_and_gregory():
 
 
 def test_dispositivo_pratico_lagrange():
+    """Valida o 'dispositivo prático' de Lagrange com dados sintéticos."""
     x = [0.0, 1.0, 2.0]
     y = [0.0, 1.0, 4.0]
     val = interpolacoes.dispositivo_pratico_lagrange(x, y, 1.5)
@@ -37,6 +58,11 @@ def test_dispositivo_pratico_lagrange():
 
 
 def test_verifica_espaçamento_uniforme_and_calcular_erro():
+    """Testa verificação de espaçamento uniforme e estimativa de erro.
+
+    - Verifica que h=1.0 e que a estimativa de erro para f(x)=x^2 é nula
+      no caso exato usado aqui.
+    """
     x = [0.0, 1.0, 2.0]
     ok, h = interpolacoes.verifica_espaçamento_uniforme(x)
     assert ok and abs(h - 1.0) < 1e-12
@@ -45,7 +71,7 @@ def test_verifica_espaçamento_uniforme_and_calcular_erro():
 
 
 def test_lagrange_real_data_1():
-    """Test Lagrange interpolation with real data from menu example"""
+    """Testa interpolação de Lagrange com dados reais do exemplo do menu"""
     x = [1.0, 1.3, 1.8]
     y = [0.0, 0.262, 0.588]
     val = interpolacoes.lagrange_interpol(x, y, 1.4)
@@ -53,7 +79,7 @@ def test_lagrange_real_data_1():
 
 
 def test_newton_real_data_1():
-    """Test Newton interpolation with real data from menu example"""
+    """Testa interpolação de Newton com dados reais do exemplo do menu"""
     x = [1.0, 1.3, 1.8]
     y = [0.0, 0.262, 0.588]
     tabela = interpolacoes.tabela_diferencas_divididas(x, y)
@@ -62,7 +88,7 @@ def test_newton_real_data_1():
 
 
 def test_dispositivo_pratico_lagrange_real_data():
-    """Test dispositivo prático Lagrange with temperature data"""
+    """Testa dispositivo prático de Lagrange com dados de temperatura"""
     x = [0.2, 0.3, 0.5]
     y = [85.0, 88.0, 92.0]
     val = interpolacoes.dispositivo_pratico_lagrange(x, y, 0.4)
@@ -70,7 +96,7 @@ def test_dispositivo_pratico_lagrange_real_data():
 
 
 def test_newton_real_data_2():
-    """Test Newton with 4 points"""
+    """Testa Newton com 4 pontos"""
     x = [0.0, 0.5, 0.75, 1.0]
     y = [1.0, 4.482, 9.488, 20.086]
     tabela = interpolacoes.tabela_diferencas_divididas(x, y)
@@ -79,7 +105,7 @@ def test_newton_real_data_2():
 
 
 def test_lagrange_real_data_2():
-    """Test Lagrange with pressure data"""
+    """Testa Lagrange com dados de pressão"""
     x = [55.0, 70.0, 85.0, 100.0]
     y = [14.08, 13.56, 13.28, 12.27]
     val = interpolacoes.lagrange_interpol(x, y, 80.0)
@@ -87,7 +113,7 @@ def test_lagrange_real_data_2():
 
 
 def test_lagrange_real_data_3():
-    """Test Lagrange with another pressure dataset"""
+    """Testa Lagrange com outro conjunto de dados de pressão"""
     x = [85.0, 100.0, 115.0, 130.0]
     y = [13.28, 12.27, 11.30, 10.40]
     val = interpolacoes.lagrange_interpol(x, y, 110.0)
@@ -95,7 +121,7 @@ def test_lagrange_real_data_3():
 
 
 def test_newton_real_data_3():
-    """Test Newton with decreasing x values"""
+    """Testa Newton com valores de x decrescentes"""
     x = [1000.0, 750.0, 500.0]
     y = [15.0, 10.0, 7.0]
     tabela = interpolacoes.tabela_diferencas_divididas(x, y)
@@ -104,7 +130,7 @@ def test_newton_real_data_3():
 
 
 def test_max_grau_limitation():
-    """Test that max_grau parameter limits the polynomial degree"""
+    """Garante que o parâmetro max_grau limita o grau do polinômio"""
     x = [0.0, 1.0, 2.0, 3.0]
     y = [0.0, 1.0, 4.0, 9.0]
     val = interpolacoes.lagrange_interpol(x, y, 1.5, max_grau=1)
@@ -112,7 +138,7 @@ def test_max_grau_limitation():
 
 
 def test_gregory_newton_real_data():
-    """Test Gregory-Newton with equally spaced data"""
+    """Testa Gregory-Newton com dados igualmente espaçados"""
     x = [0.0, 0.5, 1.0, 1.5]
     y = [1.0, 1.648721, 2.718282, 4.481689]
     val = interpolacoes.gregory_newton_progressivo(x, y, 0.75)
@@ -121,7 +147,7 @@ def test_gregory_newton_real_data():
 
 
 def test_input_validation_errors():
-    """Test that input validation raises appropriate errors"""
+    """Verifica que validação de entradas levanta erros apropriados"""
     import pytest
     
     with pytest.raises(ValueError, match="x e y devem ter o mesmo comprimento"):
@@ -135,7 +161,7 @@ def test_input_validation_errors():
 
 
 def test_verbose_output(capsys):
-    """Test that verbose=False produces no output and verbose=True produces output"""
+    """Verifica que verbose=False não produz saída e verbose=True produz saída"""
     x = [0.0, 1.0, 2.0]
     y = [0.0, 1.0, 4.0]
     
@@ -151,7 +177,7 @@ def test_verbose_output(capsys):
 
 
 def test_lagrange_verbose_detailed_output(capsys):
-    """Test detailed verbose output for Lagrange interpolation"""
+    """Verifica saída detalhada em verbose para interpolação de Lagrange"""
     x = [1.0, 1.3, 1.8]
     y = [0.0, 0.262, 0.588]
     
@@ -160,7 +186,7 @@ def test_lagrange_verbose_detailed_output(capsys):
 
 
 def test_newton_verbose_detailed_output(capsys):
-    """Test detailed verbose output for Newton interpolation"""
+    """Verifica saída detalhada em verbose para interpolação de Newton"""
     x = [1.0, 1.3, 1.8]
     y = [0.0, 0.262, 0.588]
     tabela = interpolacoes.tabela_diferencas_divididas(x, y)
@@ -169,7 +195,7 @@ def test_newton_verbose_detailed_output(capsys):
     assert abs(val - 0.33826666666666655) < 1e-10
 
 def test_numpy_array_inputs():
-    """Test that functions work with numpy arrays as input"""
+    """Verifica que as funções aceitam arrays numpy como entrada"""
     x = np.array([0.0, 1.0, 2.0])
     y = np.array([0.0, 1.0, 4.0])
     
@@ -179,3 +205,39 @@ def test_numpy_array_inputs():
     tabela = interpolacoes.tabela_diferencas_divididas(x, y)
     val_newton = interpolacoes.newton_dif_divididas(x, tabela, 1.5)
     assert abs(val_newton - 2.25) < 1e-12
+
+
+def test_verbose_enables_tables_and_details(capsys):
+    """Quando verbose=True, a função imprime passos e tabelas detalhadas."""
+    x = [0.0, 1.0, 2.0]
+    y = [0.0, 1.0, 4.0]
+    tabela = interpolacoes.tabela_diferencas_divididas(x, y)
+
+    val = interpolacoes.newton_dif_divididas(x, tabela, 1.5, verbose=True)
+    captured = capsys.readouterr()
+    assert "Termo" in captured.out or "Parcial" in captured.out
+    assert abs(val - 2.25) < 1e-12
+
+
+def test_invalid_xp_raises():
+    """xp deve ser um número finito."""
+    x = [0.0, 1.0]
+    y = [0.0, 1.0]
+    tabela = interpolacoes.tabela_diferencas_divididas(x, y)
+    import math
+    import pytest
+    with pytest.raises(TypeError):
+        interpolacoes.newton_dif_divididas(x, tabela, 'not-a-number')
+    with pytest.raises(ValueError):
+        interpolacoes.newton_dif_divididas(x, tabela, math.inf)
+
+
+def test_max_grau_limits_degree():
+    """Garante que max_grau é limitado a [1, n-1]"""
+    x = [0.0, 1.0, 2.0]
+    y = [0.0, 1.0, 4.0]
+    tabela = interpolacoes.tabela_diferencas_divididas(x, y)
+    # request a ridiculously large degree, should be clamped
+    val_high = interpolacoes.newton_dif_divididas(x, tabela, 1.5, max_grau=100)
+    val_full = interpolacoes.newton_dif_divididas(x, tabela, 1.5, max_grau=None)
+    assert abs(val_high - val_full) < 1e-12

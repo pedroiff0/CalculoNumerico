@@ -490,10 +490,11 @@ def newton_dif_divididas(x, tabela_diferencas, xp, max_grau=None, verbose=False,
         raise ValueError("O ponto de interpolação xp deve ser finito (não NaN ou infinito)")
 
     # Configuração dos flags de saída
+    # Se verbose=True e tabela/grafico não forem informados, habilita-os automaticamente
     if tabela is None:
-        tabela = globals().get('tabela', False)
+        tabela = bool(verbose) or globals().get('tabela', False)
     if grafico is None:
-        grafico = globals().get('grafico', False)
+        grafico = bool(verbose) or globals().get('grafico', False)
 
     # Exibição da tabela se solicitado
     if tabela:
@@ -691,10 +692,11 @@ def gregory_newton_progressivo(x, y, xp, max_grau=None, verbose=False, tabela=No
     tabela_dif_finitas = tabela_diferencas_finitas(y)
 
     # Configuração dos flags de saída
+    # Se verbose=True e tabela/grafico não forem informados, habilita-os automaticamente
     if tabela is None:
-        tabela = globals().get('tabela', False)
+        tabela = bool(verbose) or globals().get('tabela', False)
     if grafico is None:
-        grafico = globals().get('grafico', False)
+        grafico = bool(verbose) or globals().get('grafico', False)
 
     # Exibição da tabela se solicitado
     if tabela:
@@ -872,18 +874,20 @@ def lagrange_interpol(x, y, xp, max_grau=None, verbose=False, tabela=None, grafi
     yp = 0.0
 
     # Configuração dos flags de saída
+    # Se verbose=True e tabela/grafico não forem informados, habilita-os automaticamente
     if tabela is None:
-        tabela = globals().get('tabela', False)
+        tabela = bool(verbose) or globals().get('tabela', False)
     if grafico is None:
-        grafico = globals().get('grafico', False)
+        grafico = bool(verbose) or globals().get('grafico', False)
 
-    # Exibição da tabela de pontos se solicitado
-    if tabela and verbose:
-        print("\nTabela de pontos de interpolação:")
-        print(" i |   x[i]   |   y[i]   ")
-        print("---|----------|----------")
-        for i in range(min(max_grau + 1, n)):
-            print("2d")
+    # Exibição da tabela de pontos se solicitado (detalhes impressos apenas em verbose)
+    if tabela:
+        if verbose:
+            print("\nTabela de pontos de interpolação:")
+            print(" i |   x[i]   |   y[i]   ")
+            print("---|----------|----------")
+            for i in range(min(max_grau + 1, n)):
+                print(f"{i:2d} | {x[i]:10.6f} | {y[i]:10.6f}")
 
     # Cálculo da interpolação
     if verbose:
