@@ -505,7 +505,7 @@ listas de pontos e <code class="docutils literal notranslate"><span class="pre">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.interpolacoes.imprimir_tabela_diferencas_divididas">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">imprimir_tabela_diferencas_divididas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#imprimir_tabela_diferencas_divididas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.imprimir_tabela_diferencas_divididas" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">imprimir_tabela_diferencas_divididas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#imprimir_tabela_diferencas_divididas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.imprimir_tabela_diferencas_divididas" title="Link para esta definição"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -527,7 +527,7 @@ listas de pontos e <code class="docutils literal notranslate"><span class="pre">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.interpolacoes.imprimir_tabela_diferencas_finitas">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">imprimir_tabela_diferencas_finitas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#imprimir_tabela_diferencas_finitas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.imprimir_tabela_diferencas_finitas" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">imprimir_tabela_diferencas_finitas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#imprimir_tabela_diferencas_finitas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.imprimir_tabela_diferencas_finitas" title="Link para esta definição"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -560,7 +560,7 @@ listas de pontos e <code class="docutils literal notranslate"><span class="pre">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.interpolacoes.newton_dif_divididas">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">newton_dif_divididas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#newton_dif_divididas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.newton_dif_divididas" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">newton_dif_divididas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#newton_dif_divididas"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.newton_dif_divididas" title="Link para esta definição"></a></dt>
 <dd><p>Avalia o polinômio interpolador de Newton (diferenças divididas) em xp.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
@@ -569,6 +569,7 @@ listas de pontos e <code class="docutils literal notranslate"><span class="pre">
 <li><p><strong>tabela</strong> (<em>list</em><em> of </em><em>lists</em>) – Tabela de diferenças divididas (como retornada por <code class="docutils literal notranslate"><span class="pre">tabela_diferencas_divididas</span></code>).</p></li>
 <li><p><strong>xp</strong> (<em>float</em>) – Ponto onde avaliar o polinômio.</p></li>
 <li><p><strong>max_grau</strong> (<em>int</em><em> or </em><em>None</em>) – Grau máximo a ser usado.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime os passos do cálculo; se False, executa silenciosamente (default: False).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
@@ -582,12 +583,12 @@ listas de pontos e <code class="docutils literal notranslate"><span class="pre">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.interpolacoes.gregory_newton_progressivo">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">gregory_newton_progressivo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#gregory_newton_progressivo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.gregory_newton_progressivo" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">gregory_newton_progressivo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#gregory_newton_progressivo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.gregory_newton_progressivo" title="Link para esta definição"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.interpolacoes.lagrange_interpol">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">lagrange_interpol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#lagrange_interpol"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.lagrange_interpol" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">lagrange_interpol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#lagrange_interpol"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.lagrange_interpol" title="Link para esta definição"></a></dt>
 <dd><p>Avalia o polinômio interpolador de Lagrange em xp.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parâmetros<span class="colon">:</span></dt>
@@ -596,6 +597,7 @@ listas de pontos e <code class="docutils literal notranslate"><span class="pre">
 <li><p><strong>y</strong> (<em>sequence</em>) – Nós e valores correspondentes.</p></li>
 <li><p><strong>xp</strong> (<em>float</em>) – Ponto a ser interpolado.</p></li>
 <li><p><strong>max_grau</strong> (<em>int</em><em> or </em><em>None</em>) – Grau máximo a ser usado.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Se True, imprime os cálculos detalhados; se False, executa silenciosamente (default: False).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Retorna<span class="colon">:</span></dt>
@@ -609,7 +611,7 @@ listas de pontos e <code class="docutils literal notranslate"><span class="pre">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.interpolacoes.dispositivo_pratico_lagrange">
-<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">dispositivo_pratico_lagrange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#dispositivo_pratico_lagrange"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.dispositivo_pratico_lagrange" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.interpolacoes.</span></span><span class="sig-name descname"><span class="pre">dispositivo_pratico_lagrange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/interpolacoes.html#dispositivo_pratico_lagrange"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.interpolacoes.dispositivo_pratico_lagrange" title="Link para esta definição"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -862,48 +864,34 @@ com as soluções em cada tempo.</p>
 <dd></dd></dl>
 
 <dl class="py function" id="module-codigos.ajustecurvas">
-<dt class="sig sig-object py" id="codigos.ajustecurvas.log_output">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">log_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log_resultados.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#log_output"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.log_output" title="Link para esta definição"></a></dt>
-<dd><p>Função para registrar logs em arquivo com timestamp</p>
-<p>Parâmetros:
-- message: string com o conteúdo a ser registrado (pode conter múltiplas linhas)
-- logfile: nome do arquivo de log (padrão ‘log_resultados.txt’)</p>
-<p>O arquivo é aberto em modo append e cada chamada adiciona a mensagem com a data/hora corrente</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="codigos.ajustecurvas.dados">
 <span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#dados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.dados" title="Link para esta definição"></a></dt>
-<dd><p>Função de entrada de dados:</p>
-<ul class="simple">
-<li><p>Tratamento de zeros e entradas inválidas</p></li>
-</ul>
-<p>Saídas:
-- Vetor x
-- Vetor y</p>
+<dd><p>Função de entrada de dados interativa.</p>
+<p>Solicita ao usuário o número de pontos e os valores de x e y,
+com validação de entrada e tratamento de erros.</p>
+<p>Returns:
+- Vetor x (np.ndarray)
+- Vetor y (np.ndarray)</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.ajustecurvas.tabela_interpolador">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">tabela_interpolador</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#tabela_interpolador"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.tabela_interpolador" title="Link para esta definição"></a></dt>
-<dd><p>Tabela para exibição dos cálculos pelo método dos mínimos quadrados:</p>
-<p>Entradas/Parâmetros:
-- x (vetor de pontos em x)
-- y (vetor de pontos em y)
-- p1x (valores do polinomio interpolador de x)</p>
-<p>Fórmulas
-di = yi - p1(xi)</p>
-<p>Saídas:
-- Tabela com i,xi,yi,p_1(xi),di,di**2</p>
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">tabela_interpolador</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#tabela_interpolador"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.tabela_interpolador" title="Link para esta definição"></a></dt>
+<dd><p>Tabela para exibição dos cálculos pelo método dos mínimos quadrados.</p>
+<p>Parameters:
+- x, y: vetores de pontos
+- p1x: valores do polinomio interpolador
+- verbose: se True, imprime a tabela</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.ajustecurvas.tabela_minimos_quadrados">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">tabela_minimos_quadrados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#tabela_minimos_quadrados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.tabela_minimos_quadrados" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">tabela_minimos_quadrados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#tabela_minimos_quadrados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.tabela_minimos_quadrados" title="Link para esta definição"></a></dt>
 <dd><p>Tabela para exibição dos cálculos pelo método dos mínimos quadrados:</p>
 <p>Entradas/Parâmetros:
 - x (vetor de pontos em x)
-- y (vetor de pontos em y)</p>
+- y (vetor de pontos em y)
+- verbose (bool): se True, imprime a tabela; se False, executa silenciosamente</p>
 <p>Fórmulas
 b1 = (sum_xi * sum_yi - n * sum_xiyi) / (sum_xi ** 2 - n * sum_xi**2)
 b0 = (sum_yi - b1 * sum_xi) / n</p>
@@ -913,7 +901,7 @@ b0 = (sum_yi - b1 * sum_xi) / n</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.ajustecurvas.calcula_chi_e_r2">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">calcula_chi_e_r2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#calcula_chi_e_r2"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.calcula_chi_e_r2" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">calcula_chi_e_r2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#calcula_chi_e_r2"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.calcula_chi_e_r2" title="Link para esta definição"></a></dt>
 <dd><p>Calcula chi-quadrado (ajustado), soma dos quadrados dos resíduos (desvio) e coeficiente de determinação R^2,
 recebendo explicitamente os coeficientes da reta (b0, b1) e os pontos (x, y).</p>
 <p>Parâmetros:
@@ -921,7 +909,8 @@ x (np.array): valores de x
 y (np.array): valores observados
 b0 (float): coeficiente linear da reta
 b1 (float): coeficiente angular da reta
-n_params (int): número de parâmetros do modelo (p), padrão 2 para regressão linear</p>
+n_params (int): número de parâmetros do modelo (p), padrão 2 para regressão linear
+verbose (bool): se True, imprime os resultados; se False, executa silenciosamente</p>
 <p>Fórmulas:
 D(a0,a1) = sum((y_i - b0 - b1*x_i)^2)
 SQT = sum((y_i - y_media)^2)
@@ -937,16 +926,19 @@ Chi^2 = D(a0,a1) / (n - p) (n = número de pontos, p = número de parâmetros do
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.ajustecurvas.regressaolinear">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">regressaolinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#regressaolinear"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.regressaolinear" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">regressaolinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#regressaolinear"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.regressaolinear" title="Link para esta definição"></a></dt>
 <dd><p>Método 1: Polinômio interpolador de ordem 1
 - Escolhendo o primeiro e o último ponto, ou qualquer outro par de pontos inserido previamente pelo usuário.</p>
 <p>Entradas/Parâmetros:
 - x (vetor de pontos em x)
 - y (vetor de pontos em y)
+- verbose (bool): se True, imprime resultados; se False, executa silenciosamente
+- tabela (bool): se True, mostra tabela; se None, usa variável global
+- grafico (bool): se True, mostra gráfico; se None, usa variável global
 - x0,y0; x1,y1 (pares de pontos escolhidos por indice)</p>
 <p>Fórmulas
-b1 = (y1 - y0) / (x1 - x0)         # Coeficiente angular (m)
-b0 = y0 - b1 * x0                  # Coeficiente linear (y)
+b1 = (y1 - y0) / (x1 - x0)
+b0 = y0 - b1 * x0
 P_1(x) = y0 - ((y1 - y0)/(x1 - x0))*(x-x0)
 D(a0,a1) = sum((yi - p1(xi))^2)</p>
 <p>Saídas:
@@ -959,12 +951,13 @@ D(a0,a1) = sum((yi - p1(xi))^2)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.ajustecurvas.regressaolinear_intervalo">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">regressaolinear_intervalo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#regressaolinear_intervalo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.regressaolinear_intervalo" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">regressaolinear_intervalo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#regressaolinear_intervalo"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.regressaolinear_intervalo" title="Link para esta definição"></a></dt>
 <dd><p>Método 2: Polinômio interpolador de ordem 1 dentro do intervalo (x.min(x), x.max(x))
 - Inserindo pontos manualmente dentro do intervalo previamente definido com os dados da funcao dados()</p>
 <p>Entradas/Parâmetros:
 - x (vetor de pontos em x)
-- y (vetor de pontos em y)</p>
+- y (vetor de pontos em y)
+- verbose (bool): se True, imprime resultados; se False, executa silenciosamente</p>
 <p>Fórmulas
 P_1(x) = y0 - ((y1 - y0)/(x1 - x0))*(x-x0)
 D(a0,a1) = sum((yi - p1(xi))^2)</p>
@@ -978,12 +971,15 @@ D(a0,a1) = sum((yi - p1(xi))^2)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.ajustecurvas.minquadrados">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">minquadrados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#minquadrados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.minquadrados" title="Link para esta definição"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">minquadrados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#minquadrados"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.minquadrados" title="Link para esta definição"></a></dt>
 <dd><p>Método 3: Mínimos Quadrados
 - É a derivada do desvio igualada a 0 com respeito a b0 e b1 (parciais)</p>
 <p>Entradas/Parâmetros:
 - x (vetor de pontos em x)
-- y (vetor de pontos em y)</p>
+- y (vetor de pontos em y)
+- verbose (bool): se True, imprime resultados; se False, executa silenciosamente
+- tabela (bool): se True, mostra tabela; se None, usa variável global
+- grafico (bool): se True, mostra gráfico; se None, usa variável global</p>
 <p>Fórmulas:
 b0 = (sum(yi) - b1*sum(xi)) / n
 b1 = (sum(xi)*sum(yi) - n*sum(xiyi))/((sum(xi)**2) - n*sum(xi**2))
@@ -997,15 +993,16 @@ D(b0,b1) = sum((yi - (b0 + b1*xi))^2)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="codigos.ajustecurvas.minquadrados_ordem_n_manual">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">minquadrados_ordem_n_manual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#minquadrados_ordem_n_manual"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.minquadrados_ordem_n_manual" title="Link para esta definição"></a></dt>
+<dt class="sig sig-object py" id="codigos.ajustecurvas.minquadrados_ordem_n">
+<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">minquadrados_ordem_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabela</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grafico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#minquadrados_ordem_n"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.minquadrados_ordem_n" title="Link para esta definição"></a></dt>
 <dd><p>Método 3: Mínimos Quadrados</p>
 <p>Entradas/Parâmetros:
 - x (vetor de pontos em x)
 - y (vetor de pontos em y)
-- ordem (1,n)
-- tabela (pra mostrar x,ui,di,di**2)
-- gráfico com legenda mostrando as infos calculadas.</p>
+- ordem (inteiro &gt;=0)
+- verbose (bool): se True, imprime resultados; se False, executa silenciosamente
+- tabela (bool): se True, mostra tabela; se None, usa variável global
+- grafico (bool): se True, mostra gráfico; se None, usa variável global</p>
 <p>Fórmulas:
 basicamente montar um sistema e resolver por Gauss (poderia ser por decomposição LU tb)</p>
 <p>Saídas:
@@ -1014,16 +1011,6 @@ basicamente montar um sistema e resolver por Gauss (poderia ser por decomposiç�
 - Chi2, R2
 - Gráfico ilustrativo</p>
 </dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="codigos.ajustecurvas.questao1c">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">questao1c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#questao1c"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.questao1c" title="Link para esta definição"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="codigos.ajustecurvas.questao1e">
-<span class="sig-prename descclassname"><span class="pre">codigos.ajustecurvas.</span></span><span class="sig-name descname"><span class="pre">questao1e</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codigos/ajustecurvas.html#questao1e"><span class="viewcode-link"><span class="pre">[código-fonte]</span></span></a><a class="headerlink" href="#codigos.ajustecurvas.questao1e" title="Link para esta definição"></a></dt>
-<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="codigos.ajustecurvas.menu">

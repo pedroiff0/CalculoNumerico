@@ -3,6 +3,27 @@ Ajustes de Curvas
 
 Funções do módulo :mod:`codigos.ajustecurvas` para ajustes de curvas e estatísticas.
 
+Características Implementadas
+-----------------------------
+
+O módulo ``codigos/ajustecurvas.py`` implementa métodos robustos para ajuste de curvas com as seguintes características:
+
+- **Validação de Entrada**: Todas as funções validam entradas usando ``_validate_curve_fitting_inputs()``
+- **Parâmetros Consistentes**: Todas as funções principais seguem a assinatura ``(x, y, ..., verbose=True, tabela=None, grafico=None)``
+- **Controle de Saída**:
+  - ``verbose=True`` controla impressão de resultados
+  - ``tabela=None`` usa variável global ou padrão ``True`` para exibir tabelas
+  - ``grafico=None`` usa variável global ou padrão ``True`` para exibir gráficos
+- **Tratamento de Erros**: Validação robusta com mensagens de erro informativas
+- **Métodos Implementados**:
+  - Regressão linear por pontos selecionados
+  - Regressão linear por intervalo
+  - Mínimos quadrados (linear)
+  - Mínimos quadrados polinomial (ordem n)
+- **Métricas Estatísticas**: Cálculo de R², Chi² ajustado, desvios e resíduos
+- **Interface Interativa**: Função ``dados()`` para entrada de dados com validação
+- **Testes Abrangentes**: 15+ testes cobrindo casos normais e de erro
+
 Documentação
 ------------
 

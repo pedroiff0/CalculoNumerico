@@ -371,14 +371,13 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.ajustecurvasv2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.ajustecurvas</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">regressaolinear</span><span class="p">,</span>
     <span class="n">regressaolinear_intervalo</span><span class="p">,</span>
     <span class="n">minquadrados</span><span class="p">,</span>
+    <span class="n">minquadrados_ordem_n</span><span class="p">,</span>
     <span class="n">dados</span> <span class="k">as</span> <span class="n">dados_ajustes</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">codigos.ajustecurvasOrdemn</span><span class="w"> </span><span class="kn">import</span> <span class="n">minquadrados_ordem_n_manual</span>
 
 <div class="viewcode-block" id="menu_ajustes">
 <a class="viewcode-back" href="../../modules.html#codigos.calcnum.menu_ajustes">[documentos]</a>
@@ -410,7 +409,7 @@
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ordem inválida. Usando ordem 1.&quot;</span><span class="p">)</span>
                 <span class="n">ordem</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="n">minquadrados_ordem_n_manual</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ordem</span><span class="o">=</span><span class="n">ordem</span><span class="p">)</span>
+            <span class="n">minquadrados_ordem_n</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ordem</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida.&quot;</span><span class="p">)</span></div>
 

@@ -81,6 +81,63 @@
   <h1>Código-fonte para codigos.interpolacoes</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">factorial</span><span class="p">,</span> <span class="n">isclose</span> <span class="c1"># isclose é só pro gregory newton</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span> <span class="c1"># pro erro e truncamento</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_interpolation_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Valida entradas para funções de interpolação.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x, y : array_like</span>
+<span class="sd">        Nós e valores correspondentes.</span>
+<span class="sd">    xp : float, optional</span>
+<span class="sd">        Ponto de interpolação.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x_valid, y_valid : np.ndarray</span>
+<span class="sd">        Entradas validadas e convertidas.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se as entradas não forem válidas.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x deve ser um array 1D.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;y deve ser um array 1D.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x e y devem ter o mesmo comprimento.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;São necessários pelo menos 2 pontos para interpolação.&quot;</span><span class="p">)</span>
+    <span class="c1"># Verificar pontos x duplicados</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Os pontos x devem ser únicos.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_max_grau</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Valida e ajusta o grau máximo.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n : int</span>
+<span class="sd">        Número de pontos.</span>
+<span class="sd">    max_grau : int or None</span>
+<span class="sd">        Grau máximo solicitado.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Grau máximo válido.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">max_grau</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">max_grau</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">max_grau</span> <span class="o">&gt;</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">max_grau</span>
 
 <div class="viewcode-block" id="dados_interpolacao">
 <a class="viewcode-back" href="../../modules.html#codigos.interpolacoes.dados_interpolacao">[documentos]</a>
@@ -170,6 +227,7 @@
 <span class="sd">    list of lists</span>
 <span class="sd">        Tabela em que cada linha j contém as diferenças divididas de ordem j.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_validate_interpolation_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">tabela</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()]</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
@@ -185,7 +243,9 @@
 <span class="c1"># impressao de tabela </span>
 <div class="viewcode-block" id="imprimir_tabela_diferencas_divididas">
 <a class="viewcode-back" href="../../modules.html#codigos.interpolacoes.imprimir_tabela_diferencas_divididas">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">imprimir_tabela_diferencas_divididas</span><span class="p">(</span><span class="n">tabela</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">imprimir_tabela_diferencas_divididas</span><span class="p">(</span><span class="n">tabela</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">return</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Tabela de Diferenças Divididas:&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tabela</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
         <span class="n">linha</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tabela</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;12.6f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tabela</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">12</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tabela</span><span class="p">))]</span>
@@ -207,6 +267,11 @@
 <span class="sd">    list of lists</span>
 <span class="sd">        Tabela de diferenças finitas progressivas.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;y deve ser um array 1D.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;São necessários pelo menos 2 pontos para diferenças finitas.&quot;</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">tabela</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()]</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
@@ -219,7 +284,9 @@
 
 <div class="viewcode-block" id="imprimir_tabela_diferencas_finitas">
 <a class="viewcode-back" href="../../modules.html#codigos.interpolacoes.imprimir_tabela_diferencas_finitas">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">imprimir_tabela_diferencas_finitas</span><span class="p">(</span><span class="n">tabela</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">imprimir_tabela_diferencas_finitas</span><span class="p">(</span><span class="n">tabela</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">return</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Tabela de Diferenças Finitas Progressivas:&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tabela</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
         <span class="n">linha</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tabela</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;12.6f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tabela</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">12</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tabela</span><span class="p">))]</span>
@@ -295,7 +362,7 @@
 
 <div class="viewcode-block" id="newton_dif_divididas">
 <a class="viewcode-back" href="../../modules.html#codigos.interpolacoes.newton_dif_divididas">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">newton_dif_divididas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Avalia o polinômio interpolador de Newton (diferenças divididas) em xp.</span>
 
 <span class="sd">    Parameters</span>
@@ -308,6 +375,8 @@
 <span class="sd">        Ponto onde avaliar o polinômio.</span>
 <span class="sd">    max_grau : int or None</span>
 <span class="sd">        Grau máximo a ser usado.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Se True, imprime os passos do cálculo; se False, executa silenciosamente (default: False).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -315,50 +384,54 @@
 <span class="sd">        Valor do polinômio interpolador em ``xp``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">max_grau</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">max_grau</span> <span class="o">&gt;</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">max_grau</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">max_grau</span> <span class="o">=</span> <span class="n">_validate_max_grau</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">)</span>
     <span class="n">resultado</span> <span class="o">=</span> <span class="n">tabela</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">termo</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cálculo passo a passo (Newton Diferenças Divididas):&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P0 = </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cálculo passo a passo (Newton Diferenças Divididas):&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P0 = </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_grau</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">termo</span> <span class="o">*=</span> <span class="p">(</span><span class="n">xp</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Termo </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: (xp - x[</span><span class="si">{</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">]) = (</span><span class="si">{</span><span class="n">xp</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">xp</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Δ^</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> f = </span><span class="si">{</span><span class="n">tabela</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Δ é o operador da dif dividida</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Termo </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: (xp - x[</span><span class="si">{</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">]) = (</span><span class="si">{</span><span class="n">xp</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">xp</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Δ^</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> f = </span><span class="si">{</span><span class="n">tabela</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Δ é o operador da dif dividida</span>
         <span class="n">resultado</span> <span class="o">+=</span> <span class="n">tabela</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">termo</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parcial após termo </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parcial após termo </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">resultado</span></div>
 
 
 <div class="viewcode-block" id="gregory_newton_progressivo">
 <a class="viewcode-back" href="../../modules.html#codigos.interpolacoes.gregory_newton_progressivo">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">gregory_newton_progressivo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gregory_newton_progressivo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_validate_interpolation_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">max_grau</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">max_grau</span> <span class="o">&gt;</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">max_grau</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">max_grau</span> <span class="o">=</span> <span class="n">_validate_max_grau</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">)</span>
     <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">xp</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span>  <span class="c1"># variável u</span>
     <span class="n">tabela</span> <span class="o">=</span> <span class="n">tabela_diferencas_finitas</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">resultado</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">termo</span> <span class="o">=</span> <span class="mf">1.0</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Passo h = </span><span class="si">{</span><span class="n">dx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valor de u (s) = (xp - x[0]) / h = (</span><span class="si">{</span><span class="n">xp</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">) / </span><span class="si">{</span><span class="n">dx</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cálculo passo a passo (Gregory-Newton Progressivo):&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y[0] = </span><span class="si">{</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Passo h = </span><span class="si">{</span><span class="n">dx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valor de u (s) = (xp - x[0]) / h = (</span><span class="si">{</span><span class="n">xp</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">) / </span><span class="si">{</span><span class="n">dx</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cálculo passo a passo (Gregory-Newton Progressivo):&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y[0] = </span><span class="si">{</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_grau</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">termo</span> <span class="o">*=</span> <span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">k</span>
         <span class="n">delta</span> <span class="o">=</span> <span class="n">tabela</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">resultado</span> <span class="o">+=</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">termo</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Δ^</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> y[0] = </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">, termo: </span><span class="si">{</span><span class="n">termo</span><span class="si">}</span><span class="s2">, parcial: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Δ^</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> y[0] = </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2">, termo: </span><span class="si">{</span><span class="n">termo</span><span class="si">}</span><span class="s2">, parcial: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">resultado</span></div>
 
 
 <div class="viewcode-block" id="lagrange_interpol">
 <a class="viewcode-back" href="../../modules.html#codigos.interpolacoes.lagrange_interpol">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lagrange_interpol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Avalia o polinômio interpolador de Lagrange em xp.</span>
 
 <span class="sd">    Parameters</span>
@@ -369,39 +442,45 @@
 <span class="sd">        Ponto a ser interpolado.</span>
 <span class="sd">    max_grau : int or None</span>
 <span class="sd">        Grau máximo a ser usado.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Se True, imprime os cálculos detalhados; se False, executa silenciosamente (default: False).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    float</span>
 <span class="sd">        Valor interpolado em ``xp``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_validate_interpolation_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">max_grau</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">max_grau</span> <span class="o">&gt;</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">max_grau</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">max_grau</span> <span class="o">=</span> <span class="n">_validate_max_grau</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">)</span>
     <span class="n">yp</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cálculos detalhados do polinômio de Lagrange:&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cálculos detalhados do polinômio de Lagrange:&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_grau</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">li</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Termo </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">(xp) = &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Termo </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">(xp) = &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
                 <span class="n">li</span> <span class="o">*=</span> <span class="p">(</span><span class="n">xp</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;((</span><span class="si">{</span><span class="n">xp</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">}</span><span class="s2">) / (</span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">}</span><span class="s2">)) &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;((</span><span class="si">{</span><span class="n">xp</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">}</span><span class="s2">) / (</span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">}</span><span class="s2">)) &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">termo</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">li</span>
         <span class="n">yp</span> <span class="o">+=</span> <span class="n">termo</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;= </span><span class="si">{</span><span class="n">li</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] * L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> * </span><span class="si">{</span><span class="n">li</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">termo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;= </span><span class="si">{</span><span class="n">li</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] * L</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> * </span><span class="si">{</span><span class="n">li</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">termo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">yp</span></div>
 
 
 <div class="viewcode-block" id="dispositivo_pratico_lagrange">
 <a class="viewcode-back" href="../../modules.html#codigos.interpolacoes.dispositivo_pratico_lagrange">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">dispositivo_pratico_lagrange</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dispositivo_pratico_lagrange</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_validate_interpolation_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">max_grau</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">max_grau</span> <span class="o">&gt;</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">max_grau</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">max_grau</span> <span class="o">=</span> <span class="n">_validate_max_grau</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">)</span>
     <span class="n">resultado</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">G</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
@@ -413,8 +492,9 @@
                 <span class="n">linha</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
         <span class="n">G</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linha</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Dispositivo Prático de Lagrange:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;i&#39;</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;x[i]&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;y[i]&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;L[i](xp)&#39;</span><span class="si">:</span><span class="s2">&gt;15</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Dispositivo Prático de Lagrange:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;i&#39;</span><span class="si">:</span><span class="s2">&gt;2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;x[i]&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;y[i]&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;L[i](xp)&#39;</span><span class="si">:</span><span class="s2">&gt;15</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_grau</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">numerador</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -426,11 +506,13 @@
         <span class="n">Li</span> <span class="o">=</span> <span class="n">numerador</span> <span class="o">/</span> <span class="n">denominador</span>
         <span class="n">termo</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">Li</span>
         <span class="n">resultado</span> <span class="o">+=</span> <span class="n">termo</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">Li</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">Li</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Matriz G (x[i] - x[j], diagonal = xp - x[i]):&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">linha</span> <span class="ow">in</span> <span class="n">G</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">linha</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; ]&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Matriz G (x[i] - x[j], diagonal = xp - x[i]):&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">linha</span> <span class="ow">in</span> <span class="n">G</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">linha</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; ]&quot;</span><span class="p">)</span>
 
     <span class="n">Gi</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">Gd</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -441,15 +523,16 @@
         <span class="n">Gi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prod</span><span class="p">)</span>
         <span class="n">Gd</span> <span class="o">*=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Produto da diagonal Gd = </span><span class="si">{</span><span class="n">Gd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Gi</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Produto da linha G[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] = </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Produto da diagonal Gd = </span><span class="si">{</span><span class="n">Gd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Gi</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Produto da linha G[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] = </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">soma_serie</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_grau</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">soma_serie</span> <span class="o">+=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">Gi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cálculo final: Gd * sum(y[i]/Gi[i]) = </span><span class="si">{</span><span class="n">Gd</span><span class="si">}</span><span class="s2"> * </span><span class="si">{</span><span class="n">soma_serie</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">Gd</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">soma_serie</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Valor interpolado em x = </span><span class="si">{</span><span class="n">xp</span><span class="si">}</span><span class="s2"> é: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">soma_serie</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_grau</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">soma_serie</span> <span class="o">+=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">Gi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Cálculo final: Gd * sum(y[i]/Gi[i]) = </span><span class="si">{</span><span class="n">Gd</span><span class="si">}</span><span class="s2"> * </span><span class="si">{</span><span class="n">soma_serie</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">Gd</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">soma_serie</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Valor interpolado em x = </span><span class="si">{</span><span class="n">xp</span><span class="si">}</span><span class="s2"> é: </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">resultado</span></div>
 
@@ -476,21 +559,21 @@
         <span class="n">max_grau</span> <span class="o">=</span> <span class="n">obter_max_grau</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
-            <span class="n">resultado</span> <span class="o">=</span> <span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="n">max_grau</span><span class="p">)</span>
+            <span class="n">resultado</span> <span class="o">=</span> <span class="n">lagrange_interpol</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="n">max_grau</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">resultado</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">erro_trunc</span><span class="p">,</span> <span class="n">erro_real</span> <span class="o">=</span> <span class="n">perguntar_erro</span><span class="p">(</span><span class="n">x_vals</span><span class="p">[:</span><span class="n">max_grau</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">,</span> <span class="n">resultado</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado final (Lagrange): </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
-            <span class="n">resultado</span> <span class="o">=</span> <span class="n">dispositivo_pratico_lagrange</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="n">max_grau</span><span class="p">)</span>
+            <span class="n">resultado</span> <span class="o">=</span> <span class="n">dispositivo_pratico_lagrange</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="n">max_grau</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">resultado</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">erro_trunc</span><span class="p">,</span> <span class="n">erro_real</span> <span class="o">=</span> <span class="n">perguntar_erro</span><span class="p">(</span><span class="n">x_vals</span><span class="p">[:</span><span class="n">max_grau</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">,</span> <span class="n">resultado</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado final (Dispositivo Prático de Lagrange): </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
             <span class="n">tabela</span> <span class="o">=</span> <span class="n">tabela_diferencas_divididas</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">)</span>
-            <span class="n">imprimir_tabela_diferencas_divididas</span><span class="p">(</span><span class="n">tabela</span><span class="p">)</span>
-            <span class="n">resultado</span> <span class="o">=</span> <span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="n">max_grau</span><span class="p">)</span>
+            <span class="n">imprimir_tabela_diferencas_divididas</span><span class="p">(</span><span class="n">tabela</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">resultado</span> <span class="o">=</span> <span class="n">newton_dif_divididas</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">tabela</span><span class="p">,</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="n">max_grau</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">resultado</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">erro_trunc</span><span class="p">,</span> <span class="n">erro_real</span> <span class="o">=</span> <span class="n">perguntar_erro</span><span class="p">(</span><span class="n">x_vals</span><span class="p">[:</span><span class="n">max_grau</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">,</span> <span class="n">resultado</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado final (Newton Diferenças Divididas): </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -501,8 +584,8 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Os pontos x não têm espaçamento uniforme! Gregory-Newton requer x igualmente espaçados.&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="n">tabela</span> <span class="o">=</span> <span class="n">tabela_diferencas_finitas</span><span class="p">(</span><span class="n">y_vals</span><span class="p">)</span>
-            <span class="n">imprimir_tabela_diferencas_finitas</span><span class="p">(</span><span class="n">tabela</span><span class="p">)</span>
-            <span class="n">resultado</span> <span class="o">=</span> <span class="n">gregory_newton_progressivo</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="n">max_grau</span><span class="p">)</span>
+            <span class="n">imprimir_tabela_diferencas_finitas</span><span class="p">(</span><span class="n">tabela</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">resultado</span> <span class="o">=</span> <span class="n">gregory_newton_progressivo</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="o">=</span><span class="n">max_grau</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">resultado</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">erro_trunc</span><span class="p">,</span> <span class="n">erro_real</span> <span class="o">=</span> <span class="n">perguntar_erro</span><span class="p">(</span><span class="n">x_vals</span><span class="p">[:</span><span class="n">max_grau</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_interp</span><span class="p">,</span> <span class="n">max_grau</span><span class="p">,</span> <span class="n">resultado</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado final (Gregory-Newton Progressivo): </span><span class="si">{</span><span class="n">resultado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>

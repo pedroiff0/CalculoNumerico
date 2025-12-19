@@ -79,15 +79,11 @@
            <div itemprop="articleBody">
              
   <h1>Código-fonte para codigos.ajustecurvas</h1><div class="highlight"><pre>
-<span></span><span class="c1">#auhtor: pedro h r andrade</span>
-<span class="c1">#pip3 install numpy, matplotlib, pandas</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span> <span class="c1">#opcional, apenas para simplificar os somatórios, vetores, etc...</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span> <span class="c1">#opcional, apenas para exibir os gráficos</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">codigos.sistemaslineares</span><span class="w"> </span><span class="kn">import</span> <span class="n">eliminacao_gauss_com_pivotamento</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="c1"># Configurações base para plotagem (aproveitamento codigo do projeto da bolsa)</span>
 <span class="n">plotpars_1x1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;axes.linewidth&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
                 <span class="s1">&#39;axes.labelsize&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
                 <span class="s1">&#39;xtick.labelsize&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
@@ -102,91 +98,101 @@
                 <span class="s1">&#39;image.cmap&#39;</span><span class="p">:</span> <span class="s1">&#39;ocean_r&#39;</span>
                <span class="p">}</span>
 
-<span class="c1">## VARIÁVEIS GLOBAIS DE CONTROLE PARA GRÁFICOS, LOGS E TABELAS.</span>
-
-<span class="n">log</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">tabela</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">grafico</span> <span class="o">=</span> <span class="kc">True</span>
-
-<span class="c1"># reutilizado de outro codigo!</span>
-<div class="viewcode-block" id="log_output">
-<a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.log_output">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">log_output</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s1">&#39;log_resultados.txt&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_curve_fitting_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Função para registrar logs em arquivo com timestamp</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x, y : array_like</span>
+<span class="sd">        Pontos de dados para ajuste.</span>
 <span class="sd">    </span>
-<span class="sd">    Parâmetros:</span>
-<span class="sd">    - message: string com o conteúdo a ser registrado (pode conter múltiplas linhas)</span>
-<span class="sd">    - logfile: nome do arquivo de log (padrão &#39;log_resultados.txt&#39;)</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x_valid, y_valid : np.ndarray</span>
+<span class="sd">        Entradas validadas e convertidas.</span>
 <span class="sd">    </span>
-<span class="sd">    O arquivo é aberto em modo append e cada chamada adiciona a mensagem com a data/hora corrente</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Se as entradas não forem válidas.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">log</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
-        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s1">]</span><span class="se">\n</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">pass</span></div>
-
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x deve ser um array 1D.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;y deve ser um array 1D.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x e y devem ter o mesmo comprimento.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;São necessários pelo menos 2 pontos para ajuste de curvas.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
 
 <div class="viewcode-block" id="dados">
 <a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.dados">[documentos]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dados</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Função de entrada de dados:</span>
-<span class="sd">    </span>
-<span class="sd">    - Tratamento de zeros e entradas inválidas</span>
-<span class="sd">    </span>
-<span class="sd">    Saídas:     </span>
-<span class="sd">    - Vetor x</span>
-<span class="sd">    - Vetor y</span>
+<span class="sd">    Função de entrada de dados interativa.</span>
+
+<span class="sd">    Solicita ao usuário o número de pontos e os valores de x e y,</span>
+<span class="sd">    com validação de entrada e tratamento de erros.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - Vetor x (np.ndarray)</span>
+<span class="sd">    - Vetor y (np.ndarray)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
     <span class="k">try</span><span class="p">:</span>
         <span class="n">n_str</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Quantos pontos de dados? &quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">n_str</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span> <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">n_str</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entrada vazia. Retornando arrays vazios.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_str</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Digite os valores de x e y para o conjunto de dados:&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">x_v</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x[</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">] = &quot;</span><span class="p">))</span>
-            <span class="n">y_v</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y[</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">] = &quot;</span><span class="p">))</span>
-            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_v</span><span class="p">)</span>
-            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_v</span><span class="p">)</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Pontos Inseridos</span><span class="se">\n</span><span class="s2">=========================&quot;</span><span class="p">,</span>
-                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-                   <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-                   <span class="p">)</span>
-            <span class="n">log_output</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;São necessários pelo menos 2 pontos para ajuste de curvas.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Insira os valores de x em uma única linha, </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> valores separados por espaço:&quot;</span><span class="p">)</span>
+        <span class="n">x_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;x: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">x_input</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entrada vazia para x. Retornando arrays vazios.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">x_input</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número de valores x (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">) deve ser igual ao número especificado (</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Insira os valores de y em uma única linha, </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> valores separados por espaço:&quot;</span><span class="p">)</span>
+        <span class="n">y_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;y: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">y_input</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entrada vazia para y. Retornando arrays vazios.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">y_input</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número de valores y (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="si">}</span><span class="s2">) deve ser igual ao número especificado (</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entrada inválida. Retornando arrays vazios.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entrada inválida: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Retornando arrays vazios.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erro inesperado: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Retornando arrays vazios.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span></div>
 
 
 <div class="viewcode-block" id="tabela_interpolador">
 <a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.tabela_interpolador">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">tabela_interpolador</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p1x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tabela_interpolador</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Tabela para exibição dos cálculos pelo método dos mínimos quadrados:</span>
+<span class="sd">    Tabela para exibição dos cálculos pelo método dos mínimos quadrados.</span>
 
-<span class="sd">    Entradas/Parâmetros: </span>
-<span class="sd">    - x (vetor de pontos em x)</span>
-<span class="sd">    - y (vetor de pontos em y)</span>
-<span class="sd">    - p1x (valores do polinomio interpolador de x)</span>
-<span class="sd">    </span>
-<span class="sd">    Fórmulas</span>
-<span class="sd">    di = yi - p1(xi)</span>
-<span class="sd">    </span>
-<span class="sd">    Saídas:     </span>
-<span class="sd">    - Tabela com i,xi,yi,p_1(xi),di,di**2 </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    - x, y: vetores de pontos</span>
+<span class="sd">    - p1x: valores do polinomio interpolador</span>
+<span class="sd">    - verbose: se True, imprime a tabela</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span> <span class="c1">#opcional, apenas se quiser mostrar as tabelas formatadas</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
     <span class="n">di</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">p1x</span>
-    <span class="c1"># di2 = di ** 2</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
     <span class="n">dados</span> <span class="o">=</span> <span class="p">{</span>
@@ -195,33 +201,26 @@
         <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
         <span class="s1">&#39;p1(x)&#39;</span><span class="p">:</span> <span class="n">p1x</span><span class="p">,</span>
         <span class="s1">&#39;di&#39;</span><span class="p">:</span> <span class="n">di</span><span class="p">,</span>
-        <span class="c1"># &#39;di^2&#39;: di2</span>
     <span class="p">}</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dados</span><span class="p">)</span>
-    <span class="n">soma</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> 
-               <span class="s1">&#39;y&#39;</span><span class="p">,</span> 
-               <span class="s1">&#39;p1(x)&#39;</span><span class="p">,</span> 
-               <span class="s1">&#39;di&#39;</span><span class="p">,</span>
-               <span class="c1">#&#39;di^2&#39;</span>
-               <span class="p">]]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">soma</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;p1(x)&#39;</span><span class="p">,</span> <span class="s1">&#39;di&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="n">soma</span><span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">soma</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Tabela Interpolador</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
-           <span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-    <span class="n">log_output</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="tabela_minimos_quadrados">
 <a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.tabela_minimos_quadrados">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">tabela_minimos_quadrados</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tabela_minimos_quadrados</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tabela para exibição dos cálculos pelo método dos mínimos quadrados:</span>
 
 <span class="sd">    Entradas/Parâmetros: </span>
 <span class="sd">    - x (vetor de pontos em x)</span>
 <span class="sd">    - y (vetor de pontos em y)</span>
+<span class="sd">    - verbose (bool): se True, imprime a tabela; se False, executa silenciosamente</span>
 
 <span class="sd">    Fórmulas</span>
 <span class="sd">    b1 = (sum_xi * sum_yi - n * sum_xiyi) / (sum_xi ** 2 - n * sum_xi**2)</span>
@@ -230,14 +229,13 @@
 <span class="sd">    Saídas:     </span>
 <span class="sd">    - Tabela com i,xi,yi,xi**2,yi**2,xiyi,ui,di,di**2</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span> <span class="c1">#opcional, apenas se quiser mostrar as tabelas formatadas</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">sum_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">sum_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">sum_x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">sum_xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
-    <span class="c1"># sum_y2 = np.sum(y ** 2)</span>
 
     <span class="n">b1</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_x</span> <span class="o">*</span> <span class="n">sum_y</span> <span class="o">-</span> <span class="n">n</span> <span class="o">*</span> <span class="n">sum_xy</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sum_x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">n</span> <span class="o">*</span> <span class="n">sum_x2</span><span class="p">)</span>
     <span class="n">b0</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_y</span> <span class="o">-</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">sum_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
@@ -261,14 +259,13 @@
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="n">soma</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">numeric_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">soma</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-    <span class="n">log_output</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="calcula_chi_e_r2">
 <a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.calcula_chi_e_r2">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">calcula_chi_e_r2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">n_params</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calcula_chi_e_r2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">n_params</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calcula chi-quadrado (ajustado), soma dos quadrados dos resíduos (desvio) e coeficiente de determinação R^2,</span>
 <span class="sd">    recebendo explicitamente os coeficientes da reta (b0, b1) e os pontos (x, y).</span>
@@ -279,6 +276,7 @@
 <span class="sd">    b0 (float): coeficiente linear da reta</span>
 <span class="sd">    b1 (float): coeficiente angular da reta</span>
 <span class="sd">    n_params (int): número de parâmetros do modelo (p), padrão 2 para regressão linear</span>
+<span class="sd">    verbose (bool): se True, imprime os resultados; se False, executa silenciosamente</span>
 
 <span class="sd">    Fórmulas:</span>
 <span class="sd">    D(a0,a1) = sum((y_i - b0 - b1*x_i)^2)</span>
@@ -298,39 +296,25 @@
     <span class="n">Ui</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">x</span>
     <span class="n">y_media</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
-    <span class="c1"># Soma total dos quadrados</span>
     <span class="n">SQT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_media</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
-    <span class="c1"># Soma dos quadrados dos resíduos (Desvio)</span>
     <span class="n">SQRes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">Ui</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
-    <span class="c1"># Soma dos quadrados da regressão</span>
     <span class="n">SQReg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">Ui</span> <span class="o">-</span> <span class="n">y_media</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
-    <span class="c1"># Coeficiente de determinação R²</span>
     <span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">SQRes</span> <span class="o">/</span> <span class="n">SQT</span><span class="p">)</span> <span class="k">if</span> <span class="n">SQT</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Chi-quadrado</span>
     <span class="n">chi2</span> <span class="o">=</span> <span class="n">SQRes</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">n_params</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">n_params</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
 
     <span class="n">desvio</span> <span class="o">=</span> <span class="n">SQRes</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) = </span><span class="si">{</span><span class="n">desvio</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">chi2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SQT = </span><span class="si">{</span><span class="n">SQT</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SQRes = </span><span class="si">{</span><span class="n">SQRes</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SQReg = </span><span class="si">{</span><span class="n">SQReg</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Estatísticas</span><span class="se">\n</span><span class="s2">=========================&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Desvio D(a0,a1) = </span><span class="si">{</span><span class="n">desvio</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Chi² = </span><span class="si">{</span><span class="n">chi2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">SQT = </span><span class="si">{</span><span class="n">SQT</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">SQRes = </span><span class="si">{</span><span class="n">SQRes</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">SQReg = </span><span class="si">{</span><span class="n">SQReg</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">R² = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="p">)</span>
-    <span class="n">log_output</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) = </span><span class="si">{</span><span class="n">desvio</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">chi2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SQT = </span><span class="si">{</span><span class="n">SQT</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SQRes = </span><span class="si">{</span><span class="n">SQRes</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SQReg = </span><span class="si">{</span><span class="n">SQReg</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
         <span class="s1">&#39;Chi2&#39;</span><span class="p">:</span> <span class="n">chi2</span><span class="p">,</span>
@@ -345,7 +329,7 @@
 
 <div class="viewcode-block" id="regressaolinear">
 <a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.regressaolinear">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">regressaolinear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">regressaolinear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tabela</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grafico</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Método 1: Polinômio interpolador de ordem 1</span>
 <span class="sd">    - Escolhendo o primeiro e o último ponto, ou qualquer outro par de pontos inserido previamente pelo usuário.</span>
@@ -353,11 +337,14 @@
 <span class="sd">    Entradas/Parâmetros: </span>
 <span class="sd">    - x (vetor de pontos em x)</span>
 <span class="sd">    - y (vetor de pontos em y)</span>
+<span class="sd">    - verbose (bool): se True, imprime resultados; se False, executa silenciosamente</span>
+<span class="sd">    - tabela (bool): se True, mostra tabela; se None, usa variável global</span>
+<span class="sd">    - grafico (bool): se True, mostra gráfico; se None, usa variável global</span>
 <span class="sd">    - x0,y0; x1,y1 (pares de pontos escolhidos por indice)</span>
 
 <span class="sd">    Fórmulas</span>
-<span class="sd">    b1 = (y1 - y0) / (x1 - x0)         # Coeficiente angular (m)</span>
-<span class="sd">    b0 = y0 - b1 * x0                  # Coeficiente linear (y)</span>
+<span class="sd">    b1 = (y1 - y0) / (x1 - x0)        </span>
+<span class="sd">    b0 = y0 - b1 * x0                 </span>
 <span class="sd">    P_1(x) = y0 - ((y1 - y0)/(x1 - x0))*(x-x0)</span>
 <span class="sd">    D(a0,a1) = sum((yi - p1(xi))^2)</span>
 <span class="sd">    </span>
@@ -369,6 +356,7 @@
 <span class="sd">    - Chi2, R2</span>
 <span class="sd">    - Gráfico ilustrativo</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_validate_curve_fitting_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -389,7 +377,6 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Os pontos devem ser diferentes. Tente novamente.&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">p1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">p2</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
-                <span class="c1"># Verifica se os valores de x são iguais (reta vertical, divisão por zero)</span>
                 <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">p1</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="n">p2</span><span class="p">]:</span>
                      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: Pontos com mesmo valor de X causam divisão por zero. Escolha outros.&quot;</span><span class="p">)</span>
                      <span class="k">continue</span>
@@ -402,56 +389,45 @@
     <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">p1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">p1</span><span class="p">]</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">p2</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">p2</span><span class="p">]</span>
 
-    <span class="c1"># Eq. Reta: y - y0 = m * (x- x0)</span>
-    <span class="c1"># Cálculo dos coeficientes da reta: y = b0 + b1*x</span>
-    <span class="n">b1</span> <span class="o">=</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span>         <span class="c1"># Coeficiente angular (m)</span>
-    <span class="n">b0</span> <span class="o">=</span> <span class="n">y0</span> <span class="o">-</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">x0</span>                  <span class="c1"># Coeficiente linear (y)</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span>
+    <span class="n">b0</span> <span class="o">=</span> <span class="n">y0</span> <span class="o">-</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">x0</span>
     
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Pontos escolhidos: P</span><span class="si">{</span><span class="n">p1</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y0</span><span class="si">}</span><span class="s2">) e P</span><span class="si">{</span><span class="n">p2</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">x1</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y1</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Pontos escolhidos: P</span><span class="si">{</span><span class="n">p1</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">x0</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y0</span><span class="si">}</span><span class="s2">) e P</span><span class="si">{</span><span class="n">p2</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">x1</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y1</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Calcula as estatísticas usando a reta definida pelos 2 pontos</span>
-    <span class="n">estatisticas</span> <span class="o">=</span> <span class="n">calcula_chi_e_r2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">)</span>
+    <span class="n">estatisticas</span> <span class="o">=</span> <span class="n">calcula_chi_e_r2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="n">p1x</span> <span class="o">=</span> <span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Ui&#39;</span><span class="p">]</span>
     <span class="n">funcao</span> <span class="o">=</span> <span class="s1">&#39;b0 + b1*x&#39;</span>
-
-    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Resultados</span><span class="se">\n</span><span class="s2">=========================&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Método 1: Regressão Linear Simples&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Polinômio interpolador: p1(x) = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> * x&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Tabela p1(x)</span><span class="se">\n</span><span class="s2">=========================&quot;</span>
-           <span class="p">)</span>
-    <span class="n">log_output</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    
-    <span class="c1"># Exibe tabela e resultados</span>
-    <span class="k">if</span> <span class="n">tabela</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
-        <span class="n">tabela_interpolador</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p1x</span><span class="p">)</span>
+   
+    <span class="k">if</span> <span class="n">tabela</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tabela</span><span class="p">:</span>
+        <span class="n">tabela_interpolador</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">pass</span>
     
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polinômio interpolador: p1(x) = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> * x&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polinômio interpolador: p1(x) = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> * x&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">grafico</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span> <span class="c1">#opcional, apenas para exibir os gráficos </span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plotpars_1x1</span><span class="p">)</span>  <span class="c1"># atualizar parâmetros do plt</span>
-        <span class="c1"># Plotagem</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plotpars_1x1</span><span class="p">)</span>
         <span class="n">legenda</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Função = </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;y = </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">x + </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;b1 = </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;b0 = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;Desvio = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s2">&quot;Desvio&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s2">&quot;Chi2&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s2">&quot;R2&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">&#39;R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s2">&quot;R2&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         
         <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dados originais&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
         
-        <span class="c1"># Destacar os pontos escolhidos</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Pontos Escolhidos&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
         
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Regressão Linear&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -467,7 +443,7 @@
    
 <div class="viewcode-block" id="regressaolinear_intervalo">
 <a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.regressaolinear_intervalo">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">regressaolinear_intervalo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">regressaolinear_intervalo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tabela</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grafico</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Método 2: Polinômio interpolador de ordem 1 dentro do intervalo (x.min(x), x.max(x))</span>
 <span class="sd">    - Inserindo pontos manualmente dentro do intervalo previamente definido com os dados da funcao dados()</span>
@@ -475,6 +451,7 @@
 <span class="sd">    Entradas/Parâmetros: </span>
 <span class="sd">    - x (vetor de pontos em x)</span>
 <span class="sd">    - y (vetor de pontos em y)</span>
+<span class="sd">    - verbose (bool): se True, imprime resultados; se False, executa silenciosamente</span>
 
 <span class="sd">    Fórmulas</span>
 <span class="sd">    P_1(x) = y0 - ((y1 - y0)/(x1 - x0))*(x-x0)</span>
@@ -487,6 +464,8 @@
 <span class="sd">    - Chi2, R2</span>
 <span class="sd">    - Gráfico ilustrativo</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_validate_curve_fitting_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;São necessários pelo menos 2 pontos no conjunto de dados para definir o intervalo.&quot;</span><span class="p">)</span>
@@ -517,46 +496,46 @@
                 <span class="k">continue</span>
             <span class="n">y2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot; y2: &quot;</span><span class="p">))</span>
             
-            <span class="k">break</span> <span class="c1"># Se chegou aqui, tudo válido</span>
+            <span class="k">break</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Entrada inválida. Digite números válidos.&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Eq. Reta: y - y1 = m * (x- x1)</span>
-    <span class="c1"># Cálculo dos coeficientes da reta definida pelos pontos manuais</span>
-    <span class="n">b1</span> <span class="o">=</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="c1"># (m)</span>
-    <span class="n">b0</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">x1</span> <span class="c1"># (y)</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span>
+    <span class="n">b0</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">x1</span>
 
-    <span class="c1"># Calcula as estatísticas para os dados ORIGINAIS usando essa reta</span>
-    <span class="n">estatisticas</span> <span class="o">=</span> <span class="n">calcula_chi_e_r2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">)</span>
+    <span class="n">estatisticas</span> <span class="o">=</span> <span class="n">calcula_chi_e_r2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="n">p1x</span> <span class="o">=</span> <span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Ui&#39;</span><span class="p">]</span>
     <span class="n">funcao</span> <span class="o">=</span> <span class="s1">&#39;b0 + b1*x&#39;</span>
 
-    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Resultados</span><span class="se">\n</span><span class="s2">=========================&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Método 2: Regressão Linear Intervalo&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Polinômio interpolador: p1(x) = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> * x&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Tabela p1(x)</span><span class="se">\n</span><span class="s2">=========================&quot;</span>
-           <span class="p">)</span>
-    <span class="n">log_output</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Resultados</span><span class="se">\n</span><span class="s2">=========================&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Método 2: Regressão Linear Intervalo&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polinômio interpolador: p1(x) = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> * x&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=========================</span><span class="se">\n</span><span class="s2">Tabela p1(x)</span><span class="se">\n</span><span class="s2">=========================&quot;</span><span class="p">)</span>
     
-    <span class="k">if</span> <span class="n">tabela</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
-        <span class="n">tabela_interpolador</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p1x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tabela</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tabela</span><span class="p">:</span>
+        <span class="n">tabela_interpolador</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">pass</span>
     
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polinômio Interpolador: p_1(x) = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> * x&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polinômio Interpolador: p_1(x) = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> * x&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">grafico</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span> <span class="c1">#opcional, apenas para exibir os gráficos </span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plotpars_1x1</span><span class="p">)</span>  <span class="c1"># atualizar parâmetros do plt</span>
-        <span class="c1"># Plotagem</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plotpars_1x1</span><span class="p">)</span>
         <span class="n">legenda</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Função = </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;y = </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">x + </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;b1 = </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -565,13 +544,10 @@
                 <span class="sa">f</span><span class="s1">&#39;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s2">&quot;Chi2&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s2">&quot;R2&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="c1"># Dados originais</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Dados originais&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
         
-        <span class="c1"># Pontos manuais que definiram a reta</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="p">[</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Pontos Escolhidos&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
         
-        <span class="c1"># Para plotar a reta estendida por todo o gráfico</span>
         <span class="n">x_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
         <span class="n">y_plot</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">x_plot</span>
         
@@ -587,7 +563,7 @@
 
 <div class="viewcode-block" id="minquadrados">
 <a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.minquadrados">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">minquadrados</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">minquadrados</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tabela</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grafico</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Método 3: Mínimos Quadrados</span>
 <span class="sd">    - É a derivada do desvio igualada a 0 com respeito a b0 e b1 (parciais)</span>
@@ -595,6 +571,9 @@
 <span class="sd">    Entradas/Parâmetros: </span>
 <span class="sd">    - x (vetor de pontos em x)</span>
 <span class="sd">    - y (vetor de pontos em y)</span>
+<span class="sd">    - verbose (bool): se True, imprime resultados; se False, executa silenciosamente</span>
+<span class="sd">    - tabela (bool): se True, mostra tabela; se None, usa variável global</span>
+<span class="sd">    - grafico (bool): se True, mostra gráfico; se None, usa variável global</span>
 
 <span class="sd">    Fórmulas:</span>
 <span class="sd">    b0 = (sum(yi) - b1*sum(xi)) / n</span>
@@ -608,49 +587,49 @@
 <span class="sd">    - Chi2, R2</span>
 <span class="sd">    - Gráfico ilustrativo</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_validate_curve_fitting_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">sum_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">sum_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">sum_xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
     <span class="n">sum_x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">sum_y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="n">b1</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_x</span> <span class="o">*</span> <span class="n">sum_y</span> <span class="o">-</span> <span class="n">n</span> <span class="o">*</span> <span class="n">sum_xy</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="n">sum_x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">n</span> <span class="o">*</span> <span class="n">sum_x2</span><span class="p">)</span>
     <span class="n">b0</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_y</span> <span class="o">-</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">sum_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
 
-    <span class="n">estatisticas</span> <span class="o">=</span> <span class="n">calcula_chi_e_r2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">n_params</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">estatisticas</span> <span class="o">=</span> <span class="n">calcula_chi_e_r2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">n_params</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="n">funcao</span> <span class="o">=</span> <span class="s1">&#39;b0+b1*x&#39;</span>
     
-    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Resultados</span><span class="se">\n</span><span class="s2">=========================&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Método 3: Mínimos Quadrados&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Polinômio interpolador: p1(x) = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> * x&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
-           <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Tabela Mínimos Quadrados</span><span class="se">\n</span><span class="s2">=========================&quot;</span>
-           <span class="p">)</span>
-    <span class="n">log_output</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    
-    <span class="c1">#criação da tabela de mínimos quadrados</span>
-    <span class="k">if</span> <span class="n">tabela</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
-        <span class="n">tabela_minimos_quadrados</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=========================</span><span class="se">\n</span><span class="s2">Resultados</span><span class="se">\n</span><span class="s2">=========================&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Método 3: Mínimos Quadrados&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polinômio interpolador: p1(x) = </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> * x&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=========================</span><span class="se">\n</span><span class="s2">Tabela Mínimos Quadrados</span><span class="se">\n</span><span class="s2">=========================&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">tabela</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tabela</span><span class="p">:</span>
+        <span class="n">tabela_minimos_quadrados</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">pass</span>
     
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Equação da reta: y = </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">x + </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R²: </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
- 
-    <span class="c1"># Resoluções específicas da questão 1c e 1e</span>
-    <span class="c1"># questao1c(b0,b1)</span>
-    <span class="c1"># questao1e(b0,b1)</span>
-    
-    <span class="k">if</span> <span class="n">grafico</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Função: </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Equação da reta: y = </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">x + </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio D(a0,a1) (SQRes) = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Desvio&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² = </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;Chi2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R²: </span><span class="si">{</span><span class="n">estatisticas</span><span class="p">[</span><span class="s1">&#39;R2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span> <span class="c1">#opcional, apenas para exibir os gráficos </span>
-        <span class="c1"># Plotagem</span>
+       
         <span class="n">legenda</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Função = </span><span class="si">{</span><span class="n">funcao</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;y = </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">x + </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;b1 = </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -667,21 +646,29 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">legenda</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">title_fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">pass</span></div>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;a0&#39;</span><span class="p">:</span> <span class="n">b0</span><span class="p">,</span>
+        <span class="s1">&#39;a1&#39;</span><span class="p">:</span> <span class="n">b1</span><span class="p">,</span>
+        <span class="s1">&#39;equacao&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;y = </span><span class="si">{</span><span class="n">b1</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">x + </span><span class="si">{</span><span class="n">b0</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;estatisticas&#39;</span><span class="p">:</span> <span class="n">estatisticas</span>
+    <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="minquadrados_ordem_n_manual">
-<a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.minquadrados_ordem_n_manual">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">minquadrados_ordem_n_manual</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ordem</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tabela</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grafico</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="minquadrados_ordem_n">
+<a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.minquadrados_ordem_n">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">minquadrados_ordem_n</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ordem</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tabela</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grafico</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Método 3: Mínimos Quadrados</span>
 
 <span class="sd">    Entradas/Parâmetros: </span>
 <span class="sd">    - x (vetor de pontos em x)</span>
 <span class="sd">    - y (vetor de pontos em y)</span>
-<span class="sd">    - ordem (1,n)</span>
-<span class="sd">    - tabela (pra mostrar x,ui,di,di**2)</span>
-<span class="sd">    - gráfico com legenda mostrando as infos calculadas.</span>
+<span class="sd">    - ordem (inteiro &gt;=0)</span>
+<span class="sd">    - verbose (bool): se True, imprime resultados; se False, executa silenciosamente</span>
+<span class="sd">    - tabela (bool): se True, mostra tabela; se None, usa variável global</span>
+<span class="sd">    - grafico (bool): se True, mostra gráfico; se None, usa variável global</span>
 
 <span class="sd">    Fórmulas:</span>
 <span class="sd">    basicamente montar um sistema e resolver por Gauss (poderia ser por decomposição LU tb)</span>
@@ -692,36 +679,38 @@
 <span class="sd">    - Chi2, R2</span>
 <span class="sd">    - Gráfico ilustrativo</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_validate_curve_fitting_inputs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">ordem</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dados insuficientes ou ordem inválida.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="c1"># Somatórios S_x^k para k=0..2*ordem</span>
+   
     <span class="n">Sx</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
-    <span class="c1"># Somatórios S_x^k y para k=0..ordem</span>
+   
     <span class="n">Sxy</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">x</span> <span class="o">**</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
 
-    <span class="c1"># Montar matriz do sistema normal (seria o equivalente a usar a funcao de montar sistema que fiz em sistemaslineares.py)</span>
+   
     <span class="n">ATA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ordem</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">ordem</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">ATA</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Sx</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span>
-    <span class="c1"># Lado direito</span>
+   
     <span class="n">ATy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Sxy</span><span class="p">)</span>
 
-    <span class="c1"># Resolver sistema pelo método de pivotamento (retornar apenas o vetor solução)</span>
+   
     <span class="n">sol</span> <span class="o">=</span> <span class="n">eliminacao_gauss_com_pivotamento</span><span class="p">(</span><span class="n">ATA</span><span class="p">,</span> <span class="n">ATy</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">sol</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Falha ao resolver sistema normal para mínimos quadrados de ordem n&quot;</span><span class="p">)</span>
-    <span class="c1"># eliminacao_gauss_com_pivotamento pode retornar (x, A, b) ou apenas x</span>
+   
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
         <span class="n">candidate</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">candidate</span> <span class="o">=</span> <span class="n">sol</span>
     <span class="n">coef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
-    <span class="c1"># Calcular valores ajustados</span>
+   
     <span class="n">Ui</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">Ui</span> <span class="o">+=</span> <span class="n">coef</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="n">k</span><span class="p">)</span>
@@ -736,24 +725,25 @@
     <span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">SQRes</span> <span class="o">/</span> <span class="n">SQT</span><span class="p">)</span> <span class="k">if</span> <span class="n">SQT</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
     <span class="n">chi2</span> <span class="o">=</span> <span class="n">SQRes</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
 
-    <span class="c1"># equação da reta</span>
+   
     <span class="n">termos</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">)x^</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">coef</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
     <span class="n">equacao</span> <span class="o">=</span> <span class="s2">&quot; + &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">termos</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Equação ajustada:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p(x) = &quot;</span> <span class="o">+</span> <span class="n">equacao</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Equação ajustada:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p(x) = &quot;</span> <span class="o">+</span> <span class="n">equacao</span><span class="p">)</span>
 
-    <span class="c1"># Coeficientes</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Coeficientes:&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coef</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;a</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+       
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Coeficientes:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coef</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;a</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Estatísticas do ajuste:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio (SQRes) = </span><span class="si">{</span><span class="n">SQRes</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² ajustado = </span><span class="si">{</span><span class="n">chi2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Estatísticas do ajuste:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desvio (SQRes) = </span><span class="si">{</span><span class="n">SQRes</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi² ajustado = </span><span class="si">{</span><span class="n">chi2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² = </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-
-    <span class="c1"># Tabela contendo os dados assim como para o MMQ de ordem 1 (reaproveitado, apenas fiz direto aqui pra poupar linhas de código)</span>
+    <span class="k">if</span> <span class="n">tabela</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tabela</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tabela&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">tabela</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
@@ -769,10 +759,13 @@
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">soma</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">numeric_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">soma</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Tabela de cálculos intermediários:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Tabela de cálculos intermediários:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">grafico</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grafico</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grafico&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">grafico</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">xp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">500</span><span class="p">)</span>
         <span class="n">yp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ordem</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
@@ -793,40 +786,6 @@
     <span class="k">return</span> <span class="n">coef</span></div>
 
 
-<span class="c1">#resolução específica da questão 1c (para as estimatias, só substituir!)</span>
-<span class="c1"># para utilizar, descomente a chamada na função minquadrados()</span>
-<div class="viewcode-block" id="questao1c">
-<a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.questao1c">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">questao1c</span><span class="p">(</span><span class="n">b0</span><span class="p">,</span><span class="n">b1</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Questão 1c):&quot;</span><span class="p">)</span>
-    <span class="n">altura_est</span> <span class="o">=</span> <span class="mi">175</span> <span class="c1"># (x)</span>
-    <span class="n">peso_est</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">altura_est</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Peso estimado para altura </span><span class="si">{</span><span class="n">altura_est</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm: </span><span class="si">{</span><span class="n">peso_est</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> kg&quot;</span><span class="p">)</span>
-    
-    <span class="c1"># Estimativa de altura para peso 80 kg (inverter a equação)</span>
-    <span class="n">peso_ref</span> <span class="o">=</span> <span class="mi">80</span> <span class="c1"># (y)</span>
-    <span class="n">altura_est_inv</span> <span class="o">=</span> <span class="p">(</span><span class="n">peso_ref</span> <span class="o">-</span> <span class="n">b0</span><span class="p">)</span> <span class="o">/</span> <span class="n">b1</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Altura estimada para peso </span><span class="si">{</span><span class="n">peso_ref</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> kg: </span><span class="si">{</span><span class="n">altura_est_inv</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm&quot;</span><span class="p">)</span></div>
-
-
-<span class="c1"># resolução específica da questão 1e pois os eixos estão invertidos, as contas mudam</span>
-<span class="c1"># para utilizar, descomente a chamada na função minquadrados()</span>
-<div class="viewcode-block" id="questao1e">
-<a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.questao1e">[documentos]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">questao1e</span><span class="p">(</span><span class="n">b0</span><span class="p">,</span><span class="n">b1</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Questão 1e):&quot;</span><span class="p">)</span>
-    <span class="n">peso_est</span> <span class="o">=</span> <span class="mi">80</span> <span class="c1"># (x)</span>
-    <span class="n">altura_est</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">peso_est</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Altura estimada para peso </span><span class="si">{</span><span class="n">peso_est</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> kg: </span><span class="si">{</span><span class="n">altura_est</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm&quot;</span><span class="p">)</span>
-        
-    <span class="n">altura_est</span> <span class="o">=</span> <span class="mi">175</span> <span class="c1"># (y)</span>
-    <span class="n">peso_est</span> <span class="o">=</span> <span class="p">(</span><span class="n">altura_est</span> <span class="o">-</span> <span class="n">b0</span><span class="p">)</span> <span class="o">/</span> <span class="n">b1</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Peso estimado para altura </span><span class="si">{</span><span class="n">altura_est</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm: </span><span class="si">{</span><span class="n">peso_est</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> kg&quot;</span><span class="p">)</span>     </div>
-
-
-<span class="c1"># //TODO: Adicionar FIT POLINOMIAL de grau n, sem usar numpy.polyfit</span>
-<span class="c1"># //TODO: Adicionar FIT EXPONENCIAL, LOGARÍTMICO, TRIGONOMÉTRICO</span>
-
 <div class="viewcode-block" id="menu">
 <a class="viewcode-back" href="../../modules.html#codigos.ajustecurvas.menu">[documentos]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">menu</span><span class="p">():</span>
@@ -838,17 +797,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
-    
-    <span class="c1">#questão 1a,b,c)</span>
-    <span class="c1"># x = [183, 173, 168, 188, 158, 163, 193, 163, 178] # altura</span>
-    <span class="c1"># y = [79, 69, 70, 81, 61, 63, 79, 71, 73] # peso</span>
-    
-    <span class="c1">#questão 1d,e)</span>
-    <span class="c1"># x = [79, 69, 70, 81, 61, 63, 79, 71, 73] # peso</span>
-    <span class="c1"># y = [183, 173, 168, 188, 158, 163, 193, 163, 178] # altura</span>
-    
-    <span class="c1"># x_val = np.array(x)</span>
-    <span class="c1"># y_val = np.array(y)    </span>
     
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">================ MENU DE REGRESSÕES ================&quot;</span><span class="p">)</span>
@@ -863,15 +811,15 @@
         <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dados</span><span class="p">()</span>
             <span class="n">regressaolinear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-            <span class="c1"># regressaolinear(x_val, y_val) # para usar essa função, utilize os dados prontos, e comente as linhas de obtenção de dados</span>
+           
         <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dados</span><span class="p">()</span>
             <span class="n">regressaolinear_intervalo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-            <span class="c1"># regressaolinear_intervalo(x_val, y_val) # para usar essa função, utilize os dados prontos, e comente as linhas de obtenção de dados</span>
+           
         <span class="k">elif</span> <span class="n">opcao</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dados</span><span class="p">()</span>
             <span class="n">minquadrados</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-            <span class="c1"># minquadrados(x_val, y_val) # para usar essa função, utilize os dados prontos, e comente as linhas de obtenção de dados</span>
+           
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opção inválida. Tente novamente.&quot;</span><span class="p">)</span></div>
 
