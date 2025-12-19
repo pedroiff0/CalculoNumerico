@@ -1,12 +1,8 @@
-#auhtor: pedro h r andrade
-#pip3 install numpy, matplotlib, pandas
-
-import numpy as np #opcional, apenas para simplificar os somatórios, vetores, etc...
-import matplotlib.pyplot as plt #opcional, apenas para exibir os gráficos
+import numpy as np
 from codigos.sistemaslineares import eliminacao_gauss_com_pivotamento
 import pandas as pd
+import matplotlib.pyplot as plt
 
-# Configurações base para plotagem (aproveitamento codigo do projeto da bolsa)
 plotpars_1x1 = {'axes.linewidth': 1.0,
                 'axes.labelsize': 14,
                 'xtick.labelsize': 14,
@@ -21,83 +17,96 @@ plotpars_1x1 = {'axes.linewidth': 1.0,
                 'image.cmap': 'ocean_r'
                }
 
-## VARIÁVEIS GLOBAIS DE CONTROLE PARA GRÁFICOS, LOGS E TABELAS.
-
-log = False
-tabela = False
-grafico = True
-
-# reutilizado de outro codigo!
-def log_output(message, logfile='log_resultados.txt'):
+def _validate_curve_fitting_inputs(x, y):
     """
-    Função para registrar logs em arquivo com timestamp
+    Parameters
+    ----------
+    x, y : array_like
+        Pontos de dados para ajuste.
     
-    Parâmetros:
-    - message: string com o conteúdo a ser registrado (pode conter múltiplas linhas)
-    - logfile: nome do arquivo de log (padrão 'log_resultados.txt')
+    Returns
+    -------
+    x_valid, y_valid : np.ndarray
+        Entradas validadas e convertidas.
     
-    O arquivo é aberto em modo append e cada chamada adiciona a mensagem com a data/hora corrente
+    Raises
+    ------
+    ValueError
+        Se as entradas não forem válidas.
     """
-    if log==True:
-        import datetime
-        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        with open(logfile, 'a', encoding='utf-8') as f:
-            f.write(f'[{timestamp}]\n{message}\n')
-    else:
-        pass
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+    if x.ndim != 1:
+        raise ValueError("x deve ser um array 1D.")
+    if y.ndim != 1:
+        raise ValueError("y deve ser um array 1D.")
+    if len(x) != len(y):
+        raise ValueError("x e y devem ter o mesmo comprimento.")
+    if len(x) < 2:
+        raise ValueError("São necessários pelo menos 2 pontos para ajuste de curvas.")
+    return x, y
 
 def dados():
     """
-    Função de entrada de dados:
-    
-    - Tratamento de zeros e entradas inválidas
-    
-    Saídas:     
-    - Vetor x
-    - Vetor y
+    Função de entrada de dados interativa.
+
+    Solicita ao usuário o número de pontos e os valores de x e y,
+    com validação de entrada e tratamento de erros.
+
+    Returns:
+    - Vetor x (np.ndarray)
+    - Vetor y (np.ndarray)
     """
-    
     try:
         n_str = input("Quantos pontos de dados? ")
-        if not n_str.strip(): return np.array([]), np.array([])
+        if not n_str.strip():
+            print("Entrada vazia. Retornando arrays vazios.")
+            return np.array([]), np.array([])
         n = int(n_str)
-        x = []
-        y = []
-        print("Digite os valores de x e y para o conjunto de dados:")
-        for i in range(n):
-            x_v = float(input(f"x[{i+1}] = "))
-            y_v = float(input(f"y[{i+1}] = "))
-            x.append(x_v)
-            y.append(y_v)
-            msg = (f"\n=========================\nPontos Inseridos\n=========================",
-                   np.array(x),
-                   np.array(y)
-                   )
-            log_output(msg)
+        if n < 2:
+            print("São necessários pelo menos 2 pontos para ajuste de curvas.")
+            return np.array([]), np.array([])
+
+        print(f"Insira os valores de x em uma única linha, {n} valores separados por espaço:")
+        x_input = input("x: ").strip()
+        if not x_input:
+            print("Entrada vazia para x. Retornando arrays vazios.")
+            return np.array([]), np.array([])
+        x = list(map(float, x_input.split()))
+        if len(x) != n:
+            print(f"Número de valores x ({len(x)}) deve ser igual ao número especificado ({n})!")
+            return np.array([]), np.array([])
+
+        print(f"Insira os valores de y em uma única linha, {n} valores separados por espaço:")
+        y_input = input("y: ").strip()
+        if not y_input:
+            print("Entrada vazia para y. Retornando arrays vazios.")
+            return np.array([]), np.array([])
+        y = list(map(float, y_input.split()))
+        if len(y) != n:
+            print(f"Número de valores y ({len(y)}) deve ser igual ao número especificado ({n})!")
+            return np.array([]), np.array([])
+
         return np.array(x), np.array(y)
-    except ValueError:
-        print("Entrada inválida. Retornando arrays vazios.")
+    except ValueError as e:
+        print(f"Entrada inválida: {e}. Retornando arrays vazios.")
+        return np.array([]), np.array([])
+    except Exception as e:
+        print(f"Erro inesperado: {e}. Retornando arrays vazios.")
         return np.array([]), np.array([])
 
-def tabela_interpolador(x, y, p1x):
+def tabela_interpolador(x, y, p1x, verbose=True):
     """
-    Tabela para exibição dos cálculos pelo método dos mínimos quadrados:
+    Tabela para exibição dos cálculos pelo método dos mínimos quadrados.
 
-    Entradas/Parâmetros: 
-    - x (vetor de pontos em x)
-    - y (vetor de pontos em y)
-    - p1x (valores do polinomio interpolador de x)
-    
-    Fórmulas
-    di = yi - p1(xi)
-    
-    Saídas:     
-    - Tabela com i,xi,yi,p_1(xi),di,di**2 
+    Parameters:
+    - x, y: vetores de pontos
+    - p1x: valores do polinomio interpolador
+    - verbose: se True, imprime a tabela
     """
-    import pandas as pd #opcional, apenas se quiser mostrar as tabelas formatadas
+    import pandas as pd
 
     di = y - p1x
-    # di2 = di ** 2
     n = len(x)
 
     dados = {
@@ -106,30 +115,23 @@ def tabela_interpolador(x, y, p1x):
         'y': y,
         'p1(x)': p1x,
         'di': di,
-        # 'di^2': di2
     }
     df = pd.DataFrame(dados)
-    soma = df[['x', 
-               'y', 
-               'p1(x)', 
-               'di',
-               #'di^2'
-               ]].sum()
+    soma = df[['x', 'y', 'p1(x)', 'di']].sum()
     soma['i'] = ''
     df = pd.concat([df, pd.DataFrame([soma])], ignore_index=True)
-    print(df.to_string(index=False))
-    msg = (f"\n=========================\nTabela Interpolador\n=========================\n",
-           df.to_string(index=False))
-    log_output(msg)
+    if verbose:
+        print(df.to_string(index=False))
 
 
-def tabela_minimos_quadrados(x, y):
+def tabela_minimos_quadrados(x, y, verbose=True):
     """
     Tabela para exibição dos cálculos pelo método dos mínimos quadrados:
 
     Entradas/Parâmetros: 
     - x (vetor de pontos em x)
     - y (vetor de pontos em y)
+    - verbose (bool): se True, imprime a tabela; se False, executa silenciosamente
 
     Fórmulas
     b1 = (sum_xi * sum_yi - n * sum_xiyi) / (sum_xi ** 2 - n * sum_xi**2)
@@ -138,14 +140,13 @@ def tabela_minimos_quadrados(x, y):
     Saídas:     
     - Tabela com i,xi,yi,xi**2,yi**2,xiyi,ui,di,di**2
     """
-    import pandas as pd #opcional, apenas se quiser mostrar as tabelas formatadas
+    import pandas as pd
 
     n = len(x)
     sum_x = np.sum(x)
     sum_y = np.sum(y)
     sum_x2 = np.sum(x ** 2)
     sum_xy = np.sum(x * y)
-    # sum_y2 = np.sum(y ** 2)
 
     b1 = (sum_x * sum_y - n * sum_xy) / (sum_x ** 2 - n * sum_x2)
     b0 = (sum_y - b1 * sum_x) / n
@@ -169,11 +170,10 @@ def tabela_minimos_quadrados(x, y):
     df = pd.DataFrame(data)
     soma = df.sum(numeric_only=True)
     df = pd.concat([df, pd.DataFrame([soma])], ignore_index=True)
-    print(df.to_string(index=False))
-    msg = (df.to_string(index=False))
-    log_output(msg)
+    if verbose:
+        print(df.to_string(index=False))
 
-def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
+def calcula_chi_e_r2(x, y, b0, b1, n_params=2, verbose=True):
     """
     Calcula chi-quadrado (ajustado), soma dos quadrados dos resíduos (desvio) e coeficiente de determinação R^2,
     recebendo explicitamente os coeficientes da reta (b0, b1) e os pontos (x, y).
@@ -184,6 +184,7 @@ def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
     b0 (float): coeficiente linear da reta
     b1 (float): coeficiente angular da reta
     n_params (int): número de parâmetros do modelo (p), padrão 2 para regressão linear
+    verbose (bool): se True, imprime os resultados; se False, executa silenciosamente
 
     Fórmulas:
     D(a0,a1) = sum((y_i - b0 - b1*x_i)^2)
@@ -203,39 +204,25 @@ def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
     Ui = b0 + b1 * x
     y_media = np.mean(y)
 
-    # Soma total dos quadrados
     SQT = np.sum((y - y_media) ** 2)
 
-    # Soma dos quadrados dos resíduos (Desvio)
     SQRes = np.sum((y - Ui) ** 2)
 
-    # Soma dos quadrados da regressão
     SQReg = np.sum((Ui - y_media) ** 2)
 
-    # Coeficiente de determinação R²
     r2 = 1 - (SQRes / SQT) if SQT != 0 else float('nan')
 
-    # Chi-quadrado
     chi2 = SQRes / (n - n_params) if (n - n_params) > 0 else float('nan')
 
     desvio = SQRes
 
-    print(f"Desvio D(a0,a1) = {desvio:.6f}")
-    print(f"Chi² = {chi2:.6f}")
-    print(f"SQT = {SQT:.6f}")
-    print(f"SQRes = {SQRes:.6f}")
-    print(f"SQReg = {SQReg:.6f}")
-    print(f"R² = {r2:.6f}")
-
-    msg = (f"\n=========================\nEstatísticas\n========================="
-           f"\nDesvio D(a0,a1) = {desvio:.6f}"
-           f"\nChi² = {chi2:.6f}"
-           f"\nSQT = {SQT:.6f}"
-           f"\nSQRes = {SQRes:.6f}"
-           f"\nSQReg = {SQReg:.6f}"
-           f"\nR² = {r2:.6f}"
-           )
-    log_output(msg)
+    if verbose:
+        print(f"Desvio D(a0,a1) = {desvio:.6f}")
+        print(f"Chi² = {chi2:.6f}")
+        print(f"SQT = {SQT:.6f}")
+        print(f"SQRes = {SQRes:.6f}")
+        print(f"SQReg = {SQReg:.6f}")
+        print(f"R² = {r2:.6f}")
 
     return {
         'Chi2': chi2,
@@ -247,7 +234,7 @@ def calcula_chi_e_r2(x, y, b0, b1, n_params=2):
         'Ui': Ui
     }
 
-def regressaolinear(x, y):
+def regressaolinear(x, y, verbose=True, tabela=None, grafico=None):
     """
     Método 1: Polinômio interpolador de ordem 1
     - Escolhendo o primeiro e o último ponto, ou qualquer outro par de pontos inserido previamente pelo usuário.
@@ -255,11 +242,14 @@ def regressaolinear(x, y):
     Entradas/Parâmetros: 
     - x (vetor de pontos em x)
     - y (vetor de pontos em y)
+    - verbose (bool): se True, imprime resultados; se False, executa silenciosamente
+    - tabela (bool): se True, mostra tabela; se None, usa variável global
+    - grafico (bool): se True, mostra gráfico; se None, usa variável global
     - x0,y0; x1,y1 (pares de pontos escolhidos por indice)
 
     Fórmulas
-    b1 = (y1 - y0) / (x1 - x0)         # Coeficiente angular (m)
-    b0 = y0 - b1 * x0                  # Coeficiente linear (y)
+    b1 = (y1 - y0) / (x1 - x0)        
+    b0 = y0 - b1 * x0                 
     P_1(x) = y0 - ((y1 - y0)/(x1 - x0))*(x-x0)
     D(a0,a1) = sum((yi - p1(xi))^2)
     
@@ -271,6 +261,7 @@ def regressaolinear(x, y):
     - Chi2, R2
     - Gráfico ilustrativo
     """
+    x, y = _validate_curve_fitting_inputs(x, y)
     
     n = len(x)
     if n < 2:
@@ -291,7 +282,6 @@ def regressaolinear(x, y):
                 print("Erro: Os pontos devem ser diferentes. Tente novamente.")
                 continue
             if 0 <= p1 < n and 0 <= p2 < n:
-                # Verifica se os valores de x são iguais (reta vertical, divisão por zero)
                 if x[p1] == x[p2]:
                      print("Erro: Pontos com mesmo valor de X causam divisão por zero. Escolha outros.")
                      continue
@@ -304,56 +294,45 @@ def regressaolinear(x, y):
     x0, y0 = x[p1], y[p1]
     x1, y1 = x[p2], y[p2]
 
-    # Eq. Reta: y - y0 = m * (x- x0)
-    # Cálculo dos coeficientes da reta: y = b0 + b1*x
-    b1 = (y1 - y0) / (x1 - x0)         # Coeficiente angular (m)
-    b0 = y0 - b1 * x0                  # Coeficiente linear (y)
+    b1 = (y1 - y0) / (x1 - x0)
+    b0 = y0 - b1 * x0
     
-    print(f"\nPontos escolhidos: P{p1+1}({x0}, {y0}) e P{p2+1}({x1}, {y1})")
+    if verbose:
+        print(f"\nPontos escolhidos: P{p1+1}({x0}, {y0}) e P{p2+1}({x1}, {y1})")
 
-    # Calcula as estatísticas usando a reta definida pelos 2 pontos
-    estatisticas = calcula_chi_e_r2(x, y, b0, b1)
+    estatisticas = calcula_chi_e_r2(x, y, b0, b1, verbose=verbose)
     p1x = estatisticas['Ui']
     funcao = 'b0 + b1*x'
-
-    msg = (f"\n=========================\nResultados\n========================="
-           f"\nMétodo 1: Regressão Linear Simples"
-           f"\nFunção: {funcao}"
-           f"\nPolinômio interpolador: p1(x) = {b0:.4f} + {b1:.4f} * x"
-           f"\nDesvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.4f}"
-           f"\nChi² = {estatisticas['Chi2']:.4f}"
-           f"\nR² = {estatisticas['R2']:.4f}"
-           f"\n=========================\nTabela p1(x)\n========================="
-           )
-    log_output(msg)
-    
-    # Exibe tabela e resultados
-    if tabela==True:
-        tabela_interpolador(x, y, p1x)
+   
+    if tabela is None:
+        tabela = globals().get('tabela', True)
+    if tabela:
+        tabela_interpolador(x, y, p1x, verbose=verbose)
     else:
         pass
     
-    print(f"\nFunção: {funcao}")
-    print(f"Polinômio interpolador: p1(x) = {b0:.4f} + {b1:.4f} * x")
-    print(f"Desvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.4f}")
-    print(f"Chi² = {estatisticas['Chi2']:.4f}")
-    print(f"R² = {estatisticas['R2']:.4f}")
+    if verbose:
+        print(f"\nFunção: {funcao}")
+        print(f"Polinômio interpolador: p1(x) = {b0:.4f} + {b1:.4f} * x")
+        print(f"Desvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.4f}")
+        print(f"Chi² = {estatisticas['Chi2']:.4f}")
+        print(f"R² = {estatisticas['R2']:.4f}")
 
-    if grafico==True:
-        import matplotlib.pyplot as plt #opcional, apenas para exibir os gráficos 
-        plt.rcParams.update(plotpars_1x1)  # atualizar parâmetros do plt
-        # Plotagem
+    if grafico is None:
+        grafico = globals().get('grafico', True)
+    if grafico and verbose:
+        import matplotlib.pyplot as plt
+        plt.rcParams.update(plotpars_1x1)
         legenda = (f'Função = {funcao}\n'
                 f'y = {b1:.6f}x + {b0:.6f}\n'
                 f'b1 = {b1:.6f}\n'
                 f'b0 = {b0:.6f}\n'
                 f'Desvio = {estatisticas["Desvio"]:.6f}\n'
                 f'Chi² = {estatisticas["Chi2"]:.6f}\n'
-                f'R² = {estatisticas["R2"]:.6f}')
+                f'R² = {estatisticas["R2"]:.4f}')
         
         plt.scatter(x, y, color='green', s=50, label='Dados originais', zorder=3)
         
-        # Destacar os pontos escolhidos
         plt.scatter([x0, x1], [y0, y1], color='purple', s=50, marker='o', label='Pontos Escolhidos', zorder=4)
         
         plt.plot(x, p1x, color='red', linestyle='-', label='Regressão Linear', linewidth=2)
@@ -366,7 +345,7 @@ def regressaolinear(x, y):
     else:
         pass
    
-def regressaolinear_intervalo(x, y):
+def regressaolinear_intervalo(x, y, verbose=True, tabela=None, grafico=None):
     """
     Método 2: Polinômio interpolador de ordem 1 dentro do intervalo (x.min(x), x.max(x))
     - Inserindo pontos manualmente dentro do intervalo previamente definido com os dados da funcao dados()
@@ -374,6 +353,7 @@ def regressaolinear_intervalo(x, y):
     Entradas/Parâmetros: 
     - x (vetor de pontos em x)
     - y (vetor de pontos em y)
+    - verbose (bool): se True, imprime resultados; se False, executa silenciosamente
 
     Fórmulas
     P_1(x) = y0 - ((y1 - y0)/(x1 - x0))*(x-x0)
@@ -386,6 +366,8 @@ def regressaolinear_intervalo(x, y):
     - Chi2, R2
     - Gráfico ilustrativo
     """
+    x, y = _validate_curve_fitting_inputs(x, y)
+    
     n = len(x)
     if n < 2:
         print("São necessários pelo menos 2 pontos no conjunto de dados para definir o intervalo.")
@@ -416,46 +398,46 @@ def regressaolinear_intervalo(x, y):
                 continue
             y2 = float(input(" y2: "))
             
-            break # Se chegou aqui, tudo válido
+            break
         except ValueError:
             print(" Entrada inválida. Digite números válidos.")
 
-    # Eq. Reta: y - y1 = m * (x- x1)
-    # Cálculo dos coeficientes da reta definida pelos pontos manuais
-    b1 = (y2 - y1) / (x2 - x1) # (m)
-    b0 = y1 - b1 * x1 # (y)
+    b1 = (y2 - y1) / (x2 - x1)
+    b0 = y1 - b1 * x1
 
-    # Calcula as estatísticas para os dados ORIGINAIS usando essa reta
-    estatisticas = calcula_chi_e_r2(x, y, b0, b1)
+    estatisticas = calcula_chi_e_r2(x, y, b0, b1, verbose=verbose)
     p1x = estatisticas['Ui']
     funcao = 'b0 + b1*x'
 
-    msg = (f"\n=========================\nResultados\n========================="
-           f"\nMétodo 2: Regressão Linear Intervalo"
-           f"\nFunção: {funcao}"
-           f"\nPolinômio interpolador: p1(x) = {b0:.4f} + {b1:.4f} * x"
-           f"\nDesvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.4f}"
-           f"\nChi² = {estatisticas['Chi2']:.4f}"
-           f"\nR² = {estatisticas['R2']:.4f}"
-           f"\n=========================\nTabela p1(x)\n========================="
-           )
-    log_output(msg)
+    if verbose:
+        print(f"\n=========================\nResultados\n=========================")
+        print("Método 2: Regressão Linear Intervalo")
+        print(f"Função: {funcao}")
+        print(f"Polinômio interpolador: p1(x) = {b0:.4f} + {b1:.4f} * x")
+        print(f"Desvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.4f}")
+        print(f"Chi² = {estatisticas['Chi2']:.4f}")
+        print(f"R² = {estatisticas['R2']:.4f}")
+        print("=========================\nTabela p1(x)\n=========================")
     
-    if tabela==True:
-        tabela_interpolador(x, y, p1x)
+    if tabela is None:
+        tabela = globals().get('tabela', True)
+    if tabela:
+        tabela_interpolador(x, y, p1x, verbose=verbose)
     else:
         pass
     
-    print(f"\nFunção: {funcao}")
-    print(f"Polinômio Interpolador: p_1(x) = {b0:.6f} + {b1:.6f} * x")
-    print(f"Desvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.6f}")
-    print(f"Chi² = {estatisticas['Chi2']:.6f}")
-    print(f"R² = {estatisticas['R2']:.6f}")
+    if verbose:
+        print(f"\nFunção: {funcao}")
+        print(f"Polinômio Interpolador: p_1(x) = {b0:.6f} + {b1:.6f} * x")
+        print(f"Desvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.6f}")
+        print(f"Chi² = {estatisticas['Chi2']:.6f}")
+        print(f"R² = {estatisticas['R2']:.6f}")
 
-    if grafico==True:
-        import matplotlib.pyplot as plt #opcional, apenas para exibir os gráficos 
-        plt.rcParams.update(plotpars_1x1)  # atualizar parâmetros do plt
-        # Plotagem
+    if grafico is None:
+        grafico = globals().get('grafico', True)
+    if grafico and verbose:
+        import matplotlib.pyplot as plt
+        plt.rcParams.update(plotpars_1x1)
         legenda = (f'Função = {funcao}\n'
                 f'y = {b1:.6f}x + {b0:.6f}\n'
                 f'b1 = {b1:.6f}\n'
@@ -464,13 +446,10 @@ def regressaolinear_intervalo(x, y):
                 f'Chi² = {estatisticas["Chi2"]:.6f}\n'
                 f'R² = {estatisticas["R2"]:.6f}')
 
-        # Dados originais
         plt.scatter(x, y, color='green', s=50, label='Dados originais', zorder=3)
         
-        # Pontos manuais que definiram a reta
         plt.scatter([x1, x2], [y1, y2], color='purple', s=50, marker='o', label='Pontos Escolhidos', zorder=4)
         
-        # Para plotar a reta estendida por todo o gráfico
         x_plot = np.linspace(x_min, x_max, 100)
         y_plot = b0 + b1 * x_plot
         
@@ -483,7 +462,7 @@ def regressaolinear_intervalo(x, y):
     else:
         pass   
 
-def minquadrados(x, y):
+def minquadrados(x, y, verbose=True, tabela=None, grafico=None):
     """
     Método 3: Mínimos Quadrados
     - É a derivada do desvio igualada a 0 com respeito a b0 e b1 (parciais)
@@ -491,6 +470,9 @@ def minquadrados(x, y):
     Entradas/Parâmetros: 
     - x (vetor de pontos em x)
     - y (vetor de pontos em y)
+    - verbose (bool): se True, imprime resultados; se False, executa silenciosamente
+    - tabela (bool): se True, mostra tabela; se None, usa variável global
+    - grafico (bool): se True, mostra gráfico; se None, usa variável global
 
     Fórmulas:
     b0 = (sum(yi) - b1*sum(xi)) / n
@@ -504,49 +486,49 @@ def minquadrados(x, y):
     - Chi2, R2
     - Gráfico ilustrativo
     """
+    x, y = _validate_curve_fitting_inputs(x, y)
+    
     n = len(x)
     sum_x = np.sum(x)
     sum_y = np.sum(y)
     sum_xy = np.sum(x * y)
     sum_x2 = np.sum(x ** 2)
-    sum_y2 = np.sum(y ** 2)
 
     b1 = (sum_x * sum_y - n * sum_xy) / ((sum_x) ** 2 - n * sum_x2)
     b0 = (sum_y - b1 * sum_x) / n
 
-    estatisticas = calcula_chi_e_r2(x, y, b0, b1, n_params=2)
+    estatisticas = calcula_chi_e_r2(x, y, b0, b1, n_params=2, verbose=verbose)
     funcao = 'b0+b1*x'
     
-    msg = (f"\n=========================\nResultados\n========================="
-           f"\nMétodo 3: Mínimos Quadrados"
-           f"\nFunção: {funcao}"
-           f"\nPolinômio interpolador: p1(x) = {b0:.4f} + {b1:.4f} * x"
-           f"\nDesvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.4f}"
-           f"\nChi² = {estatisticas['Chi2']:.4f}"
-           f"\nR² = {estatisticas['R2']:.4f}"
-           f"\n=========================\nTabela Mínimos Quadrados\n========================="
-           )
-    log_output(msg)
-    
-    #criação da tabela de mínimos quadrados
-    if tabela==True:
-        tabela_minimos_quadrados(x, y)
+    if verbose:
+        print(f"\n=========================\nResultados\n=========================")
+        print(f"Método 3: Mínimos Quadrados")
+        print(f"Função: {funcao}")
+        print(f"Polinômio interpolador: p1(x) = {b0:.4f} + {b1:.4f} * x")
+        print(f"Desvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.4f}")
+        print(f"Chi² = {estatisticas['Chi2']:.4f}")
+        print(f"R² = {estatisticas['R2']:.4f}")
+        print("=========================\nTabela Mínimos Quadrados\n=========================")
+
+    if tabela is None:
+        tabela = globals().get('tabela', True)
+    if tabela:
+        tabela_minimos_quadrados(x, y, verbose=verbose)
     else:
         pass
     
-    print(f"\nFunção: {funcao}")
-    print(f"Equação da reta: y = {b1:.6f}x + {b0:.6f}")
-    print(f"Desvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.6f}")
-    print(f"Chi² = {estatisticas['Chi2']:.6f}")
-    print(f"R²: {estatisticas['R2']:.6f}")
- 
-    # Resoluções específicas da questão 1c e 1e
-    # questao1c(b0,b1)
-    # questao1e(b0,b1)
-    
-    if grafico==True:
+    if verbose:
+        print(f"\nFunção: {funcao}")
+        print(f"Equação da reta: y = {b1:.6f}x + {b0:.6f}")
+        print(f"Desvio D(a0,a1) (SQRes) = {estatisticas['Desvio']:.6f}")
+        print(f"Chi² = {estatisticas['Chi2']:.6f}")
+        print(f"R²: {estatisticas['R2']:.6f}")
+
+    if grafico is None:
+        grafico = globals().get('grafico', True)
+    if grafico and verbose:
         import matplotlib.pyplot as plt #opcional, apenas para exibir os gráficos 
-        # Plotagem
+       
         legenda = (f'Função = {funcao}\n'
                 f'y = {b1:.6f}x + {b0:.6f}\n'
                 f'b1 = {b1:.6f}\n'
@@ -565,16 +547,24 @@ def minquadrados(x, y):
     else:
         pass
 
-def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
+    return {
+        'a0': b0,
+        'a1': b1,
+        'equacao': f"y = {b1:.6f}x + {b0:.6f}",
+        'estatisticas': estatisticas
+    }
+
+def minquadrados_ordem_n(x, y, ordem, verbose=True, tabela=None, grafico=None):
     """
     Método 3: Mínimos Quadrados
 
     Entradas/Parâmetros: 
     - x (vetor de pontos em x)
     - y (vetor de pontos em y)
-    - ordem (1,n)
-    - tabela (pra mostrar x,ui,di,di**2)
-    - gráfico com legenda mostrando as infos calculadas.
+    - ordem (inteiro >=0)
+    - verbose (bool): se True, imprime resultados; se False, executa silenciosamente
+    - tabela (bool): se True, mostra tabela; se None, usa variável global
+    - grafico (bool): se True, mostra gráfico; se None, usa variável global
 
     Fórmulas:
     basicamente montar um sistema e resolver por Gauss (poderia ser por decomposição LU tb)
@@ -585,36 +575,38 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
     - Chi2, R2
     - Gráfico ilustrativo
     """
+    x, y = _validate_curve_fitting_inputs(x, y)
+    
     n = len(x)
     if n == 0 or ordem < 0:
         print("Dados insuficientes ou ordem inválida.")
         return None
 
-    # Somatórios S_x^k para k=0..2*ordem
+   
     Sx = [np.sum(x ** k) for k in range(2 * ordem + 1)]
-    # Somatórios S_x^k y para k=0..ordem
+   
     Sxy = [np.sum((x ** k) * y) for k in range(ordem + 1)]
 
-    # Montar matriz do sistema normal (seria o equivalente a usar a funcao de montar sistema que fiz em sistemaslineares.py)
+   
     ATA = np.zeros((ordem+1, ordem+1))
     for i in range(ordem + 1):
         for j in range(ordem + 1):
             ATA[i, j] = Sx[i + j]
-    # Lado direito
+   
     ATy = np.array(Sxy)
 
-    # Resolver sistema pelo método de pivotamento (retornar apenas o vetor solução)
+   
     sol = eliminacao_gauss_com_pivotamento(ATA, ATy)
     if sol is None:
         raise RuntimeError("Falha ao resolver sistema normal para mínimos quadrados de ordem n")
-    # eliminacao_gauss_com_pivotamento pode retornar (x, A, b) ou apenas x
+   
     if isinstance(sol, (tuple, list)):
         candidate = sol[0]
     else:
         candidate = sol
     coef = np.asarray(candidate, dtype=float).ravel()
 
-    # Calcular valores ajustados
+   
     Ui = np.zeros(n)
     for k in range(ordem + 1):
         Ui += coef[k] * (x ** k)
@@ -629,24 +621,25 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
     r2 = 1 - (SQRes / SQT) if SQT != 0 else float('nan')
     chi2 = SQRes / (n - (ordem + 1)) if (n - (ordem + 1)) > 0 else float('nan')
 
-    # equação da reta
+   
     termos = [f"({coef[i]:.6f})x^{i}" if i > 0 else f"({coef[i]:.6f})" for i in range(ordem + 1)]
     equacao = " + ".join(termos)
-    print("\nEquação ajustada:")
-    print("p(x) = " + equacao)
+    if verbose:
+        print("\nEquação ajustada:")
+        print("p(x) = " + equacao)
 
-    # Coeficientes
-    print("\nCoeficientes:")
-    for i, c in enumerate(coef):
-        print(f"a{i} = {c:.6f}")
+       
+        print("\nCoeficientes:")
+        for i, c in enumerate(coef):
+            print(f"a{i} = {c:.6f}")
 
-    print(f"\nEstatísticas do ajuste:")
-    print(f"Desvio (SQRes) = {SQRes:.6f}")
-    print(f"Chi² ajustado = {chi2:.6f}")
-    print(f"R² = {r2:.6f}")
+        print(f"\nEstatísticas do ajuste:")
+        print(f"Desvio (SQRes) = {SQRes:.6f}")
+        print(f"Chi² ajustado = {chi2:.6f}")
+        print(f"R² = {r2:.6f}")
 
-
-    # Tabela contendo os dados assim como para o MMQ de ordem 1 (reaproveitado, apenas fiz direto aqui pra poupar linhas de código)
+    if tabela is None:
+        tabela = globals().get('tabela', True)
     if tabela:
         data = {
             'i': np.arange(1, n+1),
@@ -662,10 +655,13 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
         df = pd.DataFrame(data)
         soma = df.sum(numeric_only=True)
         df = pd.concat([df, pd.DataFrame([soma])], ignore_index=True)
-        print("\nTabela de cálculos intermediários:")
-        print(df.to_string(index=False))
+        if verbose:
+            print("\nTabela de cálculos intermediários:")
+            print(df.to_string(index=False))
 
-    if grafico:
+    if grafico is None:
+        grafico = globals().get('grafico', True)
+    if grafico and verbose:
         xp = np.linspace(np.min(x), np.max(x), 500)
         yp = np.zeros_like(xp)
         for k in range(ordem + 1):
@@ -685,34 +681,6 @@ def minquadrados_ordem_n_manual(x, y, ordem=1, tabela=True, grafico=True):
 
     return coef
 
-#resolução específica da questão 1c (para as estimatias, só substituir!)
-# para utilizar, descomente a chamada na função minquadrados()
-def questao1c(b0,b1):
-    print("\nQuestão 1c):")
-    altura_est = 175 # (x)
-    peso_est = b0 + b1 * altura_est
-    print(f"Peso estimado para altura {altura_est:.2f} cm: {peso_est:.2f} kg")
-    
-    # Estimativa de altura para peso 80 kg (inverter a equação)
-    peso_ref = 80 # (y)
-    altura_est_inv = (peso_ref - b0) / b1
-    print(f"Altura estimada para peso {peso_ref:.2f} kg: {altura_est_inv:.2f} cm")
-
-# resolução específica da questão 1e pois os eixos estão invertidos, as contas mudam
-# para utilizar, descomente a chamada na função minquadrados()
-def questao1e(b0,b1):
-    print("\nQuestão 1e):")
-    peso_est = 80 # (x)
-    altura_est = b0 + b1 * peso_est
-    print(f"Altura estimada para peso {peso_est:.2f} kg: {altura_est:.2f} cm")
-        
-    altura_est = 175 # (y)
-    peso_est = (altura_est - b0) / b1
-    print(f"Peso estimado para altura {altura_est:.2f} cm: {peso_est:.2f} kg")     
-
-# //TODO: Adicionar FIT POLINOMIAL de grau n, sem usar numpy.polyfit
-# //TODO: Adicionar FIT EXPONENCIAL, LOGARÍTMICO, TRIGONOMÉTRICO
-
 def menu():
     """Menu interativo de demonstração para Ajustes de Curvas.
 
@@ -722,17 +690,6 @@ def menu():
     """
     x = []
     y = []
-    
-    #questão 1a,b,c)
-    # x = [183, 173, 168, 188, 158, 163, 193, 163, 178] # altura
-    # y = [79, 69, 70, 81, 61, 63, 79, 71, 73] # peso
-    
-    #questão 1d,e)
-    # x = [79, 69, 70, 81, 61, 63, 79, 71, 73] # peso
-    # y = [183, 173, 168, 188, 158, 163, 193, 163, 178] # altura
-    
-    # x_val = np.array(x)
-    # y_val = np.array(y)    
     
     while True:
         print("\n================ MENU DE REGRESSÕES ================")
@@ -747,15 +704,15 @@ def menu():
         elif opcao == "1":
             x, y = dados()
             regressaolinear(x, y)
-            # regressaolinear(x_val, y_val) # para usar essa função, utilize os dados prontos, e comente as linhas de obtenção de dados
+           
         elif opcao == "2":
             x, y = dados()
             regressaolinear_intervalo(x, y)
-            # regressaolinear_intervalo(x_val, y_val) # para usar essa função, utilize os dados prontos, e comente as linhas de obtenção de dados
+           
         elif opcao == "3":
             x, y = dados()
             minquadrados(x, y)
-            # minquadrados(x_val, y_val) # para usar essa função, utilize os dados prontos, e comente as linhas de obtenção de dados
+           
         else:
             print("Opção inválida. Tente novamente.")
 

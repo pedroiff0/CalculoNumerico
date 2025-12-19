@@ -281,14 +281,13 @@ Ajustes de Curvas - Parte 3
 
 """
 
-from codigos.ajustecurvasv2 import (
+from codigos.ajustecurvas import (
     regressaolinear,
     regressaolinear_intervalo,
     minquadrados,
+    minquadrados_ordem_n,
     dados as dados_ajustes,
 )
-
-from codigos.ajustecurvasOrdemn import minquadrados_ordem_n_manual
 
 def menu_ajustes():
     while True:
@@ -318,7 +317,7 @@ def menu_ajustes():
             except ValueError:
                 print("Ordem inválida. Usando ordem 1.")
                 ordem = 1
-            minquadrados_ordem_n_manual(x, y, ordem=ordem)
+            minquadrados_ordem_n(x, y, ordem)
         else:
             print("Opção inválida.")
 
