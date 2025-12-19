@@ -1,3 +1,13 @@
+"""
+Módulo para métodos de busca de raízes de equações.
+
+Este módulo implementa algoritmos numéricos para encontrar raízes de
+funções: bisseção, ponto fixo, Newton-Raphson e secante.
+
+Author: Pedro Henrique Rocha de Andrade
+Date: Dezembro 2025
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -338,5 +348,17 @@ def pedir_dados_raizes(metodo=None):
     except Exception as e:
         print(f"Erro ao ler parâmetros: {e}")
         return None, None, None, ()
+
+
+def dados():
+    """Menu interativo para métodos de busca de raízes."""
+    print("\n=== Métodos de Busca de Raízes ===")
+    print("1 - Método da Bissecção")
+    print("2 - Método do Ponto Fixo")
+    print("3 - Método de Newton-Raphson")
+    print("4 - Método da Secante")
+    print("0 - Sair")
+    opcao = input("Escolha o método desejado: ")
+    return opcao
 if __name__ == "__main__":
     pedir_dados_raizes()
