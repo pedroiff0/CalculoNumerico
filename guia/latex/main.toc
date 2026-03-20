@@ -1,0 +1,10 @@
+\babel@toc {brazilian}{}\relax 
+\contentsline {chapter}{\numberline {1}Introdução ao Cálculo Numérico}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Fundamentos do Cálculo Numérico}{2}{chapter.2}%
+\contentsline {chapter}{\numberline {3}Sistemas Lineares}{3}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Interpolação}{4}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Ajuste de Curvas}{5}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Integração Numérica}{6}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Equações Diferenciais Ordinárias}{7}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Raízes de Equações}{8}{chapter.8}%
+\contentsline {chapter}{\numberline {A}Tabelas de Referência}{9}{appendix.A}%

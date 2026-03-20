@@ -1,0 +1,29 @@
+% estilos.sty - Estilos específicos
+\ProvidesPackage{estilos}
+
+% Estilos para algoritmos
+\RequirePackage{algorithm}
+\RequirePackage{algorithmic}
+
+% Estilos para teoremas e definições
+\newtheorem{theorem}{Teorema}[chapter]
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{corollary}[theorem]{Corolário}
+\newtheorem{proposition}[theorem]{Proposição}
+\newtheorem{definition}[theorem]{Definição}
+\newtheorem{example}[theorem]{Exemplo}
+\newtheorem{remark}[theorem]{Observação}
+
+% Estilos para ambientes de prova (usando amsthm em vez de ntheorem)
+\RequirePackage{amsthm}
+
+% Estilos para referências
+\RequirePackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=red,
+    urlcolor=blue
+}
+
+\endinput

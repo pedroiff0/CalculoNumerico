@@ -1,0 +1,69 @@
+% config.sty - Configurações gerais
+\ProvidesPackage{config}
+
+% Pacotes matemáticos
+\RequirePackage{amsmath,amssymb,amsthm}
+
+% Figuras e tabelas
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage{subcaption}
+
+% Listas e enumerações
+\RequirePackage{enumerate}
+\RequirePackage{enumitem}
+
+% Índices e glossário (opcional)
+\RequirePackage{makeidx}
+\makeindex
+
+% Suporte a listas customizadas e quadros
+\RequirePackage{tocloft}
+% Ambiente "quadro" (para quadros e tabelas complementares)
+\RequirePackage{float}
+\newfloat{quadro}{htbp}{loq}
+\floatname{quadro}{Quadro}
+% Lista de quadros
+\newcommand{\listofquadros}{\listof{quadro}{Lista de Quadros}}
+
+% Lista de equações (manual): use \equationcaption{Texto} após uma equação para registrá-la
+\newlistof{equations}{equ}{Lista de Equações}
+\newcommand{\equationcaption}[1]{%
+  \addcontentsline{equ}{equations}{\protect\numberline{\theequation}#1}%
+}
+
+% Lista de ilustrações combinada (figuras, tabelas, quadros, equações)
+\makeatletter
+\newcommand{\listofillustrations}{%
+  % Preserve current plain style and ensure no headers for the duration
+  \begingroup
+
+  \chapter*{\normalsize\bfseries\MakeUppercase{Lista de Ilustrações}}%
+  \thispagestyle{empty}% ensure first page is empty
+  \vspace{\baselineskip}
+
+  {\normalsize\bfseries\MakeUppercase{Figuras}}
+  \vspace{0.5\baselineskip}
+  \@starttoc{lof}
+  \vspace{\baselineskip}
+
+  {\normalsize\bfseries\MakeUppercase{Tabelas}}
+  \vspace{0.5\baselineskip}
+  \@starttoc{lot}
+  \vspace{\baselineskip}
+
+  {\normalsize\bfseries\MakeUppercase{Quadros}}
+  \vspace{0.5\baselineskip}
+  \@starttoc{loq}
+  \vspace{\baselineskip}
+
+  {\normalsize\bfseries\MakeUppercase{Equações}}%
+  \vspace{0.5\baselineskip}
+  \@starttoc{equ}
+  \vspace{\baselineskip}
+
+  \endgroup
+}
+\makeatother
+
+\endinput

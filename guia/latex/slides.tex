@@ -1,0 +1,256 @@
+% slides.tex - Apresentações em Beamer
+\documentclass[11pt]{beamer}
+
+% Tema e configurações
+\usetheme{Madrid}
+\usecolortheme{default}
+\useinnertheme{circles}
+\useoutertheme{infolines}
+
+% Pacotes
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+  language=Python,
+  basicstyle=\footnotesize\ttfamily,
+  numbers=left,
+  numberstyle=\tiny,
+  frame=single,
+  backgroundcolor=\color{gray!10},
+  breaklines=true,
+  captionpos=b,
+  showstringspaces=false,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{green!60!black},
+  stringstyle=\color{red}
+}
+\usepackage{hyperref}
+
+% Configurações de numeração de equações
+\numberwithin{equation}{section}
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+
+% Configurações de fonte para seções (removido tamanho especial)
+\setbeamerfont{section title}{series=\bfseries,family=\sffamily}
+\setbeamerfont{subsection title}{family=\sffamily}
+
+% Template para página de seção com menos espaço
+\setbeamertemplate{section page}{
+  \begin{centering}
+    {\usebeamerfont{section title}\usebeamercolor[fg]{section title}\MakeUppercase{\insertsectionhead}}%
+  \end{centering}
+}
+
+% Template para página de subsection
+\setbeamertemplate{subsection page}{
+  \begin{centering}
+    {\usebeamerfont{subsection title}\usebeamercolor[fg]{subsection title}\insertsubsectionhead}%
+  \end{centering}
+}
+
+% Informações da apresentação
+\title{Guia de Cálculo Numérico}
+\subtitle{Slides de Apresentação}
+\author{Pedro}
+\institute{Universidade}
+\date{\today}
+
+\begin{document}
+
+% Título
+\begin{frame}
+\titlepage
+\end{frame}
+
+% Sumário
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+% Introdução
+\section{Introdução}
+\begin{frame}{Introdução ao Cálculo Numérico}
+\begin{itemize}
+\item Importância do cálculo numérico
+\item Aplicações práticas
+\item Métodos fundamentais
+\item Análise de erros
+\item Implementações em Python
+\end{itemize}
+\end{frame}
+
+% Fundamentos
+\section{Fundamentos}
+\begin{frame}{Representação Numérica}
+\begin{itemize}
+\item Números de ponto flutuante IEEE 754
+\item Precisão simples (32 bits) e dupla (64 bits)
+\item Erros de arredondamento e truncamento
+\item Eps da máquina
+\item Cancelamento catastrófico
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Análise de Erros}
+\begin{itemize}
+\item Erro absoluto vs relativo
+\item Propagação de erros
+\item Condição do problema
+\item Número de condição
+\item Estabilidade numérica
+\end{itemize}
+\end{frame}
+
+% Seções dos capítulos
+\section{Raízes de Equações}
+\begin{frame}{Métodos para Raízes}
+\begin{itemize}
+\item Método da bissecção (intervalo, convergência garantida)
+\item Método de Newton-Raphson (derivada, quadrática)
+\item Método da secante (aproximação da derivada, superlinear)
+\item Comparação: robustez vs velocidade
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bissecção - Algoritmo}
+\begin{itemize}
+\item Requer intervalo $[a,b]$ com $f(a)f(b) < 0$
+\item Convergência linear: erro reduz à metade a cada iteração
+\item Sempre converge para uma raiz
+\item Fácil implementação, mas lento
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Newton-Raphson}
+\begin{itemize}
+\item Fórmula iterativa:
+\begin{equation}
+x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}
+\end{equation}
+\item Convergência quadrática (ordem 2)
+\item Requer derivada e boa estimativa inicial
+\item Pode falhar se $f'(x) = 0$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Código: Método da Bissecção}
+\footnotesize
+Implementação básica em Python (código omitido para simplificação da apresentação).
+\end{frame}
+
+\begin{frame}{Código: Newton-Raphson}
+\footnotesize
+Implementação básica em Python (código omitido para simplificação da apresentação).
+\end{frame}
+
+\section{Sistemas Lineares}
+\begin{frame}{Resolução de Sistemas}
+\begin{itemize}
+\item Eliminação de Gauss (direta, exata)
+\item Decomposição LU (fatoração, reutilização)
+\item Método de Jacobi (iterativo, paralelizável)
+\item Análise de estabilidade e convergência
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Eliminação de Gauss}
+\begin{itemize}
+\item Transforma sistema em triangular superior
+\item Operações elementares: troca de linhas, multiplicação
+\item Pivotamento parcial para estabilidade
+\item Complexidade $O(n^3)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Código: Eliminação de Gauss}
+\footnotesize
+% Código omitido
+\end{frame}
+
+\section{Interpolação}
+\begin{frame}{Interpolação Polinomial}
+\begin{itemize}
+\item Lagrange: forma direta, numericamente estável
+\item Newton: diferenças divididas, incremental
+\item Splines: evita oscilações, melhor para muitos pontos
+\item Fenômeno de Runge: interpolação de alto grau
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Código: Interpolação de Lagrange}
+\footnotesize
+% Código omitido
+\end{frame}
+
+\section{Ajuste de Curvas}
+\begin{frame}{Ajuste de Curvas}
+\begin{itemize}
+\item Método dos mínimos quadrados
+\item Regressão linear: $y = ax + b$
+\item Regressão polinomial: grau n
+\item Métricas: $R^2$, MSE, MAE
+\item Detecção de outliers
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Código: Regressão Linear}
+\footnotesize
+% Código omitido
+\end{frame}
+
+\section{Integração Numérica}
+\begin{frame}{Regra do Trapézio}
+\begin{itemize}
+\item Aproximação trapezoidal:
+\begin{equation}
+\int_a^b f(x) \, dx \approx \frac{b-a}{2} (f(a) + f(b))
+\end{equation}
+\item Regra composta para maior precisão
+\item Erro proporcional a $(b-a)^3$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Código: Regra do Trapézio}
+\footnotesize
+% Código omitido
+\end{frame}
+
+\section{EDOs}
+\begin{frame}{Equações Diferenciais}
+\begin{itemize}
+\item Método de Euler:
+\begin{equation}
+y_{n+1} = y_n + h f(x_n, y_n)
+\end{equation}
+\item Método de Runge-Kutta 4ª ordem: alta precisão
+\item Sistemas de EDOs: aplicações reais
+\item Estabilidade e erro de truncamento
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Código: Método de Euler}
+\footnotesize
+% Código omitido
+\end{frame}
+
+\begin{frame}{Código: Runge-Kutta 4ª Ordem}
+\footnotesize
+% Código omitido
+\end{frame}
+
+% Conclusão
+\section{Conclusão}
+\begin{frame}{Conclusão}
+\begin{itemize}
+\item Revisão dos conceitos
+\item Implementações em Python
+\item Próximos passos
+\end{itemize}
+\end{frame}
+
+\end{document}

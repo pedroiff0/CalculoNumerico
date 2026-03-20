@@ -1,0 +1,61 @@
+% main.tex - Arquivo principal do livro
+\documentclass[12pt,a4paper,oneside]{guia}
+
+% Pacotes necessários
+\usepackage{config}
+\usepackage{estilos}
+
+% Informações do documento
+\title{Guia de Cálculo Numérico}
+\author{Pedro}
+\date{\today}
+
+\begin{document}
+
+% Capa
+\input{../frontmatter/capa}
+
+\frontmatter
+\pagestyle{empty}
+\input{../frontmatter/prefacio}
+\input{../frontmatter/colaboradores}
+\input{../frontmatter/lista_ilustracoes}
+\input{../frontmatter/sumario}
+\cleardoublepage
+
+% Mainmatter: reinicia numeração arábica e habilita cabeçalhos
+\mainmatter
+\pagestyle{fancy}
+
+% Introdução
+\input{../capitulos/intro}
+
+% Capítulo 1: Bases
+\input{../capitulos/fundamentos}
+
+% Capítulo 2: Sistemas Lineares
+\input{../capitulos/sistemas}
+
+% Capítulo 3: Interpolações
+\input{../capitulos/interpolacao}
+
+% Capítulo 4: Ajustes de Curvas
+\input{../capitulos/ajuste}
+
+% Capítulo 5: Integrações Numéricas
+\input{../capitulos/integracao}
+
+% Capítulo 6: Equações Diferenciais
+\input{../capitulos/edos}
+
+% Capítulo 7: Raízes
+\input{../capitulos/raizes}
+
+% Bibliografia 
+\bibliography{../biblio}
+
+% Apêndices
+\appendix
+\input{../backmatter/apendices}
+
+\end{document}

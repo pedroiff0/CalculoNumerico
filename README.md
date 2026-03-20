@@ -24,6 +24,13 @@
 - [Sobre](#sobre)
 - [Como rodar?](#como_rodar)
 - [Requisitos](#requisitos)
+- [📚 Documentação](#-documentação)
+- [📖 Guia LaTeX](#-guia-de-cálculo-numérico-latex)
+- [✅ Testes](#-testes)
+- [🚀 CI/CD](#-cicd)
+- [📊 Cobertura](#-cobertura)
+- [🤝 Contribuição](#-contribuição)
+- [📄 Licença](#-licença)
 - [Autores](#autores)
 ## 🧐 Sobre <a name = "sobre"></a>
 
@@ -224,6 +231,84 @@ Para regenerar a documentação dos testes localmente:
 
 ```bash
 python scripts/generate_tests_docs.py
+```
+
+## 📖 Guia de Cálculo Numérico (LaTeX)
+
+Além da documentação técnica em Sphinx, o projeto inclui um **livro guia completo em LaTeX** com implementações detalhadas e explicações teóricas de todos os métodos numéricos.
+
+### 📋 Conteúdo do Guia
+
+O guia abrange todos os tópicos da disciplina:
+
+- **Introdução ao Cálculo Numérico**
+- **Fundamentos**: Análise de erros e representação numérica
+- **Raízes de Equações**: Métodos da bissecção, Newton-Raphson, secante
+- **Sistemas Lineares**: Eliminação de Gauss, LU, Jacobi
+- **Interpolação**: Lagrange, Newton, diferenças divididas
+- **Ajuste de Curvas**: Mínimos quadrados, regressão linear e polinomial
+- **Integração Numérica**: Trapézio, Simpson, Gauss-Legendre
+- **Equações Diferenciais**: Euler, Runge-Kutta, sistemas
+
+### 🛠️ Compilação do Guia
+
+```bash
+# Compilar o livro completo
+cd guia
+make book
+
+# Compilar apenas os slides
+make slides
+
+# Compilar tudo
+make all
+
+# Limpar arquivos auxiliares
+make clean
+```
+
+### 📁 Estrutura do Sistema LaTeX
+
+```
+guia/
+├── latex/              # Arquivos LaTeX principais
+│   ├── guia.cls       # Classe LaTeX personalizada
+│   ├── main.tex       # Arquivo principal do livro
+│   └── slides.tex     # Apresentações Beamer
+├── capitulos/         # Capítulos do livro
+├── frontmatter/       # Capa e elementos pré-textuais
+├── backmatter/        # Apêndices e referências
+├── biblio.bib         # Referências bibliográficas
+├── Makefile          # Sistema de compilação
+└── README_guia.md    # Documentação detalhada
+```
+
+### 🎨 Características Técnicas
+
+- **Classe Personalizada**: `guia.cls` baseada em `book.cls` com configurações brasileiras
+- **Highlighting de Código**: Integração com `minted` para syntax highlighting de Python
+- **Bibliografia ABNT**: Formatação de referências no padrão brasileiro
+- **Slides Beamer**: Apresentações automáticas geradas a partir do conteúdo
+- **Makefile Automatizado**: Compilação simplificada com um comando
+
+### 📖 Arquivos Gerados
+
+Após a compilação, são gerados:
+
+- `guia_calculo_numerico.pdf`: Livro completo (44 páginas)
+- `guia_slides.pdf`: Apresentações em Beamer (10 slides)
+
+### 🔧 Dependências LaTeX
+
+```bash
+# macOS com MacTeX
+brew install --cask mactex
+
+# Instalar pygments para minted
+pip install Pygments
+
+# Verificar instalação
+cd guia && make check-deps
 ```
 
 ## ✅ Testes

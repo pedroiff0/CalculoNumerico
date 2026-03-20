@@ -14,7 +14,7 @@ import math
 import sympy as sp
 from sympy import sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, exp, sqrt, log, Abs, pi, E
 import re
-from .constants import SYMPY_LOCALS, SAFE_MATH
+from codigos.constants import SYMPY_LOCALS, SAFE_MATH
 
 def _validate_edo_inputs(func_input, x0, y0, h, xn, ordem=None):
     """Valida entradas para funções de resolução de EDOs.
